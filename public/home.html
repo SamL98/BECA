@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="//d3js.org/d3.v4.min.js"></script>
+</head>
+
+<div id="menu" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <form id="query">
+        <div class="form-group" id="query-group">
+            <span id="pLabel">Phenotype:</span>
+            <select id="pIn">
+                <option value="phenotype1">P1</option>
+                <option value="phenotype2">P2</option>
+                <option value="phenotype3">P3</option>
+            </select>
+            </input>
+            <input type="text" placeholder="Gene, SNP, or Position" id="gIn"></input>
+            <input type="submit">Submit</input>
+        </div>
+    </form>
+</div>
+
+<div id="main">
+    <div class="header">
+        <span onclick="openNav()">Menu</span>
+        <h1>B.E.C.A.</h1>
+    </div>
+    <svg class="chart"></svg>
+</div>
+
+<script>
+    var navOpen = false;
+
+    function openNav() {
+        if (!navOpen) {
+            document.getElementById('menu').style.width = '15vw';
+            document.getElementById('query-group').style.display = 'block';
+            document.getElementById('main').style.marginLeft = '15vw';
+            navOpen = true;
+        } else {
+            closeNav();
+        }
+    }
+
+    function closeNav() {
+        document.getElementById('menu').style.width = 0;
+        document.getElementById('query-group').style.display = 'none';
+        document.getElementById('main').style.marginLeft = 0;
+        navOpen = false;
+    }
+</script>
+<script src="/javascripts/home.js"></script>
+
+<style>
+    .point {
+        fill: steelblue;
+    }
+    
+    .axis text {
+        fill: black;
+        font: 12px sans-serif;
+    }
+
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: black;
+        shape-rendering: crispEdges;
+    }
+
+    .sidenav {
+        height: 100%;
+        width: 0;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background: lightgray;
+        transition: 0.5s;
+    }
+
+    .sidenav a {
+        padding: 8px 8px 8px 8px;
+        text-decoration: none;
+        font-size: 25px;
+        color: darkgray;
+        display: block;
+        transition: 0.3s;
+    }
+    
+    .sidenav .closebtn {
+        position: absolute;
+        top: 0;
+        right: 25px;
+        font-size: 36px;
+        margin-left: 50px;
+    }
+
+    #query {
+        display: block;
+        margin-top: 50px;
+        margin-left: 10px;
+    }
+
+    #query-group {
+        transition: 0.3s;
+        display: none;
+    }
+
+    #main {
+        transition: margin-left .5s;
+    }
+
+    .header {
+        margin-top: 0;
+        margin-left: 0;
+        margin-right: 0;
+        margin-bottom: 20px;
+        height: 10vh;
+        padding-top: 3vh;
+        background-color: steelblue;
+        color: white;
+    }
+
+    .header span {
+        margin-left: 10px;
+        display: inline;
+        font-family: "Helvetica";
+        font-size: 2vh;
+    }
+
+    .header span:hover {
+        cursor: pointer;
+    }
+
+    .header h1 {
+        margin-left: 40%;
+        display: inline;
+        text-align: center;
+        font-family: "Futura";
+        font-size: 5vh;
+    }
+</style>
