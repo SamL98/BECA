@@ -34,14 +34,13 @@ parseGenomicData(function(data) {
 $('#query').submit(function() {
     var phen = $('#pIn').val();
     var gene = $('#gIn').val();
-    console.log(gene);
     displayChart(gene);
     closeNav();
     return false;
 });
 
 var displayChart = function(gene) {
-    var buffer = 5000;
+    var buffer = 0.005;
     var margins = {
         top: 10,
         bottom: 50,
@@ -74,7 +73,7 @@ var displayChart = function(gene) {
 
     var x = d3.scaleLinear()
         .range([0, width])
-        .domain([d3.min(data, function(d) { return d.BP }) - buffer, d3.max(data, function(d) { return d.BP; }) + buffer]);
+        .domain([d3.min(data, function(d) { return d.BP/1000000; }) - buffer, d3.max(data, function(d) { return d.BP/1000000; }) + buffer]);
     var y = d3.scaleLinear()
         .range([height, 0])
         .domain([0, 1]);
@@ -85,8 +84,9 @@ var displayChart = function(gene) {
     var chart = d3.select('.chart')
         .attr('width', width + margins.left + margins.right)
         .attr('height', height + margins.top + margins.bottom)
-        .append('g').attr('transform', 'translate(' + margins.left + ',' + margins.top + ')');
-    chart.selectAll('.axis').exit().remove();
+        .append('g')
+            .attr('id', 'offsetContainer')
+            .attr('transform', 'translate(' + margins.left + ',' + margins.top + ')');
     chart.append('g')
         .attr('class', 'x axis')
         .attr('transform', 'translate(0,' + height + ')')
@@ -108,21 +108,79 @@ var displayChart = function(gene) {
     chart.selectAll('.point').data(data)
         .enter().append('circle')
         .attr('class', 'point')
+        .attr('snp', function(d) { return d.RS; })
         .attr('id', function(d, i) { return 'snp' + i; })
-        .attr('cx', function(d) { return x(d.BP); })
+        .attr('cx', function(d) { return x(d.BP/1000000); })
         .attr('cy', function(d) { return y(Math.random()); })
         .attr('r', 5);
+    
+    addAnnotationHover();
 }
 
-$('.point').mouseover(function(e) {
-    console.log(e.target.id);
-    d3.select('#' + e.target.id)
-        .transition().duration(200)
-        .attr('r', '10');
-});
+var addAnnotationHover = function() {
+    $('.point').mouseover(function(e) {
+        addAnnotationForSNP(e.target.id);
+        d3.select('#' + e.target.id)
+            .transition().duration(100)
+            .style('fill', 'indianred')
+            .attr('r', '10');
+    });
 
-$('.point').mouseout(function(e) {
-    d3.select('#' + e.target.id)
-        .transition().duration(200)
-        .attr('r', '5');
-});
+    $('.point').mouseout(function(e) {
+        removeAnnotationForSNP(e.target.id);
+        d3.select('#' + e.target.id)
+            .transition().duration(100)
+            .style('fill', 'steelblue')
+            .attr('r', '5');
+    });
+}
+
+var addAnnotationForSNP = function(id) {
+    var point = d3.select('#' + id);
+    var annotationWidth = 100, annotationHeight = 75;
+    var pointX = point.attr('cx'), pointY = point.attr('cy');
+
+    var radius = 10;
+    var triangleWidth = 20;
+    var containerOffset = 20;
+    var textInset = 15;
+    var annotationX = pointX - annotationWidth/2, 
+        annotationY = pointY - annotationHeight - containerOffset;
+
+    var offsetContainer = d3.select('.chart').select('#offsetContainer');
+    var annotation = offsetContainer.append('g')
+        .attr('id', 'annotation' + id)
+        .attr('transform', 'translate(' + annotationX + ',' + annotationY + ')')
+        .attr('width', annotationWidth).attr('height', annotationHeight);
+
+
+    annotation.append('path')
+        .style('stroke-linejoin', 'round')
+        .style('stroke', 'steelblue')
+        .style('stroke-width', '5')
+        .style('fill', 'white')
+        .attr('d', 'M 10 0 L ' + (annotationWidth - 10) + ' 0 '
+            + ' A ' + radius + ' ' + radius + ' 0 0 1 ' + annotationWidth + ' ' + radius
+            + ' L ' + annotationWidth + ' ' + (annotationHeight - radius)
+            + ' A ' + radius + ' ' + radius + ' 0 0 1 ' + (annotationWidth - radius) + ' ' + annotationHeight
+            + ' L ' + (annotationWidth/2 + triangleWidth/2)+ ' ' + annotationHeight
+            + ' L ' + annotationWidth/2 + ' ' + (annotationHeight + containerOffset/2)
+            + ' L ' + (annotationWidth/2 - triangleWidth/2) + ' ' + annotationHeight
+            + ' L ' + radius + ' ' + annotationHeight
+            + ' A ' + radius + ' ' + radius + ' 0 0 1 ' + 0 + ' ' + (annotationHeight - radius)
+            + ' L ' + 0 + ' ' + radius
+            + ' A ' + radius + ' ' + radius + ' 0 0 1 ' + radius + ' ' + 0);
+    annotation.append('text')
+        .attr('x', textInset).attr('y', textInset)
+        .attr('width', annotationWidth - textInset * 2).attr('height', annotationHeight - textInset * 2)
+        .style('color', 'black')
+        .style('font', '14px sans-serif')
+        .style('text-align', 'center')
+        .text(point.attr('snp'));
+}
+
+var removeAnnotationForSNP = function(id) {
+    var point = d3.select('#' + id);
+    d3.select('.chart').select('#offsetContainer')
+        .select('#annotation' + id).remove();
+}
