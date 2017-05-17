@@ -1,20 +1,49 @@
+var parseGenomicData = function(callback) {
+    var type = function(d) {
+        d.CHR = +d.CHR;
+        d.BP = +d.BP;
+        d.START = +d.START;
+        d.END = +d.END;
+        return d;
+    }
+    d3.tsv('gene-snp.tsv', type, function(error, data) {
+        callback(data);
+    });
+}
+
+parseGenomicData(function(data) {
+    genes = [];
+    phenotypes = [];
+    for (var i in data) {
+        if (data[i].GENE && genes.indexOf(data[i].GENE) == -1) {
+            genes.push(data[i].GENE);
+        }
+    }
+
+    $('#pIn').autocomplete({
+        source: phenotypes
+    });
+
+    $('#gIn').autocomplete({
+        source: genes
+    });
+})
+
 $('#query').submit(function() {
     var phen = $('#pIn').val();
     var gene = $('#gIn').val();
-    displayChart()
+    parseGenomicData(gene);
     closeNav();
     return false;
 });
 
-var displayChart = function() {
+var displayChart = function(data, gene) {
     var margins = {
         top: 10,
         bottom: 40,
         left: 40,
         right: 10
     };
-
-    var data = [[2, 10], [3, 5], [4, 2]];
     var width = 1000 - margins.left - margins.right, height = 650 - margins.top - margins.bottom;
 
     var x = d3.scaleLinear()
@@ -39,7 +68,7 @@ var displayChart = function() {
             .attr('x', width / 2)
             .attr('dy', '3em')
             .style('text-anchor', 'middle')
-            .text('Location (bp * 10^6)');
+            .text('Position (bp * 10^6)');
 
     chart.append('g')
         .attr('class', 'y axis')
@@ -48,7 +77,7 @@ var displayChart = function() {
             .attr('dy', '-2em')
             .attr('x', -height / 2)
             .style('text-anchor', 'middle')
-            .text('Effect (log10(p))');
+            .text('-log10(p)');
 
     chart.selectAll('.point').data(data)
         .enter().append('circle')

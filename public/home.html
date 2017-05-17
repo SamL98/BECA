@@ -2,7 +2,10 @@
 <meta charset="utf-8">
 
 <head>
+    <link href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css"
+         rel = "stylesheet">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
     <script src="//d3js.org/d3.v4.min.js"></script>
 </head>
 
@@ -10,14 +13,11 @@
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
     <form id="query">
         <div class="form-group" id="query-group">
-            <span id="pLabel">Phenotype:</span>
-            <select id="pIn">
-                <option value="phenotype1">P1</option>
-                <option value="phenotype2">P2</option>
-                <option value="phenotype3">P3</option>
-            </select>
-            </input>
-            <input type="text" placeholder="Gene, SNP, or Position" id="gIn"></input>
+            <div class="ui-label">
+                <span id="pLabel">Phenotype:</span>
+                <input type="text" placeholder="Phenotype" id="pIn" autocomplete="off"></input>
+            </div>
+            <input type="text" placeholder="Gene, SNP, or Position" id="gIn" autocomplete="off"></input>
             <input type="submit">Submit</input>
         </div>
     </form>
@@ -55,10 +55,14 @@
 <script src="/javascripts/home.js"></script>
 
 <style>
+    .ui-autocomplete {
+        z-index: 100;
+    }
+
     .point {
         fill: steelblue;
     }
-    
+
     .axis text {
         fill: black;
         font: 12px sans-serif;
