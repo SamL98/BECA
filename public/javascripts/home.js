@@ -102,6 +102,7 @@ var displayChart = function(gene) {
             .style('fill', 'white')
             .attr('width', width).attr('height', height)
             .attr('transform', 'translate(' + margins.left + ',' + margins.top + ')');
+
     chart.append('g')
         .attr('class', 'x axis')
         .attr('transform', 'translate(0,' + height + ')')
@@ -122,8 +123,6 @@ var displayChart = function(gene) {
 
     chart.selectAll('.point').data(data)
         .enter().append('circle')
-        .style('fill', 'steelblue')
-        .style('stroke', 'black')
         .attr('class', 'point')
         .attr('snp', function(d) { return d.RS; })
         .attr('freq', function(d) { return d.FREQ; })
