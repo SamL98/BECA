@@ -18,14 +18,14 @@
                 <input type="text" placeholder="Phenotype" id="pIn" autocomplete="off"></input>
             </div>
             <input type="text" placeholder="Gene, SNP, or Position" id="gIn" autocomplete="off"></input>
-            <input type="submit">Submit</input>
+            <input type="submit"></input>
         </div>
     </form>
 </div>
 
 <div id="main">
     <div class="header">
-        <span onclick="openNav()">Menu</span>
+        <img src="menu.svg" width="20em" height="20em" onclick="openNav()"></img>
         <h1>B.E.C.A.</h1>
     </div>
     <svg class="chart"></svg>
@@ -105,13 +105,23 @@
 
     #query {
         display: block;
-        margin-top: 50px;
+        margin-top: 75px;
         margin-left: 10px;
     }
 
     #query-group {
         transition: 0.3s;
         display: none;
+    }
+
+    #pLabel {
+        font-family: "Helvetica";
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    #pIn, #gIn {
+        border-radius: 5;
     }
 
     #main {
@@ -129,14 +139,12 @@
         color: white;
     }
 
-    .header span {
-        margin-left: 10px;
+    .header img {
+        margin-left: 20px;
         display: inline;
-        font-family: "Helvetica";
-        font-size: 2vh;
     }
 
-    .header span:hover {
+    .header img:hover {
         cursor: pointer;
     }
 

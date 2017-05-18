@@ -5,6 +5,7 @@ var parseGenomicData = function(callback) {
         d.BP = +d.BP;
         d.START = +d.START;
         d.END = +d.END;
+        d.FREQ = Math.random().toFixed(2);
         return d;
     }
     d3.tsv('gene-snp.tsv', type, function(error, data) {
@@ -29,6 +30,8 @@ parseGenomicData(function(data) {
     $('#gIn').autocomplete({
         source: genes
     });
+
+    displayChart('ASPM');
 })
 
 $('#query').submit(function() {
@@ -39,7 +42,13 @@ $('#query').submit(function() {
     return false;
 });
 
+var removeExistingCharts = function() {
+    d3.selectAll('.chart').remove();
+}
+
 var displayChart = function(gene) {
+    removeExistingCharts()
+
     var buffer = 0.005;
     var margins = {
         top: 10,
@@ -77,16 +86,22 @@ var displayChart = function(gene) {
     var y = d3.scaleLinear()
         .range([height, 0])
         .domain([0, 1]);
+    var freqScale = d3.scalePow()
+        .range([3, 8])
+        .domain([d3.min(data, function(d) { return d.FREQ; }),
+                d3.max(data, function(d) { return d.FREQ; })]);
 
     var xAxis = d3.axisBottom(x);
     var yAxis = d3.axisLeft(y);
 
+    d3.select('#main').append('svg').attr('class', 'chart');
     var chart = d3.select('.chart')
         .attr('width', width + margins.left + margins.right)
         .attr('height', height + margins.top + margins.bottom)
+        .style('outline', 'medium solid black')
         .append('g')
-            .attr('id', 'offsetContainer')
-            .attr('transform', 'translate(' + margins.left + ',' + margins.top + ')');
+        .attr('id', 'offsetContainer')
+        .attr('transform', 'translate(' + margins.left + ',' + margins.top + ')');
     chart.append('g')
         .attr('class', 'x axis')
         .attr('transform', 'translate(0,' + height + ')')
@@ -109,10 +124,12 @@ var displayChart = function(gene) {
         .enter().append('circle')
         .attr('class', 'point')
         .attr('snp', function(d) { return d.RS; })
+        .attr('freq', function(d) { return d.FREQ; })
+        .attr('scaledFreq', function(d) { return freqScale(d.FREQ); })
         .attr('id', function(d, i) { return 'snp' + i; })
         .attr('cx', function(d) { return x(d.BP/1000000); })
         .attr('cy', function(d) { return y(Math.random()); })
-        .attr('r', 5);
+        .attr('r', function(d) { return freqScale(d.FREQ); });
     
     addAnnotationHover();
 }
@@ -123,27 +140,29 @@ var addAnnotationHover = function() {
         d3.select('#' + e.target.id)
             .transition().duration(100)
             .style('fill', 'indianred')
-            .attr('r', '10');
+            .attr('r', 10);
     });
 
     $('.point').mouseout(function(e) {
         removeAnnotationForSNP(e.target.id);
-        d3.select('#' + e.target.id)
-            .transition().duration(100)
+        var point = d3.select('#' + e.target.id);
+        point.transition().duration(100)
             .style('fill', 'steelblue')
-            .attr('r', '5');
+            .attr('r', point.attr('scaledFreq'));
     });
 }
 
 var addAnnotationForSNP = function(id) {
     var point = d3.select('#' + id);
-    var annotationWidth = 100, annotationHeight = 75;
+    var annotationWidth = 150, annotationHeight = 100;
     var pointX = point.attr('cx'), pointY = point.attr('cy');
 
-    var radius = 10;
-    var triangleWidth = 20;
-    var containerOffset = 20;
-    var textInset = 15;
+    var fontSize = 14,
+        radius = 10,
+        triangleWidth = 20,
+        containerOffset = 20,
+        textInset = 15,
+        interlineSpacing = 5;
     var annotationX = pointX - annotationWidth/2, 
         annotationY = pointY - annotationHeight - containerOffset;
 
@@ -170,13 +189,24 @@ var addAnnotationForSNP = function(id) {
             + ' A ' + radius + ' ' + radius + ' 0 0 1 ' + 0 + ' ' + (annotationHeight - radius)
             + ' L ' + 0 + ' ' + radius
             + ' A ' + radius + ' ' + radius + ' 0 0 1 ' + radius + ' ' + 0);
-    annotation.append('text')
+    
+
+
+    var rsText = annotation.append('text')
         .attr('x', textInset).attr('y', textInset)
-        .attr('width', annotationWidth - textInset * 2).attr('height', annotationHeight - textInset * 2)
-        .style('color', 'black')
-        .style('font', '14px sans-serif')
+        .attr('dy', 2)
+        .style('font', fontSize + 'px sans-serif')
+        .style('font-weight', '600')
         .style('text-align', 'center')
         .text(point.attr('snp'));
+
+    var freqText = annotation.append('text')
+        .attr('x', textInset).attr('y', (+rsText.attr('y')) + fontSize + interlineSpacing)
+        .attr('width', rsText.attr('width')).attr('height', rsText.attr('height'))
+        .style('color', 'black')
+        .style('font', fontSize + 'px sans-serif')
+        .style('text-align', 'left')
+        .text('Frequency: ' + point.attr('freq'));
 }
 
 var removeAnnotationForSNP = function(id) {
