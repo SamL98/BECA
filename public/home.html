@@ -6,55 +6,19 @@
          rel = "stylesheet">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script type="text/javascript" src="/javascripts/dat.gui.min.js"></script>
     <script src="//d3js.org/d3.v4.min.js"></script>
 </head>
 
-<div id="menu" class="sidenav">
-    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-    <form id="query">
-        <div class="form-group" id="query-group">
-            <div class="ui-label">
-                <span id="pLabel">Phenotype:</span>
-                <input type="text" placeholder="Phenotype" id="pIn" autocomplete="off"></input>
-            </div>
-            <input type="text" placeholder="Gene, SNP, or Position" id="gIn" autocomplete="off"></input>
-            <input type="submit"></input>
-        </div>
-    </form>
-</div>
 
-<div id="main">
-    <div class="header">
-        <img src="menu.svg" width="20em" height="20em" onclick="openNav()"></img>
-        <h1>B.E.C.A.</h1>
-    </div>
-    <svg class="chart"></svg>
-</div>
-
-<script>
-    var navOpen = false;
-
-    function openNav() {
-        if (!navOpen) {
-            document.getElementById('menu').style.width = '15vw';
-            document.getElementById('query-group').style.display = 'block';
-            document.getElementById('main').style.marginLeft = '15vw';
-            navOpen = true;
-        } else {
-            closeNav();
-        }
-    }
-
-    function closeNav() {
-        document.getElementById('menu').style.width = 0;
-        document.getElementById('query-group').style.display = 'none';
-        document.getElementById('main').style.marginLeft = 0;
-        navOpen = false;
-    }
-</script>
 <script src="/javascripts/home.js"></script>
+<svg class="chart"></svg>
 
 <style>
+    .chart, #offsetContainer {
+        background-color: white;
+    }
+
     .ui-autocomplete {
         z-index: 100;
     }
@@ -68,91 +32,16 @@
         font: 12px sans-serif;
     }
 
-    .axis path,
-    .axis line {
+    .axis path, .axis line {
         fill: none;
         stroke: black;
         shape-rendering: crispEdges;
     }
 
-    .sidenav {
-        height: 100%;
-        width: 0;
-        position: fixed;
-        z-index: 1;
-        top: 0;
-        left: 0;
-        background: lightgray;
-        transition: 0.5s;
-    }
-
-    .sidenav a {
-        padding: 8px 8px 8px 8px;
-        text-decoration: none;
-        font-size: 25px;
-        color: darkgray;
-        display: block;
-        transition: 0.3s;
-    }
-    
-    .sidenav .closebtn {
-        position: absolute;
-        top: 0;
-        right: 25px;
-        font-size: 36px;
-        margin-left: 50px;
-    }
-
-    #query {
-        display: block;
-        margin-top: 75px;
-        margin-left: 10px;
-    }
-
-    #query-group {
-        transition: 0.3s;
-        display: none;
-    }
-
-    #pLabel {
-        font-family: "Helvetica";
-        font-weight: 600;
-        font-size: 14px;
-    }
-
-    #pIn, #gIn {
-        border-radius: 5;
-    }
-
-    #main {
-        transition: margin-left .5s;
-    }
-
-    .header {
-        margin-top: 0;
-        margin-left: 0;
-        margin-right: 0;
-        margin-bottom: 20px;
-        height: 10vh;
-        padding-top: 3vh;
-        background-color: steelblue;
-        color: white;
-    }
-
-    .header img {
-        margin-left: 20px;
-        display: inline;
-    }
-
-    .header img:hover {
-        cursor: pointer;
-    }
-
-    .header h1 {
-        margin-left: 40%;
-        display: inline;
-        text-align: center;
-        font-family: "Futura";
-        font-size: 5vh;
+    .label {
+        text-align: left;
+        font: 14px sans-serif;
+        color: black;
+        fill: black;
     }
 </style>
