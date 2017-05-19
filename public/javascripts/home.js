@@ -1,4 +1,4 @@
-genomicData = [];
+chromosomes = [];
 var margins = {
     top: 50,
     bottom: 50,
@@ -17,8 +17,34 @@ var parseGenomicData = function(callback) {
         return d;
     }
     d3.tsv('gene-snp.tsv', type, function(error, data) {
-        callback(data);
+        formatData(data, callback);
     });
+}
+
+var formatData = function(data, callback) {
+    var formatted = [];
+
+    var initChr = 0;
+    var initGene = '';
+
+    var i = 0;
+    while (i < data.length) {
+        if (data[i].CHR != initChr) {
+            initChr = data[i].CHR;
+            formatted.push(new Chromosome(initChr));
+        }
+
+        var chr = formatted[formatted.length - 1];
+        if (data[i].GENE != initGene) {
+            initGene = data[i].GENE;
+            chr.genes.push(new Gene(initGene, data[i].START, data[i].END));
+        }
+
+        var gene = chr.genes[chr.genes.length - 1];
+        gene.snps.push(new SNP(data[i].RS, data[i].BP, data[i].P, data[i].FREQ));
+        i++;
+    }
+    callback(formatted);
 }
 
 var ControlPanel = function() {
@@ -34,14 +60,7 @@ var ControlPanel = function() {
 
 window.onload = function() {
     parseGenomicData(function(data) {
-        genomicData = data;
-        genes = [];
-        phenotypes = [];
-        for (var i in genomicData) {
-            if (data[i].GENE && genes.indexOf(data[i].GENE) == -1) {
-                genes.push(data[i].GENE);
-            }
-        }
+        chromosomes = data;
 
         var panel = new ControlPanel();
         var gui = new dat.GUI();
@@ -73,42 +92,41 @@ var displayChart = function(gene) {
     var chrNum = 0;
     var data = [];
 
-    for (var i in genomicData) {
-        if (String(genomicData[i].GENE) === gene) {
-            upperBound = genomicData[i].END;
-            lowerBound = genomicData[i].START;
-            break;
-        }
-    }
-
-    for (var i in genomicData) {
-        var snp = genomicData[i];
-        if (snp.GENE === gene) {
-            if (chrNum == 0) {
-                chrNum = snp.CHR;
+    var foundGene = false;
+    for (var i = 0; (i < chromosomes.length && !foundGene); i++) {
+        var chr = chromosomes[i];
+        for (var j = 0; (j < chr.genes.length && !foundGene); j++) {
+            var tmp = chr.genes[j];
+            if (tmp.name === gene) {
+                foundGene = true;
+                chrNum = i;
+                upperBound = tmp.end;
+                lowerBound = tmp.start;
+                for (var k = 0; k < tmp.snps.length; k++) {
+                    var snp = tmp.snps[k];
+                    if (snp.loc < lowerBound) { 
+                        lowerBound = snp.loc; 
+                    }
+                    else if (snp.loc > upperBound) { 
+                        upperBound = snp.loc; 
+                    }
+                    console.log(snp.name);
+                    data.push(snp);
+                }
             }
-            if (snp.BP < lowerBound) { 
-                lowerBound = snp.BP; 
-            }
-            else if (snp.BP > upperBound) { 
-                upperBound = snp.BP; 
-            }
-        }
-        if (snp.BP >= lowerBound && snp.BP <= upperBound) {
-            data.push(snp);
         }
     }
 
     var x = d3.scaleLinear()
         .range([0, width])
-        .domain([d3.min(data, function(d) { return d.BP/1000000; }) - buffer, d3.max(data, function(d) { return d.BP/1000000; }) + buffer]);
+        .domain([d3.min(data, function(d) { return d.loc/1000000; }) - buffer, d3.max(data, function(d) { return d.loc/1000000; }) + buffer]);
     var y = d3.scaleLinear()
         .range([height, 0])
         .domain([0, 1]);
     var freqScale = d3.scalePow()
         .range([3, 8])
-        .domain([d3.min(data, function(d) { return d.FREQ; }),
-                d3.max(data, function(d) { return d.FREQ; })]);
+        .domain([d3.min(data, function(d) { return d.freq; }),
+                d3.max(data, function(d) { return d.freq; })]);
 
     var xAxis = d3.axisBottom(x);
     var yAxis = d3.axisLeft(y);
@@ -154,15 +172,15 @@ var displayChart = function(gene) {
     chart.selectAll('.point').data(data)
         .enter().append('circle')
         .attr('class', 'point')
-        .attr('bp', function(d) { return d.BP; })
-        .attr('snp', function(d) { return d.RS; })
-        .attr('freq', function(d) { return d.FREQ; })
-        .attr('p', function(d) { return d.P; })
-        .attr('scaledFreq', function(d) { return freqScale(d.FREQ); })
+        .attr('bp', function(d) { return d.loc; })
+        .attr('snp', function(d) { return d.name; })
+        .attr('freq', function(d) { return d.freq; })
+        .attr('p', function(d) { return d.p; })
+        .attr('scaledFreq', function(d) { return freqScale(d.freq); })
         .attr('id', function(d, i) { return 'snp' + i; })
-        .attr('cx', function(d) { return x(d.BP/1000000); })
+        .attr('cx', function(d) { return x(d.loc/1000000); })
         .attr('cy', function(d) { return y(Math.random()); })
-        .attr('r', function(d) { return freqScale(d.FREQ); });
+        .attr('r', function(d) { return freqScale(d.freq); });
     
     addAnnotationHover();
 }
