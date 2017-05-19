@@ -24,6 +24,12 @@ var parseGenomicData = function(callback) {
 var ControlPanel = function() {
     this.phenotype = '';
     this.gene = '';
+    this.previous = function() {
+
+    };
+    this.next = function() {
+
+    };
 };
 
 window.onload = function() {
@@ -39,11 +45,17 @@ window.onload = function() {
 
         var panel = new ControlPanel();
         var gui = new dat.GUI();
+        gui.remember(panel);
         gui.add(panel, 'phenotype');
-        gui.add(panel, 'gene');
 
-        displayChart('ASPM');
-    })
+        var gController = gui.add(panel, 'gene');
+        gController.onFinishChange(function(value) {
+            displayChart(value);
+        });
+
+        gui.add(panel, 'previous');
+        gui.add(panel, 'next');
+    });
 };
 
 var removeExistingCharts = function() {
@@ -58,6 +70,7 @@ var displayChart = function(gene) {
         height = 400 - margins.top - margins.bottom;
 
     var upperBound = 0, lowerBound = 0;
+    var chrNum = 0;
     var data = [];
 
     for (var i in genomicData) {
@@ -71,8 +84,15 @@ var displayChart = function(gene) {
     for (var i in genomicData) {
         var snp = genomicData[i];
         if (snp.GENE === gene) {
-            if (snp.BP < lowerBound) { lowerBound = snp.BP; }
-            else if (snp.BP > upperBound) { upperBound = snp.BP; }
+            if (chrNum == 0) {
+                chrNum = snp.CHR;
+            }
+            if (snp.BP < lowerBound) { 
+                lowerBound = snp.BP; 
+            }
+            else if (snp.BP > upperBound) { 
+                upperBound = snp.BP; 
+            }
         }
         if (snp.BP >= lowerBound && snp.BP <= upperBound) {
             data.push(snp);
@@ -104,18 +124,27 @@ var displayChart = function(gene) {
             .attr('width', width).attr('height', height)
             .attr('transform', 'translate(' + margins.left + ',' + margins.top + ')');
 
+    chart.append('text')
+        .style('fill', 'black')
+        .style('text-anchor', 'middle')
+        .attr('x', width/2).attr('y', -margins.top/2)
+        .style('font-weight', 'bold').style('font-size', '20px').style('font-family', 'Arial')
+        .text(gene);
+
     chart.append('g')
         .attr('class', 'x axis')
         .attr('transform', 'translate(0,' + height + ')')
         .call(xAxis).append('text')
+            .attr('class', 'axisLabel')
             .attr('x', width / 2)
-            .attr('dy', '4em')
+            .attr('dy', '3em')
             .style('text-anchor', 'middle')
-            .text('Position (bp * 10^6)');
+            .text('Position on Chr ' + chrNum + ' (bp * 10^6)');
 
     chart.append('g')
         .attr('class', 'y axis')
         .call(yAxis).append('text')
+            .attr('class', 'axisLabel')
             .attr('transform', 'rotate(-90)')
             .attr('dy', '-3em')
             .attr('x', -height / 2)
