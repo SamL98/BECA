@@ -64,7 +64,7 @@ var ControlPanel = function() {
     this.opacity = 0.75;
     this.reset = function() {
         renderer.r.resetBoundingBox();
-        renderer.mesh.modified();
+        renderer.r.resetViewAndRender();
     };
 };
 
