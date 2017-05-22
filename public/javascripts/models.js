@@ -17,9 +17,10 @@ function Chromosome(number) {
     this.genes = [];
     this.addGene = function(gene) {
         var i = 0;
-        while (gene.end < this.genes[i].start) {
+        while (i < this.genes.length && gene.end < this.genes[i].start) {
             i++;
         }
         this.genes.splice(i, 0, gene);
+        return i;
     };
 };

@@ -1,4 +1,5 @@
-chromosomes = [];
+var chromosomes = [];
+var currChr = 0, currGene = 0;
 var margins = {
     top: 50,
     bottom: 50,
@@ -12,8 +13,8 @@ var parseGenomicData = function(callback) {
         d.BP = +d.BP;
         d.START = +d.START;
         d.END = +d.END;
-        d.FREQ = Math.random().toFixed(2);
-        d.P = Math.random().toFixed(4);
+        d.FREQ = +Math.random().toFixed(2);
+        d.P = +Math.random().toFixed(4);
         return d;
     }
     d3.tsv('gene-snp.tsv', type, function(error, data) {
@@ -21,6 +22,7 @@ var parseGenomicData = function(callback) {
     });
 }
 
+var geneNo;
 var formatData = function(data, callback) {
     var formatted = [];
 
@@ -37,10 +39,10 @@ var formatData = function(data, callback) {
         var chr = formatted[formatted.length - 1];
         if (data[i].GENE != initGene) {
             initGene = data[i].GENE;
-            chr.genes.push(new Gene(initGene, data[i].START, data[i].END));
+            geneNo = chr.addGene(new Gene(initGene, data[i].START, data[i].END));
         }
 
-        var gene = chr.genes[chr.genes.length - 1];
+        var gene = chr.genes[geneNo];
         gene.snps.push(new SNP(data[i].RS, data[i].BP, data[i].P, data[i].FREQ));
         i++;
     }
@@ -51,12 +53,31 @@ var ControlPanel = function() {
     this.phenotype = '';
     this.gene = '';
     this.previous = function() {
-
+        currGene = Math.max(0, currGene - 1);
+        displayChart(chromosomes[currChr].genes[currGene].name);
     };
     this.next = function() {
-
+        currGene = Math.min(currGene + 1, chromosomes[currChr].genes.length);
+        displayChart(chromosomes[currChr].genes[currGene].name);
+    };
+    this.color = '#ffffff';
+    this.opacity = 0.75;
+    this.reset = function() {
+        renderer.r.resetBoundingBox();
+        renderer.mesh.modified();
     };
 };
+
+var renderer = new Renderer();
+
+function hexToRgb(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
+}
 
 window.onload = function() {
     parseGenomicData(function(data) {
@@ -64,22 +85,40 @@ window.onload = function() {
 
         var panel = new ControlPanel();
         var gui = new dat.GUI();
-        gui.remember(panel);
-        gui.add(panel, 'phenotype');
 
-        var gController = gui.add(panel, 'gene');
-        gController.onFinishChange(function(value) {
+        var chartFolder = gui.addFolder('Chart');
+        var renderFolder = gui.addFolder('Render');
+
+        gui.remember(panel);
+        chartFolder.add(panel, 'phenotype');
+
+        var gControl = chartFolder.add(panel, 'gene');
+        gControl.onFinishChange(function(value) {
             displayChart(value);
         });
 
-        gui.add(panel, 'previous');
-        gui.add(panel, 'next');
+        chartFolder.add(panel, 'previous');
+        chartFolder.add(panel, 'next');
+        chartFolder.open();
+
+        var colorControl = renderFolder.addColor(panel, 'color');
+        colorControl.onFinishChange(function(value) {
+            var rgb = hexToRgb(value);
+            renderer.mesh.color = [rgb.r/255, rgb.g/255, rgb.b/255];
+        })
+        var opacityControl = renderFolder.add(panel, 'opacity', 0.1, 1.0);
+        opacityControl.onChange(function(value) {
+            renderer.mesh.opacity = value;
+        })
+        renderFolder.add(panel, 'reset');
     });
 };
 
 var removeExistingCharts = function() {
-    d3.selectAll('.chart').remove();
+    d3.selectAll('#offsetContainer').remove();
 }
+
+var firstChart = true;
 
 var displayChart = function(gene) {
     removeExistingCharts();
@@ -99,7 +138,11 @@ var displayChart = function(gene) {
             var tmp = chr.genes[j];
             if (tmp.name === gene) {
                 foundGene = true;
-                chrNum = i;
+
+                chrNum = i + 1;
+                currChr = i;
+                currGene = j;
+
                 upperBound = tmp.end;
                 lowerBound = tmp.start;
                 for (var k = 0; k < tmp.snps.length; k++) {
@@ -110,7 +153,6 @@ var displayChart = function(gene) {
                     else if (snp.loc > upperBound) { 
                         upperBound = snp.loc; 
                     }
-                    console.log(snp.name);
                     data.push(snp);
                 }
             }
@@ -131,7 +173,7 @@ var displayChart = function(gene) {
     var xAxis = d3.axisBottom(x);
     var yAxis = d3.axisLeft(y);
 
-    d3.select('body').append('svg').attr('class', 'chart');
+    //d3.select('body').append('svg').attr('class', 'chart');
     var chart = d3.select('.chart')
         .attr('x', 0).attr('y', 0)
         .attr('width', width + margins.left + margins.right)
@@ -183,6 +225,13 @@ var displayChart = function(gene) {
         .attr('r', function(d) { return freqScale(d.freq); });
     
     addAnnotationHover();
+
+    if (firstChart) {
+        firstChart = false;
+        d3.select('body').append('div')
+        .attr('id', 'renderContainer');
+        renderer.renderBrain();
+    }
 }
 
 var addAnnotationHover = function() {
