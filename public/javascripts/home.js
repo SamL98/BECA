@@ -2,7 +2,7 @@ var chromosomes = [];
 var currChr = 0, currGene = 0;
 var margins = {
     top: 50,
-    bottom: 50,
+    bottom: 100,
     left: 50,
     right: 50
 };
@@ -52,6 +52,7 @@ var formatData = function(data, callback) {
 var ControlPanel = function() {
     this.phenotype = '';
     this.gene = '';
+
     this.previous = function() {
         currGene = Math.max(0, currGene - 1);
         displayChart(chromosomes[currChr].genes[currGene].name);
@@ -60,8 +61,10 @@ var ControlPanel = function() {
         currGene = Math.min(currGene + 1, chromosomes[currChr].genes.length);
         displayChart(chromosomes[currChr].genes[currGene].name);
     };
+
     this.color = '#ffffff';
     this.opacity = 0.75;
+
     this.reset = function() {
         renderer.r.resetBoundingBox();
         renderer.r.resetViewAndRender();
@@ -94,6 +97,7 @@ window.onload = function() {
 
         var gControl = chartFolder.add(panel, 'gene');
         gControl.onFinishChange(function(value) {
+            renderFolder.open();
             displayChart(value);
         });
 
@@ -102,10 +106,11 @@ window.onload = function() {
         chartFolder.open();
 
         var colorControl = renderFolder.addColor(panel, 'color');
-        colorControl.onFinishChange(function(value) {
+        colorControl.onChange(function(value) {
             var rgb = hexToRgb(value);
             renderer.mesh.color = [rgb.r/255, rgb.g/255, rgb.b/255];
         })
+
         var opacityControl = renderFolder.add(panel, 'opacity', 0.1, 1.0);
         opacityControl.onChange(function(value) {
             renderer.mesh.opacity = value;
@@ -115,6 +120,7 @@ window.onload = function() {
 };
 
 var removeExistingCharts = function() {
+    d3.selectAll('#chrDisplay').remove();
     d3.selectAll('#offsetContainer').remove();
 }
 
@@ -173,7 +179,6 @@ var displayChart = function(gene) {
     var xAxis = d3.axisBottom(x);
     var yAxis = d3.axisLeft(y);
 
-    //d3.select('body').append('svg').attr('class', 'chart');
     var chart = d3.select('.chart')
         .attr('x', 0).attr('y', 0)
         .attr('width', width + margins.left + margins.right)
@@ -210,6 +215,23 @@ var displayChart = function(gene) {
             .attr('x', -height / 2)
             .style('text-anchor', 'middle')
             .text('-log10(p)');
+
+    var genes = chromosomes[currChr].genes;
+    var geneBuffer = 300;
+    var geneX = d3.scaleLinear().range([geneBuffer, width - geneBuffer])
+        .domain([d3.min(genes, function(g) { return g.start; }),
+                d3.max(genes, function(g) { return g.start; })]);
+    var geneWidth = d3.scaleLinear().range([4, 12])
+        .domain([d3.min(genes, function(g) { return g.end - g.start; }),
+                d3.max(genes, function(g) { return g.end - g.start; })]);
+
+    chart.selectAll('#chrDisplay')
+        .data(genes).enter().append('rect')
+        .attr('id', 'chrDisplay')
+        .attr('transform', function(g) { return 'translate(' + geneX(g.start) + ',' + (+chart.attr('height') + margins.bottom/2) + ')'; })
+            .attr('height', margins.bottom/3)
+            .attr('width', function(g) { return geneWidth(g.end - g.start); })
+            .style('fill', 'indianred');
 
     chart.selectAll('.point').data(data)
         .enter().append('circle')
