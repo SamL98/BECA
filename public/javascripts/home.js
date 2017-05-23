@@ -98,12 +98,12 @@ window.onload = function() {
 
         var minCC = renderFolder.addColor(panel, 'MinColor');
         minCC.onChange(function(value) {
-            renderer.brain.minColor = value;
+            renderer.brain.minColor = [value[0]/255.0, value[1]/255.0, value[2]/255.0];
         })
 
         var maxCC = renderFolder.addColor(panel, 'MaxColor');
         maxCC.onChange(function(value) {
-            renderer.brain.maxColor = value;
+            renderer.brain.maxColor = [value[0]/255.0, value[1]/255.0, value[2]/255.0];
         })
 
         var opacityControl = renderFolder.add(panel, 'opacity', 0.1, 1.0);
@@ -262,22 +262,14 @@ var prepareForBrainRender = function() {
     var renderContainer = d3.select('body').append('div')
         .attr('id', 'renderContainer')
         .attr('width', '50vw').attr('height', '50vw');
-    renderContainer.append('div').attr('id', 'xSliceContainer')
-        .attr('class', 'sliceContainer')
-        .attr('width', '50%').attr('height', '50%')
-        .style('display', 'inline-block');
-    renderContainer.append('div').attr('id', 'ySliceContainer')
-        .attr('class', 'sliceContainer')
-        .attr('width', '50%').attr('height', '50%')
-        .style('display', 'inline-block');
-    renderContainer.append('div').attr('id', 'zSliceContainer')
-        .attr('class', 'sliceContainer')
-        .attr('width', '50%').attr('height', '50%')
-        .style('display', 'inline-block');
     renderContainer.append('div').attr('id', 'volumeContainer')
-        .attr('class', 'sliceContainer')
-        .attr('width', '50%').attr('height', '50%')
-        .style('display', 'inline-block');
+        .style('border-bottom', '2px solid white');
+    renderContainer.append('div').attr('id', 'xSliceContainer')
+        .attr('class', 'slice');
+    renderContainer.append('div').attr('id', 'ySliceContainer')
+        .attr('class', 'slice');
+    renderContainer.append('div').attr('id', 'zSliceContainer')
+        .attr('class', 'slice');
     renderer.renderBrain();
 }
 

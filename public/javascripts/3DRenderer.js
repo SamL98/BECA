@@ -4,10 +4,13 @@ function Renderer() {
         r.container = 'volumeContainer';
         r.init();
 
+        var slices = new X.volume();
+        slices.file = 'http://localhost:8080/gray_matter.nii';
+        slices.labelmap.file = 'http://localhost:8080/converted.nii';
+        slices.labelmap.colortable.file = 'http://localhost:8080/colortable.txt';
+
         var volume = new X.volume();
         volume.file = 'http://localhost:8080/gray_matter.nii';
-        volume.labelmap.file = 'http://localhost:8080/converted.nii';
-        volume.labelmap.colortable.file = 'http://localhost:8080/colortable.txt';
 
         var sliceX = new X.renderer2D();
         sliceX.container = 'xSliceContainer';
@@ -36,12 +39,12 @@ function Renderer() {
             volume.lowerThreshold = 0.001;
             volume.windowLower = 0.001;
             volume.windowHigh = 1;
-            volume.minColor = [1, 0, 0];
-            volume.maxColor = [0, 0, 1];
+            volume.minColor = [0, 0, 1];
+            volume.maxColor = [0, 0, 0];
 
-            sliceX.add(volume);
-            sliceY.add(volume);
-            sliceZ.add(volume);
+            sliceX.add(slices);
+            sliceY.add(slices);
+            sliceZ.add(slices);
             
             sliceX.render();
             sliceY.render();
