@@ -62,25 +62,17 @@ var ControlPanel = function() {
         displayChart(chromosomes[currChr].genes[currGene].name);
     };
 
-    this.color = '#ffffff';
+    this.MinColor = [1, 0, 0];
+    this.MaxColor = [0, 0, 1]; 
     this.opacity = 0.75;
 
     this.reset = function() {
-        renderer.r.resetBoundingBox();
-        renderer.r.resetViewAndRender();
+        renderer.renderer.resetBoundingBox();
+        renderer.renderer.resetViewAndRender();
     };
 };
 
 var renderer = new Renderer();
-
-function hexToRgb(hex) {
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16)
-    } : null;
-}
 
 window.onload = function() {
     parseGenomicData(function(data) {
@@ -104,15 +96,19 @@ window.onload = function() {
         chartFolder.add(panel, 'next');
         chartFolder.open();
 
-        var colorControl = renderFolder.addColor(panel, 'color');
-        colorControl.onChange(function(value) {
-            var rgb = hexToRgb(value);
-            renderer.mesh.color = [rgb.r/255, rgb.g/255, rgb.b/255];
+        var minCC = renderFolder.addColor(panel, 'MinColor');
+        minCC.onChange(function(value) {
+            renderer.brain.minColor = value;
+        })
+
+        var maxCC = renderFolder.addColor(panel, 'MaxColor');
+        maxCC.onChange(function(value) {
+            renderer.brain.maxColor = value;
         })
 
         var opacityControl = renderFolder.add(panel, 'opacity', 0.1, 1.0);
         opacityControl.onChange(function(value) {
-            renderer.mesh.opacity = value;
+            renderer.brain.opacity = value;
         })
         renderFolder.add(panel, 'reset');
         renderFolder.close();
@@ -258,10 +254,31 @@ var displayChart = function(gene) {
 
     if (firstChart) {
         firstChart = false;
-        d3.select('body').append('div')
-        .attr('id', 'renderContainer');
-        renderer.renderBrain();
+        prepareForBrainRender();
     }
+}
+
+var prepareForBrainRender = function() {
+    var renderContainer = d3.select('body').append('div')
+        .attr('id', 'renderContainer')
+        .attr('width', '50vw').attr('height', '50vw');
+    renderContainer.append('div').attr('id', 'xSliceContainer')
+        .attr('class', 'sliceContainer')
+        .attr('width', '50%').attr('height', '50%')
+        .style('display', 'inline-block');
+    renderContainer.append('div').attr('id', 'ySliceContainer')
+        .attr('class', 'sliceContainer')
+        .attr('width', '50%').attr('height', '50%')
+        .style('display', 'inline-block');
+    renderContainer.append('div').attr('id', 'zSliceContainer')
+        .attr('class', 'sliceContainer')
+        .attr('width', '50%').attr('height', '50%')
+        .style('display', 'inline-block');
+    renderContainer.append('div').attr('id', 'volumeContainer')
+        .attr('class', 'sliceContainer')
+        .attr('width', '50%').attr('height', '50%')
+        .style('display', 'inline-block');
+    renderer.renderBrain();
 }
 
 var addAnnotationHover = function() {
