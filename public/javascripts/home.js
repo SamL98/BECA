@@ -97,7 +97,6 @@ window.onload = function() {
 
         var gControl = chartFolder.add(panel, 'gene');
         gControl.onFinishChange(function(value) {
-            renderFolder.open();
             displayChart(value);
         });
 
@@ -116,6 +115,7 @@ window.onload = function() {
             renderer.mesh.opacity = value;
         })
         renderFolder.add(panel, 'reset');
+        renderFolder.close();
     });
 };
 
@@ -218,7 +218,7 @@ var displayChart = function(gene) {
 
     var genes = chromosomes[currChr].genes;
     var geneBuffer = 300;
-    var geneX = d3.scaleLinear().range([geneBuffer, width - geneBuffer])
+    var geneX = d3.scaleLinear().range([width - geneBuffer, geneBuffer])
         .domain([d3.min(genes, function(g) { return g.start; }),
                 d3.max(genes, function(g) { return g.start; })]);
     var geneWidth = d3.scaleLinear().range([4, 12])
@@ -231,7 +231,15 @@ var displayChart = function(gene) {
         .attr('transform', function(g) { return 'translate(' + geneX(g.start) + ',' + (+chart.attr('height') + margins.bottom/2) + ')'; })
             .attr('height', margins.bottom/3)
             .attr('width', function(g) { return geneWidth(g.end - g.start); })
-            .style('fill', 'indianred');
+            .attr('rx', 3).attr('ry', 3)
+            .style('stroke', 'black').style('stroke-width', 2)
+            .style('fill', function(g) {
+                if (g.name === gene) {
+                    return "steelblue";
+                } else {
+                    return "indianred";
+                }
+            });
 
     chart.selectAll('.point').data(data)
         .enter().append('circle')
@@ -334,7 +342,7 @@ var addAnnotationForSNP = function(id) {
     annotation.append('path')
         .style('stroke-linejoin', 'round')
         .style('stroke', 'steelblue')
-        .style('stroke-width', '5')
+        .style('stroke-width', '3')
         .style('fill', 'white')
         .attr('d', path);
 
