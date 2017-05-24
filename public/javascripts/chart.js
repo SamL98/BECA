@@ -135,9 +135,9 @@ var displayChart = function(gene) {
 
     if (firstChart) {
         firstChart = false;
-        addChartResizer();
-        addResizeObservers();
         prepareForBrainRender();
+        addChartResizer();
         addRenderResizer();
+        addResizeObservers();
     }
 }

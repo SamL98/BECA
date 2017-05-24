@@ -3,7 +3,8 @@
 
 <head>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script type="text/javascript" src="/javascripts/dat.gui.min.js"></script>
+    <script src="/javascripts/resizable.js"></script>
+    <script src="/javascripts/dat.gui.min.js"></script>
     <script src="//d3js.org/d3.v4.min.js"></script>
     <script src="//get.goXTK.com/xtk.js"></script>
     <script src="/javascripts/models.js"></script>
@@ -19,11 +20,28 @@
 <script src="/javascripts/home.js"></script>
 
 <svg class="chart"></svg>
+<div class="resizer" id="chartResizer"></div>
+<div id="renderContainer"></div>
+<div class="resizer" id="rendererResizer"></div>
 <div id="datGuiContainer"></div>
 
 <style>
     .resizer {
         background-color: gray;
+    }
+
+    #chartResizer {
+        margin-top: 5px;
+        margin-bottom: 5px;
+        vertical-align: middle;
+        cursor: row-resize;
+    }
+
+    #renderResizer {
+        margin-left: 5px;
+        margin-right: 5px;
+        display: inline-block;
+        cursor: col-resize;
     }
 
     #datGuiContainer {
@@ -43,9 +61,8 @@
     .volumeContainer {
         display: inline-block;
         margin-bottom: 2px;
-        border-bottom: 2px solid white;
         height: 70%;
-        width: 48%;
+        width: 49%;
     }
 
     .slice {
@@ -94,7 +111,7 @@
         fill: black;
     }
     
-    /*.dg.main.taller-than-window .close-button {
+    .dg.main.taller-than-window .close-button {
         border-top: 1px solid #ddd;
     }
 
@@ -155,5 +172,5 @@
 
     .dg .c .slider:hover {
         background: #eee;
-    }*/
+    }
 </style>

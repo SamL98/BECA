@@ -57,7 +57,7 @@ var setUpControls = function() {
         renderer.fullBrain.maxColor = [value[0]/255.0, value[1]/255.0, value[2]/255.0];
     })
 
-    var opacityControl = renderFolder.add(panel, 'opacity', 0.1, 1.0).step(0.5);
+    var opacityControl = renderFolder.add(panel, 'opacity', 0.1, 1.0).step(0.05);
     opacityControl.onChange(function(value) {
         renderer.fullBrain.opacity = value;
         renderer.slicedBrain.opacity = value;

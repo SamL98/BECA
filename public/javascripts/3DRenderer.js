@@ -78,20 +78,16 @@ function Renderer() {
 };
 
 var prepareForBrainRender = function() {
-    var renderContainer = d3.select('body').append('div')
-        .attr('id', 'renderContainer')
+    var renderContainer = d3.select('body').select('#renderContainer')
         .attr('width', '50vw').attr('height', '50vw');
     renderContainer.append('div').attr('id', 'fullVolumeContainer')
-        .attr('class', 'volumeContainer')
-        .style('border-right', '2px solid white');
+        .attr('class', 'volumeContainer');
     renderContainer.append('div').attr('id', 'slicedVolumeContainer')
         .attr('class', 'volumeContainer');
     renderContainer.append('div').attr('id', 'xSliceContainer')
         .attr('class', 'slice');
     renderContainer.append('div').attr('id', 'ySliceContainer')
-        .attr('class', 'slice')
-        .style('border-left', '2px solid white')
-        .style('border-right', '2px solid white');
+        .attr('class', 'slice');
     renderContainer.append('div').attr('id', 'zSliceContainer')
         .attr('class', 'slice');
     renderer.renderBrain();
