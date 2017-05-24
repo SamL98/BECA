@@ -52,3 +52,18 @@ function Renderer() {
         };
     }
 };
+
+var prepareForBrainRender = function() {
+    var renderContainer = d3.select('body').append('div')
+        .attr('id', 'renderContainer')
+        .attr('width', '50vw').attr('height', '50vw');
+    renderContainer.append('div').attr('id', 'volumeContainer')
+        .style('border-bottom', '2px solid white');
+    renderContainer.append('div').attr('id', 'xSliceContainer')
+        .attr('class', 'slice');
+    renderContainer.append('div').attr('id', 'ySliceContainer')
+        .attr('class', 'slice');
+    renderContainer.append('div').attr('id', 'zSliceContainer')
+        .attr('class', 'slice');
+    renderer.renderBrain();
+}
