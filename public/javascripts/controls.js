@@ -15,15 +15,18 @@ var ControlPanel = function() {
     this.MaxColor = [0, 0, 1]; 
     this.opacity = 0.75;
 
+    this.VolumeMode = 'Both';
+
     this.reset = function() {
-        renderer.renderer.resetBoundingBox();
-        renderer.renderer.resetViewAndRender();
+        renderer.fullRenderer.resetBoundingBox();
+        renderer.fullRenderer.resetViewAndRender();
     };
 };
 
 var setUpControls = function() {
     var panel = new ControlPanel();
-    var gui = new dat.GUI();
+    var gui = new dat.GUI({ autoPlace: false });
+    document.getElementById('datGuiContainer').appendChild(gui.domElement);
 
     var chartFolder = gui.addFolder('Chart');
     var renderFolder = gui.addFolder('Render');
@@ -47,13 +50,34 @@ var setUpControls = function() {
 
     var maxCC = renderFolder.addColor(panel, 'MaxColor');
     maxCC.onChange(function(value) {
-        renderer.brain.maxColor = [value[0]/255.0, value[1]/255.0, value[2]/255.0];
+        renderer.fullBrain.maxColor = [value[0]/255.0, value[1]/255.0, value[2]/255.0];
     })
 
-    var opacityControl = renderFolder.add(panel, 'opacity', 0.1, 1.0);
+    var opacityControl = renderFolder.add(panel, 'opacity', 0.1, 1.0).step(0.5);
     opacityControl.onChange(function(value) {
-        renderer.brain.opacity = value;
+        renderer.fullBrain.opacity = value;
+        renderer.slicedBrain.opacity = value;
     })
+
+    var volumeControl = renderFolder.add(panel, 'VolumeMode', ['Full', 'Slices', 'Both', 'None']);
+    volumeControl.onChange(function(value) {
+        switch (value) {
+            case "Full":
+                setToFullVolume(true);
+                break;
+            case "Slices":
+                setToSlicedVolume(true);
+                break;
+            case "Both":
+                setToCombinedVolume();
+                break;
+            case "None":
+                setToNoneVolume();
+                break;
+            default: break;
+        }
+    })
+
     renderFolder.add(panel, 'reset');
     renderFolder.close();
 }
