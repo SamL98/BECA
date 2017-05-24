@@ -44,25 +44,36 @@ function Renderer() {
         this.displayingSlices = true;
 
         r1.onShowtime = function() {
+            r1.camera.position = [0, 0, 300];
+
             volume.volumeRendering = true;
             volume.opacity = 0.75;
             volume.lowerThreshold = 0.001;
             volume.windowLower = 0.001;
             volume.windowHigh = 1;
-            volume.minColor = [0, 0, 1];
+            volume.minColor = [1, 1, 1];
             volume.maxColor = [0, 0, 0];
 
             r2.add(slices);
             r2.render();
+        };
+
+        r2.onShowtime = function() {
+            r2.camera.position = [0, 0, 300];
 
             sliceX.add(slices);
-            sliceY.add(slices);
-            sliceZ.add(slices);
-            
             sliceX.render();
+        }
+
+        sliceX.onShowtime = function() {
+            sliceY.add(slices);
             sliceY.render();
+        }
+
+        sliceY.onShowtime = function() {
+            sliceZ.add(slices);
             sliceZ.render();
-        };
+        }
     }
 };
 
@@ -198,17 +209,23 @@ var setToHideSlicing = function() {
 var addSlicing = function() {
     d3.selectAll('.slice').transition().duration(250)
         .style('height', '30%');
+    d3.selectAll('.volumeContainer').transition().duration(250)
+        .style('height', '69%');
     renderer.displayingSlices = true;
 }
 
 var removeSlicing = function() {
     d3.selectAll('.slice').transition().duration(250)
         .style('height', '0');
+    d3.selectAll('.volumeContainer').transition().duration(250)
+        .style('height', '100%');
     renderer.displayingSlices = false;
 }
 
 var showFullSlicing = function() {
     d3.selectAll('.slice').transition().duration(250)
         .style('height', '100%');
+    d3.selectAll('.volumeContainer').transition().duration(250)
+        .style('height', '0');
     renderer.displayingSlices = true;
 }

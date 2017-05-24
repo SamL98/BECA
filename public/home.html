@@ -15,12 +15,17 @@
 <script src="/javascripts/annotation.js"></script>
 <script src="/javascripts/chart.js"></script>
 <script src="/javascripts/controls.js"></script>
+<script src="/javascripts/resize.js"></script>
 <script src="/javascripts/home.js"></script>
 
 <svg class="chart"></svg>
 <div id="datGuiContainer"></div>
 
 <style>
+    .resizer {
+        background-color: gray;
+    }
+
     #datGuiContainer {
         position: fixed;
         right: 10px;
@@ -32,6 +37,7 @@
         height: 75vh;
         background: black;
         overflow: hidden;
+        display: inline-block;
     }
 
     .volumeContainer {

@@ -16,10 +16,14 @@ var ControlPanel = function() {
     this.opacity = 0.75;
 
     this.VolumeMode = 'Both';
+    this.SliceMode = 'Normal';
 
     this.reset = function() {
         renderer.fullRenderer.resetBoundingBox();
         renderer.fullRenderer.resetViewAndRender();
+
+        renderer.slicedRenderer.resetBoundingBox();
+        renderer.slicedRenderer.resetViewAndRender();
     };
 };
 
@@ -59,8 +63,11 @@ var setUpControls = function() {
         renderer.slicedBrain.opacity = value;
     })
 
-    var volumeControl = renderFolder.add(panel, 'VolumeMode', ['Full', 'Slices', 'Both', 'None']);
+    var volumeControl = renderFolder.add(panel, 'VolumeMode', ['Full', 'Slices', 'Both', 'None']).listen();
     volumeControl.onChange(function(value) {
+        if (panel.SliceMode === 'Full' && value !== "None") {
+            panel.SliceMode = 'Normal';
+        }
         switch (value) {
             case "Full":
                 setToFullVolume(true);
@@ -72,7 +79,25 @@ var setUpControls = function() {
                 setToCombinedVolume();
                 break;
             case "None":
+                panel.SliceMode = 'Full';
                 setToNoneVolume();
+                break;
+            default: break;
+        }
+    })
+
+    var sliceControl = renderFolder.add(panel, 'SliceMode', ['Full', 'Normal', 'None']).listen();
+    sliceControl.onChange(function(value) {
+        switch (value) {
+            case 'Full':
+                showFullSlicing();
+                break;
+            case 'Normal':
+                setToShowSlicing();
+                break;
+            case 'None':
+                setToHideSlicing();
+                panel.VolumeMode = 'Both';
                 break;
             default: break;
         }
