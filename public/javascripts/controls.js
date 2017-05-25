@@ -7,7 +7,7 @@ var ControlPanel = function() {
         displayChart(chromosomes[currChr].genes[currGene].name);
     };
     this.next = function() {
-        currGene = Math.min(currGene + 1, chromosomes[currChr].genes.length);
+        currGene = Math.min(currGene + 1, chromosomes[currChr].genes.length - 1);
         displayChart(chromosomes[currChr].genes[currGene].name);
     };
 

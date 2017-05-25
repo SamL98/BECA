@@ -1,5 +1,5 @@
 var addChartResizer = function() {
-    var boundingRect = d3.select('.chart').node().getBoundingClientRect();
+    var boundingRect = rectFor('.chart');
     var borderY = boundingRect.height + boundingRect.top;
     var borderX = boundingRect.left;
     var borderMaxY = borderY, borderMaxX = borderX + boundingRect.width;
@@ -8,7 +8,7 @@ var addChartResizer = function() {
 }
 
 var addRenderResizer = function() {
-    var boundingRect = d3.select('#renderContainer').node().getBoundingClientRect();
+    var boundingRect = rectFor('#render-container');
     var borderY = boundingRect.top;
     var borderX = boundingRect.left + boundingRect.width;
     var borderMaxX = borderX, borderMaxY = borderY + boundingRect.height;
@@ -17,25 +17,17 @@ var addRenderResizer = function() {
 }
 
 var addResizeObservers = function() {
-    var oHeight = d3.select('#offsetContainer').node().getBoundingClientRect().height;
-    var oWidth = d3.select('#renderContainer').node().getBoundingClientRect().width;
     $('.chart').resizable({
         handleSelector: '#chartResizer',
         resizeWidth: false,
         onDrag: function (e, $el, newWidth, newHeight, opt) {
             if (newHeight < 200 || newHeight > 500) {
                 return false;
-            } else {
-                var scale = newHeight/oHeight;
-                oHeight = newHeight;
-                d3.select('#offsetContainer')
-                    .attr('transform', d3.select('#offsetContainer').attr('transform') + 
-                        ' scale(1,' + scale + ')');
             }
         }
     });
 
-    $('#renderContainer').resizable({
+    $('#render-container').resizable({
         handleSelector: '#rendererResizer',
         resizeHeight: false,
         onDrag: function (e, $el, newWidth, newHeight, opt) {

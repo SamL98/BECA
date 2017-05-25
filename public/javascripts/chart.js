@@ -1,14 +1,17 @@
 var removeExistingCharts = function() {
     d3.selectAll('#chrDisplay').remove();
-    d3.selectAll('#offsetContainer').remove();
+    d3.selectAll('#offset-container').remove();
 }
 
 var displayChart = function(gene) {
     removeExistingCharts();
+    var oc = d3.select('.top-panel').append('div').attr('id', 'offset-container');
+    var chart = oc.append('svg').attr('class', 'chart').style('fill', 'white');
 
     var buffer = 0.005;
-    var width = (+d3.select('body').node().getBoundingClientRect().width) - margins.left - margins.right,
-        height = 400 - margins.top - margins.bottom;
+    var chartRect = rectFor('.chart')
+    var width = chartRect.width - margins.left - margins.right,
+        height = chartRect.height - margins.top - margins.bottom;
 
     var upperBound = 0, lowerBound = 0;
     var chrNum = 0;
@@ -43,10 +46,10 @@ var displayChart = function(gene) {
     }
 
     var x = d3.scaleLinear()
-        .range([0, width])
+        .range([margins.left, width])
         .domain([d3.min(data, function(d) { return d.loc/1000000; }) - buffer, d3.max(data, function(d) { return d.loc/1000000; }) + buffer]);
     var y = d3.scaleLinear()
-        .range([height, 0])
+        .range([height, margins.top])
         .domain([0, 1]);
     var freqScale = d3.scalePow()
         .range([3, 8])
@@ -56,20 +59,10 @@ var displayChart = function(gene) {
     var xAxis = d3.axisBottom(x);
     var yAxis = d3.axisLeft(y);
 
-    var chart = d3.select('.chart')
-        .attr('x', 0).attr('y', 0)
-        .attr('width', width + margins.left + margins.right)
-        .attr('height', height + margins.top + margins.bottom)
-        .append('g')
-            .attr('id', 'offsetContainer')
-            .style('fill', 'white')
-            .attr('width', width).attr('height', height)
-            .attr('transform', 'translate(' + margins.left + ',' + margins.top + ')');
-
     chart.append('text')
         .style('fill', 'black')
         .style('text-anchor', 'middle')
-        .attr('x', width/2).attr('y', -margins.top/2)
+        .attr('x', width/2).attr('y', 0).attr('dy', '1em')
         .style('font-weight', 'bold').style('font-size', '20px').style('font-family', 'Arial')
         .text(gene);
 
@@ -85,6 +78,7 @@ var displayChart = function(gene) {
 
     chart.append('g')
         .attr('class', 'y axis')
+        .attr('transform', 'translate(' + margins.left + ',0)')
         .call(yAxis).append('text')
             .attr('class', 'axisLabel')
             .attr('transform', 'rotate(-90)')
@@ -105,17 +99,13 @@ var displayChart = function(gene) {
     chart.selectAll('#chrDisplay')
         .data(genes).enter().append('rect')
         .attr('id', 'chrDisplay')
-        .attr('transform', function(g) { return 'translate(' + geneX(g.start) + ',' + (+chart.attr('height') + margins.bottom/2) + ')'; })
+        .attr('transform', function(g) { return 'translate(' + geneX(g.start) + ',' + (chartRect.bottom - margins.bottom/2) + ')'; })
             .attr('height', margins.bottom/3)
             .attr('width', function(g) { return geneWidth(g.end - g.start); })
             .attr('rx', 3).attr('ry', 3)
             .style('stroke', 'black').style('stroke-width', 2)
             .style('fill', function(g) {
-                if (g.name === gene) {
-                    return "steelblue";
-                } else {
-                    return "indianred";
-                }
+                return (g.name === gene) ? "steelblue" : "indianred";
             });
 
     chart.selectAll('.point').data(data)
@@ -136,8 +126,8 @@ var displayChart = function(gene) {
     if (firstChart) {
         firstChart = false;
         prepareForBrainRender();
-        addChartResizer();
-        addRenderResizer();
+        //addChartResizer();
+        //addRenderResizer();
         addResizeObservers();
     }
 }

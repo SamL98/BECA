@@ -2,6 +2,8 @@
 <meta charset="utf-8">
 
 <head>
+    <link rel="stylesheet" type="text/css" href="stylesheets/style.css"></link>
+    <link rel="stylesheet" type="text/css" href="stylesheets/dg.css"></link>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="/javascripts/resizable.js"></script>
     <script src="/javascripts/dat.gui.min.js"></script>
@@ -19,158 +21,18 @@
 <script src="/javascripts/resize.js"></script>
 <script src="/javascripts/home.js"></script>
 
-<svg class="chart"></svg>
-<div class="resizer" id="chartResizer"></div>
-<div id="renderContainer"></div>
-<div class="resizer" id="rendererResizer"></div>
+<div id="content">
+    <div class="panel top-panel">
+        <div id="offset-container">
+            <svg class="chart"></svg>
+        </div>
+    </div>
+    <div class="resizer" id="chartResizer"></div>
+    <div class="panel bottom-panel">
+        <div class="panel left-panel">
+            <div id="render-container"></div>
+        </div>
+        <div class="resizer" id="rendererResizer"></div>
+    </div>
+</div>
 <div id="datGuiContainer"></div>
-
-<style>
-    .resizer {
-        background-color: gray;
-    }
-
-    #chartResizer {
-        margin-top: 5px;
-        margin-bottom: 5px;
-        vertical-align: middle;
-        cursor: row-resize;
-    }
-
-    #renderResizer {
-        margin-left: 5px;
-        margin-right: 5px;
-        display: inline-block;
-        cursor: col-resize;
-    }
-
-    #datGuiContainer {
-        position: fixed;
-        right: 10px;
-        bottom: 0;
-    }
-
-    #renderContainer {
-        width: 50%;
-        height: 75vh;
-        background: black;
-        overflow: hidden;
-        display: inline-block;
-    }
-
-    .volumeContainer {
-        display: inline-block;
-        margin-bottom: 2px;
-        height: 70%;
-        width: 49%;
-    }
-
-    .slice {
-        width: 32%;
-        height: 30%;
-        float: left;
-    }
-
-    canvas {
-        width: 100%;
-        height: 100%;
-    }
-
-    .chart, #offsetContainer {
-        background-color: white;
-    }
-
-    .point {
-        fill: steelblue;
-        stroke: black;
-    }
-
-    .axis text {
-        fill: black;
-        font-size: 12px;
-        font-family: "arial";
-    }
-
-    .axis path, .axis line {
-        fill: none;
-        stroke: black;
-        shape-rendering: crispEdges;
-    }
-
-    .axisLabel {
-        fill: black;
-        font-size: 14px;
-        font-family: "arial";
-        font-weight: 600;
-    }
-
-    .label {
-        text-anchor: middle;
-        font: 14px sans-serif;
-        color: black;
-        fill: black;
-    }
-    
-    .dg.main.taller-than-window .close-button {
-        border-top: 1px solid #ddd;
-    }
-
-    .dg.main .close-button {
-        background-color: #ccc;
-    }
-    
-    .dg.main .close-button:hover {
-        background-color: #ddd;
-    }
-
-    .dg {
-        color: #555;
-        text-shadow: none !important;
-    }
-
-    .dg.main::-webkit-scrollbar {
-        background: #fafafa;
-    }
-
-    .dg.main::-webkit-scrollbar-thumb {
-        background: #bbb;
-    }
-    
-    .dg li:not(.folder) {
-        background: #fafafa;
-        border-bottom: 1px solid #ddd;
-    }
-    
-    .dg li.save-row .button {
-        text-shadow: none !important;
-    }
-
-    .dg li.title {
-        background: #e8e8e8 url(data:image/gif;base64,R0lGODlhBQAFAJEAAP////Pz8////////yH5BAEAAAIALAAAAAAFAAUAAAIIlI+hKgFxoCgAOw==) 6px 10px no-repeat;
-    }
-
-    .dg .cr.function:hover,.dg .cr.boolean:hover {
-        background: #fff;
-    }
-    
-    .dg .c input[type=text] {
-        background: #e9e9e9;
-    }
-    
-    .dg .c input[type=text]:hover {
-        background: #eee;
-    }
-    
-    .dg .c input[type=text]:focus {
-        background: #eee;
-        color: #555;
-    }
-    
-    .dg .c .slider {
-        background: #e9e9e9;
-    }
-
-    .dg .c .slider:hover {
-        background: #eee;
-    }
-</style>

@@ -1,0 +1,125 @@
+$vResizeHeight: 10;
+$hResizeWidth: 10;
+$chart-margins-hor: 2%;
+$chart-margins-ver: 2%;
+
+html, body, #content {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.panel {
+    width: 100%;
+}
+
+.top-panel {
+    height: 45% - $vResizeHeight/2;
+}
+
+.bottom-panel {
+    height: 55% - $vResizeHeight/2;
+    background-color: black;
+}
+
+.left-panel {
+    width: 50% - $hResizeWidth/2;
+    height: 100%;
+    float: left;
+}
+
+
+#render-container {
+    width: 100%;
+    height: 100%;
+    background: indianred;
+    overflow: hidden;
+    background: black;
+}
+
+#offset-container {
+    width: 100%;
+    height: 100%;
+}
+
+.chart {
+    margin: 0 $chart-margins-hor $chart-margins-ver $chart-margins-hor;
+    width: 100% - ($chart-margins-hor);
+    height: 100% - (2 * $chart-margins-ver);
+}
+
+.resizer {
+    background-color: gray;
+}
+
+#chartResizer {
+    height: 7.5px;
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    vertical-align: middle;
+    cursor: row-resize;
+}
+
+#renderResizer {
+    width: 7.5px;
+    height: 100%;
+    margin-left: 5px;
+    margin-right: 5px;
+    float: right;
+    cursor: col-resize;
+}
+
+#datGuiContainer {
+    position: fixed;
+    right: 10px;
+    bottom: 0;
+}
+
+.volumeContainer {
+    display: inline-block;
+    margin-bottom: 2px;
+    height: 70%;
+    width: 49%;
+}
+
+.slice {
+    width: 32%;
+    height: 30%;
+    float: left;
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+}
+
+.point {
+    fill: steelblue;
+    stroke: black;
+}
+
+.axis text {
+    fill: black;
+    font-size: 12px;
+    font-family: "arial";
+}
+
+.axis path, .axis line {
+    fill: none;
+    stroke: black;
+}
+
+.axisLabel {
+    fill: black;
+    font-size: 14px;
+    font-family: "arial";
+    font-weight: 600;
+}
+
+.label {
+    text-anchor: middle;
+    font: 14px sans-serif;
+    color: black;
+    fill: black;
+}

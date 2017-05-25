@@ -52,8 +52,8 @@ var addAnnotationForSNP = function(id) {
     var fontSize = 14,
         radius = 10, triangleWidth = 20, offset = 20,
         textInset = { x: 15, y: 15 }, interlineSpacing = 5;
-    var annotationX = pointX - annotationWidth/2 + margins.left, 
-        annotationY = pointY - annotationHeight - offset + margins.top;
+    var annotationX = pointX - annotationWidth/2, 
+        annotationY = pointY - annotationHeight - offset;
 
     var path = '';
     if (annotationY < 0) {
