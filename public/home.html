@@ -27,12 +27,28 @@
             <svg class="chart"></svg>
         </div>
     </div>
-    <div class="resizer" id="chartResizer"></div>
+    <div class="resizer" id="chart-resizer"></div>
     <div class="panel bottom-panel">
         <div class="panel left-panel">
-            <div id="render-container"></div>
+            <div id="render-container">
+                <div class="volume-panel">
+                    <div class="volumeContainer" id="fullVolumeContainer"></div>
+                    <div class="volume-resizer"></div>
+                    <div class="volumeContainer" id="slicedVolumeContainer"></div>
+                </div>
+                <div class="top-slice-resizer"></div>
+                <div class="slice" id="xSliceContainer"></div>
+                <div class="slice-resizer left"></div>
+                <div class="slice" id="ySliceContainer"></div>
+                <div class="slice-resizer right"></div>
+                <div class="slice" id="zSliceContainer"></div>
+            </div>
         </div>
         <div class="resizer" id="rendererResizer"></div>
     </div>
 </div>
 <div id="datGuiContainer"></div>
+
+<script>
+    $('.left-panel').css({ 'width': $('.left-panel').height() });
+</script>

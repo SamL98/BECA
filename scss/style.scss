@@ -7,6 +7,7 @@ html, body, #content {
     width: 100%;
     height: 100%;
     overflow: hidden;
+    cursor: default;
 }
 
 .panel {
@@ -19,7 +20,7 @@ html, body, #content {
 
 .bottom-panel {
     height: 55% - $vResizeHeight/2;
-    background-color: black;
+    background-color: white;
 }
 
 .left-panel {
@@ -32,7 +33,6 @@ html, body, #content {
 #render-container {
     width: 100%;
     height: 100%;
-    background: indianred;
     overflow: hidden;
     background: black;
 }
@@ -52,7 +52,7 @@ html, body, #content {
     background-color: gray;
 }
 
-#chartResizer {
+#chart-resizer {
     height: 7.5px;
     width: 100%;
     margin-top: 5px;
@@ -61,7 +61,7 @@ html, body, #content {
     cursor: row-resize;
 }
 
-#renderResizer {
+#render-resizer {
     width: 7.5px;
     height: 100%;
     margin-left: 5px;
@@ -76,17 +76,53 @@ html, body, #content {
     bottom: 0;
 }
 
+$volume-height: 62%;
+$slice-height: 45%;
+
+@mixin resizerMixin() {
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+    background-color: white;
+}
+
 .volumeContainer {
     display: inline-block;
-    margin-bottom: 2px;
-    height: 70%;
-    width: 49%;
+    height: 100%;
+    width: 48%;
+}
+
+.volume-panel {
+    width: 100%;
+    height: $volume-height;
 }
 
 .slice {
-    width: 32%;
-    height: 30%;
-    float: left;
+    display: inline-block;
+    width: 31.5%;
+    height: $slice-height;
+}
+
+.volume-resizer {
+    display: inline-block;
+    width: 1%;
+    height: $volume-height;
+    @include resizerMixin();
+    cursor: col-resize;
+}
+
+.slice-resizer {
+    display: inline-block;
+    width: 1%;
+    height: $slice-height;
+    @include resizerMixin();
+    cursor: col-resize;
+}
+
+.top-slice-resizer {
+    width: 100%;
+    height: 1%;
+    @include resizerMixin();
+    cursor: row-resize;
 }
 
 canvas {

@@ -49,7 +49,7 @@ var setUpControls = function() {
 
     var minCC = renderFolder.addColor(panel, 'MinColor');
     minCC.onChange(function(value) {
-        renderer.brain.minColor = [value[0]/255.0, value[1]/255.0, value[2]/255.0];
+        renderer.fullBrain.minColor = [value[0]/255.0, value[1]/255.0, value[2]/255.0];
     })
 
     var maxCC = renderFolder.addColor(panel, 'MaxColor');

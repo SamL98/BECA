@@ -78,17 +78,17 @@ function Renderer() {
 };
 
 var prepareForBrainRender = function() {
-    var renderContainer = d3.select('body').select('#render-container');
-    renderContainer.append('div').attr('id', 'fullVolumeContainer')
-        .attr('class', 'volumeContainer');
-    renderContainer.append('div').attr('id', 'slicedVolumeContainer')
-        .attr('class', 'volumeContainer');
-    renderContainer.append('div').attr('id', 'xSliceContainer')
-        .attr('class', 'slice');
-    renderContainer.append('div').attr('id', 'ySliceContainer')
-        .attr('class', 'slice');
-    renderContainer.append('div').attr('id', 'zSliceContainer')
-        .attr('class', 'slice');
+    // var renderContainer = d3.select('#render-container');
+    // renderContainer.append('div').attr('id', 'fullVolumeContainer')
+    //     .attr('class', 'volumeContainer');
+    // renderContainer.append('div').attr('id', 'slicedVolumeContainer')
+    //     .attr('class', 'volumeContainer');
+    // renderContainer.append('div').attr('id', 'xSliceContainer')
+    //     .attr('class', 'slice');
+    // renderContainer.append('div').attr('id', 'ySliceContainer')
+    //     .attr('class', 'slice');
+    // renderContainer.append('div').attr('id', 'zSliceContainer')
+    //     .attr('class', 'slice');
     renderer.renderBrain();
 }
 
