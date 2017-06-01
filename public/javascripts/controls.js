@@ -1,14 +1,22 @@
 var ControlPanel = function() {
-    this.phenotype = '';
+    this.ROI = '';
     this.gene = '';
 
+    var adjacent = function(type) {
+        const roi = parseInt(this.ROI);
+        const chr = parseInt(snps[0].chr);
+        const location = type == "prev" ? d3.min(snps, function(s) { return s.loc; })
+            : d3.max(snps, function(s) { return s.loc; });
+        adjacentGene(type, chr, location, roi, function() {
+            displayChart();
+        });
+    }
+
     this.previous = function() {
-        currGene = Math.max(0, currGene - 1);
-        displayChart(chromosomes[currChr].genes[currGene].name);
+        adjacent("prev");
     };
     this.next = function() {
-        currGene = Math.min(currGene + 1, chromosomes[currChr].genes.length - 1);
-        displayChart(chromosomes[currChr].genes[currGene].name);
+        adjacent("next");
     };
 
     this.MinColor = [1, 0, 0];
@@ -36,11 +44,22 @@ var setUpControls = function() {
     var renderFolder = gui.addFolder('Render');
 
     gui.remember(panel);
-    chartFolder.add(panel, 'phenotype');
+    var pControl = chartFolder.add(panel, 'ROI');
+    gControl.onFinishChange(function(value) {
+        if (gControl.value) {
+            parseGenomicData(gControl.value, parseInt(value), function() {
+                displayChart();
+            });
+        }
+    });
 
     var gControl = chartFolder.add(panel, 'gene');
     gControl.onFinishChange(function(value) {
-        displayChart(value);
+        if (pControl.value) {
+            parseGenomicData(value, parseInt(pControl.value), function() {
+                displayChart();
+            });
+        }
     });
 
     chartFolder.add(panel, 'previous');

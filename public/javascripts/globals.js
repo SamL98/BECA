@@ -1,5 +1,4 @@
-var chromosomes = [];
-var currChr = 0, currGene = 0;
+var snps = [];
 var geneNo;
 var margins = {
     top: 25,

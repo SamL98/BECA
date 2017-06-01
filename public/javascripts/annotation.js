@@ -87,14 +87,14 @@ var addAnnotationForSNP = function(id) {
         .style('font-weight', '600')
         .text(point.attr('snp'));   
 
-    var freqText = annotation.append('text')
+    /*var freqText = annotation.append('text')
         .attr('class', 'label')
         .attr('x', annotationWidth/2).attr('y', (+rsText.attr('dy')) + (+rsText.attr('y')) + fontSize + interlineSpacing)
-        .text('Frequency: ' + point.attr('freq'));
+        .text('Frequency: ' + point.attr('freq'));*/
 
     var pText = annotation.append('text')
         .attr('class', 'label')
-        .attr('x', annotationWidth/2).attr('y', (+freqText.attr('y')) + fontSize + interlineSpacing)
+        .attr('x', annotationWidth/2).attr('y', (+rsText.attr('y')) + fontSize + interlineSpacing)
         .text('p: ' + point.attr('p'));
 
     var bpText = annotation.append('text')
