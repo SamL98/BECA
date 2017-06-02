@@ -12,17 +12,14 @@ var displayChart = function() {
     const chartRect = rectFor('.chart')
     const width = chartRect.width - margins.left - margins.right,
         height = chartRect.height - margins.top - margins.bottom;
-
-    const upperBound = 0, lowerBound = 0;
     const data = snps;
-    const chrNum = parseInt(data[0].chr);
 
     var x = d3.scaleLinear()
         .range([margins.left, width])
-        .domain([d3.min(data, function(d) { return d.loc/1000000; }) - buffer, d3.max(data, function(d) { return d.loc/1000000; }) + buffer]);
+        .domain([lowerBound/1000000, upperBound/1000000]);
     var y = d3.scaleLinear()
         .range([height, margins.top])
-        .domain([0, 1]);
+        .domain([0, 5]);
     //var freqScale = d3.scalePow()
         .range([3, 8])
         .domain([d3.min(data, function(d) { return d.freq; }),
@@ -36,7 +33,7 @@ var displayChart = function() {
         .style('text-anchor', 'middle')
         .attr('x', width/2).attr('y', 0).attr('dy', '1em')
         .style('font-weight', 'bold').style('font-size', '20px').style('font-family', 'Arial')
-        .text(data[0].gene);
+        .text(query);
 
     chart.append('g')
         .attr('class', 'x axis')
@@ -86,11 +83,11 @@ var displayChart = function() {
         .attr('bp', function(d) { return d.loc; })
         .attr('snp', function(d) { return d.name; })
         .attr('p', function(d) { return d.p; })
-        .attr('scaledFreq', function(d) { return freqScale(d.freq); })
+        .attr('scaledFreq', 10)
         .attr('id', function(d, i) { return 'snp' + i; })
         .attr('cx', function(d) { return x(d.loc/1000000); })
-        .attr('cy', function(d) { return y(Math.random()); })
-        .attr('r', function(d) { return freqScale(d.freq); });
+        .attr('cy', function(d) { return y(-Math.log10(d.p)); })
+        .attr('r', 10);
     
     addAnnotationHover();
 

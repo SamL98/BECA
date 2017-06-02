@@ -4,10 +4,8 @@ var ControlPanel = function() {
 
     var adjacent = function(type) {
         const roi = parseInt(this.ROI);
-        const chr = parseInt(snps[0].chr);
-        const location = type == "prev" ? d3.min(snps, function(s) { return s.loc; })
-            : d3.max(snps, function(s) { return s.loc; });
-        adjacentGene(type, chr, location, roi, function() {
+        const chr = currChr;
+        adjacentRange(type, chr, roi, function() {
             displayChart();
         });
     }
@@ -45,9 +43,10 @@ var setUpControls = function() {
 
     gui.remember(panel);
     var pControl = chartFolder.add(panel, 'ROI');
-    gControl.onFinishChange(function(value) {
-        if (gControl.value) {
-            parseGenomicData(gControl.value, parseInt(value), function() {
+    pControl.onFinishChange(function(value) {
+        roi = parseInt(vlaue);
+        if (query != null && query != "") {
+            parseGenomicData(query, roi, function() {
                 displayChart();
             });
         }
@@ -55,8 +54,9 @@ var setUpControls = function() {
 
     var gControl = chartFolder.add(panel, 'gene');
     gControl.onFinishChange(function(value) {
-        if (pControl.value) {
-            parseGenomicData(value, parseInt(pControl.value), function() {
+        query = value;
+        if (roi != null && roi > 0) {
+            parseGenomicData(query, roi, function() {
                 displayChart();
             });
         }

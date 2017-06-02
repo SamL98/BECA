@@ -1,4 +1,9 @@
 var snps = [];
+var lowerBound, upperBound;
+var currChr;
+var roi, query;
+var chrRange = 600000;
+
 var geneNo;
 var margins = {
     top: 25,
