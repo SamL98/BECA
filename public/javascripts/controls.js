@@ -17,8 +17,8 @@ var ControlPanel = function() {
         adjacent("next");
     };
 
-    this.MinColor = [1, 0, 0];
-    this.MaxColor = [0, 0, 1]; 
+    this.color1 = [1, 0, 0];
+    this.color2 = [0, 0, 1]; 
     this.opacity = 0.75;
 
     this.VolumeMode = 'Both';
@@ -44,7 +44,7 @@ var setUpControls = function() {
     gui.remember(panel);
     var pControl = chartFolder.add(panel, 'ROI');
     pControl.onFinishChange(function(value) {
-        roi = parseInt(vlaue);
+        roi = parseInt(value);
         if (query != null && query != "") {
             parseGenomicData(query, roi, function() {
                 displayChart();
@@ -66,12 +66,12 @@ var setUpControls = function() {
     chartFolder.add(panel, 'next');
     chartFolder.open();
 
-    var minCC = renderFolder.addColor(panel, 'MinColor');
+    var minCC = renderFolder.addColor(panel, 'color1');
     minCC.onChange(function(value) {
         renderer.fullBrain.minColor = [value[0]/255.0, value[1]/255.0, value[2]/255.0];
     })
 
-    var maxCC = renderFolder.addColor(panel, 'MaxColor');
+    var maxCC = renderFolder.addColor(panel, 'color2');
     maxCC.onChange(function(value) {
         renderer.fullBrain.maxColor = [value[0]/255.0, value[1]/255.0, value[2]/255.0];
     })
@@ -82,7 +82,7 @@ var setUpControls = function() {
         renderer.slicedBrain.opacity = value;
     })
 
-    var volumeControl = renderFolder.add(panel, 'VolumeMode', ['Full', 'Slices', 'Both', 'None']).listen();
+    var volumeControl = renderFolder.add(panel, 'VolumeMode', ['Full', 'Slices', 'Both']).listen();
     volumeControl.onChange(function(value) {
         if (panel.SliceMode === 'Full' && value !== "None") {
             panel.SliceMode = 'Normal';
@@ -95,11 +95,7 @@ var setUpControls = function() {
                 setToSlicedVolume(true);
                 break;
             case "Both":
-                setToCombinedVolume();
-                break;
-            case "None":
-                panel.SliceMode = 'Full';
-                setToNoneVolume();
+                setToBothVolume();
                 break;
             default: break;
         }
@@ -116,7 +112,6 @@ var setUpControls = function() {
                 break;
             case 'None':
                 setToHideSlicing();
-                panel.VolumeMode = 'Both';
                 break;
             default: break;
         }

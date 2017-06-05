@@ -4,7 +4,7 @@ var addAnnotationHover = function() {
         d3.select('#' + e.target.id)
             .transition().duration(100)
             .style('fill', 'indianred')
-            .attr('r', 10);
+            .attr('r', 7);
     });
 
     $('.point').mouseout(function(e) {
@@ -46,7 +46,7 @@ var annotationPath2 = function(radius, width, height, sWidth, offset) {
 
 var addAnnotationForSNP = function(id) {
     var point = d3.select('#' + id);
-    var annotationWidth = 150, annotationHeight = 100;
+    var annotationWidth = 150, annotationHeight = 75;
     var pointX = (+point.attr('cx')), pointY = (+point.attr('cy'));
 
     var fontSize = 14,

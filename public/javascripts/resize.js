@@ -19,7 +19,7 @@ var addResizeObservers = function() {
         }
     });
 
-    $('.volumeContainer').resizable({
+    $('.vcontainer').resizable({
         handleSelector: '.volume-resizer',
         resizeHeight: false
     });

@@ -7,7 +7,7 @@ var chrRange = 600000;
 var geneNo;
 var margins = {
     top: 25,
-    bottom: 50,
+    bottom: 30,
     left: 50,
     right: 25
 };

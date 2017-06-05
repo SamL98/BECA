@@ -19,11 +19,11 @@ var displayChart = function() {
         .domain([lowerBound/1000000, upperBound/1000000]);
     var y = d3.scaleLinear()
         .range([height, margins.top])
-        .domain([0, 5]);
-    //var freqScale = d3.scalePow()
-        .range([3, 8])
-        .domain([d3.min(data, function(d) { return d.freq; }),
-                d3.max(data, function(d) { return d.freq; })]);
+        .domain([0, d3.max(data, function(d) { return -Math.log10(d.p); }) + 0.2]);
+    // var freqScale = d3.scalePow()
+    //     .range([3, 8])
+    //     .domain([d3.min(data, function(d) { return d.freq; }),
+    //             d3.max(data, function(d) { return d.freq; })]);
 
     var xAxis = d3.axisBottom(x);
     var yAxis = d3.axisLeft(y);
@@ -43,7 +43,7 @@ var displayChart = function() {
             .attr('x', width / 2)
             .attr('dy', '3em')
             .style('text-anchor', 'middle')
-            .text('Position on Chr ' + chrNum + ' (bp * 10^6)');
+            .text('Position on Chr ' + currChr + ' (bp * 10^6)');
 
     chart.append('g')
         .attr('class', 'y axis')
@@ -83,11 +83,11 @@ var displayChart = function() {
         .attr('bp', function(d) { return d.loc; })
         .attr('snp', function(d) { return d.name; })
         .attr('p', function(d) { return d.p; })
-        .attr('scaledFreq', 10)
+        .attr('scaledFreq', 3.5)
         .attr('id', function(d, i) { return 'snp' + i; })
         .attr('cx', function(d) { return x(d.loc/1000000); })
         .attr('cy', function(d) { return y(-Math.log10(d.p)); })
-        .attr('r', 10);
+        .attr('r', 3.5);
     
     addAnnotationHover();
 

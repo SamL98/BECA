@@ -1,20 +1,26 @@
+displayingVolume = true;
+displayingFull = true;
+displayingCombined = true;
+displayingSlices = true;
+displayingFullSlices = false;
+
 function Renderer() {
     this.renderBrain = function() {
         var r1 = new X.renderer3D();
-        r1.container = 'fullVolumeContainer';
+        r1.container = 'full-vcontainer';
         r1.init();
 
         var r2 = new X.renderer3D();
-        r2.container = 'slicedVolumeContainer';
+        r2.container = 'sliced-vcontainer';
         r2.init();
 
         var slices = new X.volume();
-        slices.file = 'http://localhost:8080/gray_matter.nii';
-        slices.labelmap.file = 'http://localhost:8080/converted.nii';
-        slices.labelmap.colortable.file = 'http://localhost:8080/colortable.txt';
+        slices.file = 'http://localhost:8080/file/gray_matter.nii';
+        slices.labelmap.file = 'http://localhost:8080/file/converted.nii';
+        slices.labelmap.colortable.file = 'http://localhost:8080/file/colortable.txt';
 
         var volume = new X.volume();
-        volume.file = 'http://localhost:8080/gray_matter.nii';
+        volume.file = 'http://localhost:8080/file/gray_matter.nii';
 
         var sliceX = new X.renderer2D();
         sliceX.container = 'xSliceContainer';
@@ -38,10 +44,6 @@ function Renderer() {
         this.slicedRenderer = r2;
         this.fullBrain = volume;
         this.slicedBrain = slices;
-
-        this.displayingFull = true;
-        this.displayingCombined = false;
-        this.displayingSlices = true;
 
         r1.onShowtime = function() {
             r1.camera.position = [0, 0, 300];
@@ -79,10 +81,10 @@ function Renderer() {
 
 var prepareForBrainRender = function() {
     // var renderContainer = d3.select('#render-container');
-    // renderContainer.append('div').attr('id', 'fullVolumeContainer')
-    //     .attr('class', 'volumeContainer');
-    // renderContainer.append('div').attr('id', 'slicedVolumeContainer')
-    //     .attr('class', 'volumeContainer');
+    // renderContainer.append('div').attr('id', 'full-vcontainer')
+    //     .attr('class', 'vcontainer');
+    // renderContainer.append('div').attr('id', 'sliced-vcontainer')
+    //     .attr('class', 'vcontainer');
     // renderContainer.append('div').attr('id', 'xSliceContainer')
     //     .attr('class', 'slice');
     // renderContainer.append('div').attr('id', 'ySliceContainer')
@@ -92,88 +94,74 @@ var prepareForBrainRender = function() {
     renderer.renderBrain();
 }
 
-var setToCombinedVolume = function() {
+var setToBothVolume = function() {
     setToFullVolume(false);
     setToSlicedVolume(false);
 }
 
-var setToNoneVolume = function() {
-    if (renderer.displayingFull) {
-        removeFullVolume(true);
-    }
-    if (renderer.displayingCombined) {
-        removeSlicedVolume(true);
-    }
+var toggleNoneVolume = function(none) {
+    const destHeight = none ? '0' : '62%';
+    d3.select('.volume-panel').transition().duration(250)
+        .style('height', destHeight);
+    displayingVolume = !none;
 }
 
 var setToFullVolume = function(only) {
-    if (!renderer.displayingFull) {
+    if (!displayingVolume) {
+        toggleNoneVolume(false);
+        addSlicing();
+    }
+    if (!displayingFull) {
         addFullVolume();
     }
     if (only) {
-        removeSlicedVolume(false);
+        removeSlicedVolume();
     }
 }
 
 var setToSlicedVolume = function(only) {
-    if (!renderer.displayingCombined) {
+    if (!displayingVolume) {
+        toggleNoneVolume(false);
+        addSlicing();
+    }
+    if (!displayingCombined) {
         addSlicedVolume();
     }
     if (only) {
-        removeFullVolume(false);
+        removeFullVolume();
     }
 }
 
 var addSlicedVolume = function() {
-    var renderContainer = d3.select('#render-container');
-    var fullContainer = renderContainer.select('#fullVolumeContainer');
-    var slicedContainer = renderContainer.select('#slicedVolumeContainer')
-        .attr('class', 'volumeContainer')
-        .attr('id', 'slicedVolumeContainer');
-
-    renderer.displayingCombined = true;
+    d3.select('#sliced-vcontainer').transition().duration(250)
+        .style('width', '48%');
+    d3.select('#full-vcontainer').transition().duration(250)
+        .style('width', '48%');
+    displayingCombined = true;
 }
 
 var addFullVolume = function() {
-    var renderContainer = d3.select('#render-container');
-    var slicedContainer = renderContainer.select('#slicedVolumeContainer');
-    var fullContainer = renderContainer.select('#fullVolumeContainer')
-        .attr('class', 'volumeContainer')
-        .attr('id', 'fullVolumeContainer')
-        .style('border-bottom', '2px solid white')
-        .style('border-right', '2px solid white');
-
-    renderer.displayingFull = true;
+    d3.select('#full-vcontainer').transition().duration(250)
+        .style('width', '48%');
+    d3.select('#sliced-vcontainer').transition().duration(250)
+        .style('width', '48%');
+    displayingFull = true;
 }
 
-var removeSlicedVolume = function(none) {
-    var renderContainer = d3.select('#render-container');
-    var fullContainer = renderContainer.select('#fullVolumeContainer');
-    var slicedContainer = renderContainer.select('#slicedVolumeContainer');
-
-    renderer.displayingCombined = false;
-    if (none) {
-        fullContainer.transition().duration(250)
-            .style('width', 0);
-        showFullSlicing();
-    } else if (renderer.displayingSlices) {
-        addSlicing();
-    }
+var removeSlicedVolume = function() {
+    d3.select('#full-vcontainer').transition().duration(250)
+        .style('width', '98%');
+    d3.select('#sliced-vcontainer').transition().duration(250)
+        .style('width', '0');
+    displayingCombined = false;
 }
 
-var removeFullVolume = function(none) {
-    var renderContainer = d3.select('#render-container');
-    var fullContainer = renderContainer.select('#fullVolumeContainer');
-    var slicedContainer = renderContainer.select('#slicedVolumeContainer');
-
-    renderer.displayingFull = false;
-    if (none) {
-        slicedContainer.transition().duration(250)
-            .style('width', 0);
-        showFullSlicing();
-    } else if (renderer.displayingSlices) {
-        addSlicing();
-    }
+var removeFullVolume = function() {
+    d3.select('#full-vcontainer').transition().duration(250)
+        .style('width', '0');
+    d3.select('#sliced-vcontainer').transition().duration(250)
+        .style('width', '98%');
+    displayingFull = false;
 }
 
 var setToShowSlicing = function() {
@@ -185,13 +173,24 @@ var setToHideSlicing = function() {
 }
 
 var addSlicing = function() {
-    renderer.displayingSlices = true;
+    toggleNoneVolume(false);
+    d3.selectAll('.slice').transition().duration(250)
+        .style('height', '45%');
+    displayingSlices = true;
 }
 
 var removeSlicing = function() {
-    renderer.displayingSlices = false;
+    d3.selectAll('.slice').transition().duration(250)
+        .style('height', 0);
+    toggleNoneVolume(false);
+    d3.select('.volume-panel').transition().duration(250)
+        .style('height', '100%');
+    displayingSlices = false;
 }
 
 var showFullSlicing = function() {
-    renderer.displayingSlices = true;
+    toggleNoneVolume(true);
+    d3.selectAll('.slice').transition().duration(250)
+        .style('height', '100%');
+    displayingSlices = true;
 }
