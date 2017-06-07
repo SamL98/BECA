@@ -4,9 +4,15 @@ var removeExistingCharts = function() {
 }
 
 var displayChart = function() {
+    displayGrid();
     removeExistingCharts();
+    
     var oc = d3.select('.top-panel').append('div').attr('id', 'offset-container');
-    var chart = oc.append('svg').attr('class', 'chart').style('fill', 'white');
+    var chart = oc.append('svg').attr('class', 'chart').style('fill', 'white')
+        .call(d3.drag()
+            .on('start', dragStart)
+            .on('drag', dragChange)
+            .on('end', dragEnd));
 
     const buffer = 0.005;
     const chartRect = rectFor('.chart')
@@ -19,7 +25,7 @@ var displayChart = function() {
         .domain([lowerBound/1000000, upperBound/1000000]);
     var y = d3.scaleLinear()
         .range([height, margins.top])
-        .domain([0, d3.max(data, function(d) { return -Math.log10(d.p); }) + 0.2]);
+        .domain([0, d3.max(data, function(d) { return -Math.log10(d.pvalues[roi - 1]); }) + 0.2]);
     // var freqScale = d3.scalePow()
     //     .range([3, 8])
     //     .domain([d3.min(data, function(d) { return d.freq; }),
@@ -82,18 +88,17 @@ var displayChart = function() {
         .attr('class', 'point')
         .attr('bp', function(d) { return d.loc; })
         .attr('snp', function(d) { return d.name; })
-        .attr('p', function(d) { return d.p; })
+        .attr('p', function(d) { return d.pvalues[roi - 1]; })
         .attr('scaledFreq', 3.5)
         .attr('id', function(d, i) { return 'snp' + i; })
         .attr('cx', function(d) { return x(d.loc/1000000); })
-        .attr('cy', function(d) { return y(-Math.log10(d.p)); })
+        .attr('cy', function(d) { return y(-Math.log10(d.pvalues[roi - 1])); })
         .attr('r', 3.5);
     
     addAnnotationHover();
 
     if (firstChart) {
         firstChart = false;
-        prepareForBrainRender();
-        addResizeObservers();
+        renderBrain();
     }
 }

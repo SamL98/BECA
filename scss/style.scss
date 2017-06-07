@@ -3,6 +3,9 @@ $hResizeWidth: 10;
 $chart-margins-hor: 2%;
 $chart-margins-ver: 2%;
 
+$grid-margins-hor: 4%;
+$grid-margins-ver: 5%;
+
 html, body, #content {
     width: 100%;
     height: 100%;
@@ -15,11 +18,11 @@ html, body, #content {
 }
 
 .top-panel {
-    height: 55% - $vResizeHeight/2;
+    height: 40% - $vResizeHeight/2;
 }
 
 .bottom-panel {
-    height: 45% - $vResizeHeight/2;
+    height: 60% - $vResizeHeight/2;
     background-color: white;
 }
 
@@ -29,6 +32,16 @@ html, body, #content {
     float: left;
 }
 
+.right-panel {
+    width: 50% - $hResizeWidth/2;
+    height: 100%;
+    float: right;
+}
+
+#grid-container {
+    margin: $grid-margins-ver $grid-margins-hor $grid-margins-ver $grid-margins-hor;
+    overflow: scroll !important;
+}
 
 #render-container {
     width: 100%;
@@ -66,8 +79,8 @@ html, body, #content {
     height: 100%;
     margin-left: 5px;
     margin-right: 5px;
-    float: right;
     cursor: col-resize;
+    display: inline-block;
 }
 
 #datGuiContainer {
@@ -135,4 +148,11 @@ canvas {
     font: 14px sans-serif;
     color: black;
     fill: black;
+}
+
+.grid-label {
+    text-align: center;
+    color: black;
+    font: 14 px helvetica;
+    font-weight: 600;
 }

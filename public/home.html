@@ -3,24 +3,26 @@
 
 <head>
     <link rel="stylesheet" type="text/css" href="stylesheets/style.css"></link>
-    <link rel="stylesheet" type="text/css" href="stylesheets/dg.css"></link>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="/javascripts/resizable.js"></script>
     <script src="/javascripts/dat.gui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="stylesheets/dg.css"></link>
     <script src="//d3js.org/d3.v4.min.js"></script>
     <script src="//get.goXTK.com/xtk.js"></script>
     <script src="/javascripts/models.js"></script>
+    <script src="/javascripts/converter.js"></script>
 </head>
 
 <script src="/javascripts/3drenderer.js"></script>
 <script src="/javascripts/globals.js"></script>
 <script src="/javascripts/parser.js"></script>
 <script src="/javascripts/annotation.js"></script>
+<script src="/javascripts/zoom.js"></script>
 <script src="/javascripts/chart.js"></script>
+<script src="/javascripts/grid.js"></script>
 <script src="/javascripts/controls.js"></script>
 <script src="/javascripts/resize.js"></script>
 <script src="/javascripts/home.js"></script>
-<script src="/javascripts/zoom.js"></script>
 
 <div id="content">
     <div class="panel top-panel">
@@ -41,11 +43,16 @@
                 <div class="slice" id="zSliceContainer"></div>
             </div>
         </div>
-        <div class="resizer" id="rendererResizer"></div>
+        <div class="resizer" id="render-resizer"></div>
+        <div class="panel right-panel">
+            <div id="grid-container"></div>
+        </div>
     </div>
 </div>
-<div id="datGuiContainer"></div>
+<!--<div id="datGuiContainer"></div>-->
 
 <script>
     $('.left-panel').css({ 'width': $('.left-panel').height() });
+    const rect = rectFor('#render-resizer');
+    $('.right-panel').css({'width': (+$('.bottom-panel').width() - rect.right) });
 </script>

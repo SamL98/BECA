@@ -1,98 +1,71 @@
-displayingVolume = true;
-displayingFull = true;
-displayingCombined = true;
-displayingSlices = true;
-displayingFullSlices = false;
+var displayingVolume = true, displayingFull = true,
+    displayingCombined = true, displayingSlices = true,
+    displayingFullSlices = false;
+var r1, r2, volume, slices;
 
-function Renderer() {
-    this.renderBrain = function() {
-        var r1 = new X.renderer3D();
-        r1.container = 'full-vcontainer';
-        r1.init();
+var renderBrain = function() {
+    r1.container = 'full-vcontainer';
+    r1.init();
 
-        var r2 = new X.renderer3D();
-        r2.container = 'sliced-vcontainer';
-        r2.init();
+    r2.container = 'sliced-vcontainer';
+    r2.init();
 
-        var slices = new X.volume();
-        slices.file = 'http://localhost:8080/file/gray_matter.nii';
-        slices.labelmap.file = 'http://localhost:8080/file/converted.nii';
-        slices.labelmap.colortable.file = 'http://localhost:8080/file/colortable.txt';
+    slices.file = 'http://localhost:8080/file/gray_matter.nii';
+    slices.labelmap.file = 'http://localhost:8080/file/converted.nii';
+    slices.labelmap.colortable.file = 'http://localhost:8080/file/colortable.txt';
 
-        var volume = new X.volume();
-        volume.file = 'http://localhost:8080/file/gray_matter.nii';
+    volume.file = 'http://localhost:8080/file/gray_matter.nii';
 
-        var sliceX = new X.renderer2D();
-        sliceX.container = 'xSliceContainer';
-        sliceX.orientation = 'X';
-        sliceX.init();
+    var sliceX = new X.renderer2D();
+    sliceX.container = 'xSliceContainer';
+    sliceX.orientation = 'X';
+    sliceX.init();
 
-        var sliceY = new X.renderer2D();
-        sliceY.container = 'ySliceContainer';
-        sliceY.orientation = 'Y';
-        sliceY.init();
+    var sliceY = new X.renderer2D();
+    sliceY.container = 'ySliceContainer';
+    sliceY.orientation = 'Y';
+    sliceY.init();
 
-        var sliceZ = new X.renderer2D();
-        sliceZ.container = 'zSliceContainer';
-        sliceZ.orientation = 'Z';
-        sliceZ.init();
+    var sliceZ = new X.renderer2D();
+    sliceZ.container = 'zSliceContainer';
+    sliceZ.orientation = 'Z';
+    sliceZ.init();
 
-        r1.add(volume);
-        r1.render();
+    r1.add(volume);
+    r1.render();
 
-        this.fullRenderer = r1;
-        this.slicedRenderer = r2;
-        this.fullBrain = volume;
-        this.slicedBrain = slices;
+    r1.onShowtime = function() {
+        r1.camera.position = [0, 0, 300];
 
-        r1.onShowtime = function() {
-            r1.camera.position = [0, 0, 300];
+        volume.volumeRendering = true;
+        volume.opacity = 0.75;
+        volume.lowerThreshold = 0.001;
+        volume.windowLower = 0.001;
+        volume.windowHigh = 1;
+        volume.minColor = [1, 1, 1];
+        volume.maxColor = [0, 0, 0];
 
-            volume.volumeRendering = true;
-            volume.opacity = 0.75;
-            volume.lowerThreshold = 0.001;
-            volume.windowLower = 0.001;
-            volume.windowHigh = 1;
-            volume.minColor = [1, 1, 1];
-            volume.maxColor = [0, 0, 0];
+        r2.add(slices);
+        r2.render();
+    };
 
-            r2.add(slices);
-            r2.render();
-        };
+    r2.onShowtime = function() {
+        r2.camera.position = [0, 0, 300];
 
-        r2.onShowtime = function() {
-            r2.camera.position = [0, 0, 300];
+        sliceX.add(slices);
+        sliceX.render();
+    }
 
-            sliceX.add(slices);
-            sliceX.render();
-        }
+    sliceX.onShowtime = function() {
+        sliceY.add(slices);
+        sliceY.render();
+    }
 
-        sliceX.onShowtime = function() {
-            sliceY.add(slices);
-            sliceY.render();
-        }
-
-        sliceY.onShowtime = function() {
-            sliceZ.add(slices);
-            sliceZ.render();
-        }
+    sliceY.onShowtime = function() {
+        sliceZ.add(slices);
+        sliceZ.render();
     }
 };
-
-var prepareForBrainRender = function() {
-    // var renderContainer = d3.select('#render-container');
-    // renderContainer.append('div').attr('id', 'full-vcontainer')
-    //     .attr('class', 'vcontainer');
-    // renderContainer.append('div').attr('id', 'sliced-vcontainer')
-    //     .attr('class', 'vcontainer');
-    // renderContainer.append('div').attr('id', 'xSliceContainer')
-    //     .attr('class', 'slice');
-    // renderContainer.append('div').attr('id', 'ySliceContainer')
-    //     .attr('class', 'slice');
-    // renderContainer.append('div').attr('id', 'zSliceContainer')
-    //     .attr('class', 'slice');
-    renderer.renderBrain();
-}
 
 var setToBothVolume = function() {
     setToFullVolume(false);

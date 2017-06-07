@@ -1,31 +1,28 @@
 var addResizeObservers = function() {
-    $('#offset-container').resizable({
+    $('.top-panel').resizable({
         handleSelector: '#chart-resizer',
         resizeWidth: false,
         onDrag: function (e, $el, newWidth, newHeight, opt) {
-            if (newHeight < 200 || newHeight > 500) {
+            if (newHeight < 200 || newHeight > 750) {
                 return false;
             }
+
+            $('.bottom-panel').css({'height': (+$('#content').height() - (+$('.top-panel').height())) });
+            $('.left-panel').css({'width': $('.bottom-panel').height() });
+            $('.right-panel').css({'width': (rectFor('.bottom-panel').width - rectFor('#render-resizer').right) });
         }
     });
 
-    $('#render-container').resizable({
-        handleSelector: '#rendererResizer',
+    $('.left-panel').resizable({
+        handleSelector: '#render-resizer',
         resizeHeight: false,
         onDrag: function (e, $el, newWidth, newHeight, opt) {
-            if (newWidth < 50 || newWidth > 1000) {
+            if (newWidth < 100 || newWidth > 750) {
                 return false;
             }
+
+            $('.right-panel').css({'width': (rectFor('.bottom-panel').width - rectFor('#render-resizer').right) });
+            d3.select('.chart').attr('viewBox', '0 0 ' + ($('.right-panel').width() - gridMargins.left + ' ' + ($('.right-panel').height() - gridMargins.top)))
         }
-    });
-
-    $('.vcontainer').resizable({
-        handleSelector: '.volume-resizer',
-        resizeHeight: false
-    });
-
-    $('.volume-panel').resizable({
-        handleSelector: '.top-slice-resizer',
-        resizeWidth: false
     });
 }

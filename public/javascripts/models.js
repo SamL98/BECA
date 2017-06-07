@@ -1,26 +1,6 @@
-function SNP(name, loc, p, freq) {
+function SNP(name, loc, ps, freq) {
     this.name = name;
     this.loc = loc;
-    this.p = p;
+    this.pvalues = ps;
     this.freq = freq;
-};
-
-function Gene(name, start, end) {
-    this.name = name;
-    this.start = start;
-    this.end = end;
-    this.snps = [];
-};
-
-function Chromosome(number) {
-    this.number = number;
-    this.genes = [];
-    this.addGene = function(gene) {
-        var i = 0;
-        while (i < this.genes.length && gene.end < this.genes[i].start) {
-            i++;
-        }
-        this.genes.splice(i, 0, gene);
-        return i;
-    };
 };

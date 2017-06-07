@@ -1,11 +1,11 @@
 var ControlPanel = function() {
+    //this.DisplayMode = 'All';
+
     this.ROI = '';
     this.gene = '';
 
     var adjacent = function(type) {
-        const roi = parseInt(this.ROI);
-        const chr = currChr;
-        adjacentRange(type, chr, roi, function() {
+        adjacentRange(type, currChr, roi, function() {
             displayChart();
         });
     }
@@ -25,23 +25,50 @@ var ControlPanel = function() {
     this.SliceMode = 'Normal';
 
     this.reset = function() {
-        renderer.fullRenderer.resetBoundingBox();
-        renderer.fullRenderer.resetViewAndRender();
+        fullRenderer.resetBoundingBox();
+        fullRenderer.resetViewAndRender();
 
-        renderer.slicedRenderer.resetBoundingBox();
-        renderer.slicedRenderer.resetViewAndRender();
+        slicedRenderer.resetBoundingBox();
+        slicedRenderer.resetViewAndRender();
     };
 };
 
 var setUpControls = function() {
     var panel = new ControlPanel();
-    var gui = new dat.GUI({ autoPlace: false });
-    document.getElementById('datGuiContainer').appendChild(gui.domElement);
+    var gui = new dat.GUI({ autoPlace: true });
+    //document.getElementById('datGuiContainer').appendChild(gui.domElement);
 
+    //var displayFolder = gui.addFolder('Display');
     var chartFolder = gui.addFolder('Chart');
     var renderFolder = gui.addFolder('Render');
 
     gui.remember(panel);
+
+    /*var displayControl = displayFolder.add(panel, 'DisplayMode', ['All', 'Chart and Grid', 'Grid and Brain', 'Chart', 'Grid', 'Brain']).listen();
+    displayControl.onChange(function(value) {
+        switch (value) {
+            case 'All':
+                displayAll();
+                break;
+            case 'Chart and Grid':
+                displayChartAndGrid();
+                break;
+            case 'Grid and Brain':
+                displayGridAndBrain();
+                break;
+            case 'Chart':
+                displayChart();
+                break;
+            case 'Grid':
+                displayGrid();
+                break;
+            case 'Brain':
+                displayBrain();
+                break;
+            default: break;
+        }
+    });*/
+
     var pControl = chartFolder.add(panel, 'ROI');
     pControl.onFinishChange(function(value) {
         roi = parseInt(value);
@@ -68,18 +95,18 @@ var setUpControls = function() {
 
     var minCC = renderFolder.addColor(panel, 'color1');
     minCC.onChange(function(value) {
-        renderer.fullBrain.minColor = [value[0]/255.0, value[1]/255.0, value[2]/255.0];
+        volume.minColor = [value[0]/255.0, value[1]/255.0, value[2]/255.0];
     })
 
     var maxCC = renderFolder.addColor(panel, 'color2');
     maxCC.onChange(function(value) {
-        renderer.fullBrain.maxColor = [value[0]/255.0, value[1]/255.0, value[2]/255.0];
+        volume.maxColor = [value[0]/255.0, value[1]/255.0, value[2]/255.0];
     })
 
     var opacityControl = renderFolder.add(panel, 'opacity', 0.1, 1.0).step(0.05);
     opacityControl.onChange(function(value) {
-        renderer.fullBrain.opacity = value;
-        renderer.slicedBrain.opacity = value;
+        volume.opacity = value;
+        slices.opacity = value;
     })
 
     var volumeControl = renderFolder.add(panel, 'VolumeMode', ['Full', 'Slices', 'Both']).listen();

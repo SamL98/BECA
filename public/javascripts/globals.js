@@ -11,9 +11,14 @@ var margins = {
     left: 50,
     right: 25
 };
+var gridMargins = {
+    left: 25,
+    right: 25,
+    top: 25,
+    bottom: 25
+};
 var firstChart = true;
 var rectFor = function(selector) {
     return d3.select(selector).node().getBoundingClientRect();
 };
 var originalHeight = 0;
-var renderer = new Renderer();

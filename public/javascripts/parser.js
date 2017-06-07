@@ -32,24 +32,25 @@ var adjacentRange = function(type, chr, roi, callback) {
         start = upperBound;
         end = start + chrRange;
     }
-    var urlString = 'http://localhost:8080/query-database?chr=' + currChr + '&min=' + start + '&max=' + end;
+    query = "chr" + chr + ":" + start + "-" + end;
+    var urlString = 'http://localhost:8080/query-database?roi=' + roi + '&chr=' + currChr + '&min=' + start + '&max=' + end;
     $.get(urlString, function(data) {
         formatData(data['results'], callback);
     });
 }
 
 var formatData = function(data, callback) {
-    console.log(data)
     snps = [];
     for (var i = 1; i < data.length; i++) {
-        snps.push(new SNP(data[i][0], data[i][1], data[i][2], Math.random()))
+        const name = data[i][0], loc = data[i][1];
+        data[i].shift(); data[i].shift();
+        snps.push(new SNP(name, loc, data[i], Math.random()));
     }
 
     currChr = parseInt(data[0].chr);
     lowerBound = parseInt(data[0].start);
     upperBound = parseInt(data[0].end);
-    console.log(currChr, lowerBound, upperBound)
-    chrRange = upperBound - lowerBound
+    chrRange = upperBound - lowerBound;
 
     callback();
 }
