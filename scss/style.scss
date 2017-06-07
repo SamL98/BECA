@@ -36,11 +36,14 @@ html, body, #content {
     width: 50% - $hResizeWidth/2;
     height: 100%;
     float: right;
+    background: black;
+    overflow: scroll;
 }
 
 #grid-container {
     margin: $grid-margins-ver $grid-margins-hor $grid-margins-ver $grid-margins-hor;
     overflow: scroll !important;
+    background: black;
 }
 
 #render-container {
@@ -78,7 +81,6 @@ html, body, #content {
     width: 7.5px;
     height: 100%;
     margin-left: 5px;
-    margin-right: 5px;
     cursor: col-resize;
     display: inline-block;
 }
@@ -155,4 +157,33 @@ canvas {
     color: black;
     font: 14 px helvetica;
     font-weight: 600;
+}
+
+$base-line-height: 24px;
+$white: rgb(255,255,255);
+$off-white: rgba($white, 0.2);
+$spin-duration: 1s;
+$pulse-duration: 750ms;
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loader {
+    opacity: 0.75;
+    border-radius: 50%;
+    width: $base-line-height;
+    height: $base-line-height;
+    border: .25rem solid $off-white;
+    border-top-color: $white;
+    animation: spin $spin-duration infinite linear;
+  &--double {
+    border-style: double;
+    border-width: .5rem;
+  }
 }

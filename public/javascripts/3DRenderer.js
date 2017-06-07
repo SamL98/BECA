@@ -1,7 +1,7 @@
 var displayingVolume = true, displayingFull = true,
     displayingCombined = true, displayingSlices = true,
     displayingFullSlices = false;
-var r1, r2, volume, slices;
+var r1, r2, volume, slices, sliceX, sliceY, sliceZ;
 
 var renderBrain = function() {
     r1.container = 'full-vcontainer';
@@ -16,17 +16,17 @@ var renderBrain = function() {
 
     volume.file = 'http://localhost:8080/file/gray_matter.nii';
 
-    var sliceX = new X.renderer2D();
+    sliceX = new X.renderer2D();
     sliceX.container = 'xSliceContainer';
     sliceX.orientation = 'X';
     sliceX.init();
 
-    var sliceY = new X.renderer2D();
+    sliceY = new X.renderer2D();
     sliceY.container = 'ySliceContainer';
     sliceY.orientation = 'Y';
     sliceY.init();
 
-    var sliceZ = new X.renderer2D();
+    sliceZ = new X.renderer2D();
     sliceZ.container = 'zSliceContainer';
     sliceZ.orientation = 'Z';
     sliceZ.init();

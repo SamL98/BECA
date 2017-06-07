@@ -25,11 +25,11 @@ var ControlPanel = function() {
     this.SliceMode = 'Normal';
 
     this.reset = function() {
-        fullRenderer.resetBoundingBox();
-        fullRenderer.resetViewAndRender();
+        r1.resetBoundingBox();
+        r1.resetViewAndRender();
 
-        slicedRenderer.resetBoundingBox();
-        slicedRenderer.resetViewAndRender();
+        r2.resetBoundingBox();
+        r2.resetViewAndRender();
     };
 };
 

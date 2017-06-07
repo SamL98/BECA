@@ -1,5 +1,6 @@
 var parseGenomicData = function(query, roi, callback) {
-    var urlString = 'http://localhost:8080/query-database?roi=' + roi;
+    addLoader();
+    var urlString = 'http://localhost:8000/query-database?roi=' + roi;
     if (/(rs)\d+/.test(query)) {
         // Assume query for SNP
         urlString += '&snp=' + query;
@@ -24,6 +25,7 @@ var parseGenomicData = function(query, roi, callback) {
 }
 
 var adjacentRange = function(type, chr, roi, callback) {
+    addLoader();
     var start, end;
     if (type == 'prev') {
         end = lowerBound;
@@ -33,7 +35,7 @@ var adjacentRange = function(type, chr, roi, callback) {
         end = start + chrRange;
     }
     query = "chr" + chr + ":" + start + "-" + end;
-    var urlString = 'http://localhost:8080/query-database?roi=' + roi + '&chr=' + currChr + '&min=' + start + '&max=' + end;
+    var urlString = 'http://localhost:8000/query-database?roi=' + roi + '&chr=' + currChr + '&min=' + start + '&max=' + end;
     $.get(urlString, function(data) {
         formatData(data['results'], callback);
     });

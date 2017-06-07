@@ -18,7 +18,14 @@ var displayChart = function() {
     const chartRect = rectFor('.chart')
     const width = chartRect.width - margins.left - margins.right,
         height = chartRect.height - margins.top - margins.bottom;
-    const data = snps;
+
+    var data = [];
+    for (var i = 0; i < snps.length; i++) {
+        var snp = snps[i];
+        if (snp.loc >= lowerBound || snp.loc <= upperBound) {
+            data.push(snp);
+        }
+    }
 
     var x = d3.scaleLinear()
         .range([margins.left, width])
@@ -26,10 +33,6 @@ var displayChart = function() {
     var y = d3.scaleLinear()
         .range([height, margins.top])
         .domain([0, d3.max(data, function(d) { return -Math.log10(d.pvalues[roi - 1]); }) + 0.2]);
-    // var freqScale = d3.scalePow()
-    //     .range([3, 8])
-    //     .domain([d3.min(data, function(d) { return d.freq; }),
-    //             d3.max(data, function(d) { return d.freq; })]);
 
     var xAxis = d3.axisBottom(x);
     var yAxis = d3.axisLeft(y);
@@ -61,27 +64,6 @@ var displayChart = function() {
             .attr('x', -height / 2)
             .style('text-anchor', 'middle')
             .text('-log10(p)');
-`   `
-    /*var genes = chromosomes[currChr].genes;
-    var geneBuffer = 300;
-    var geneX = d3.scaleLinear().range([width - geneBuffer, geneBuffer])
-        .domain([d3.min(genes, function(g) { return g.start; }),
-                d3.max(genes, function(g) { return g.start; })]);
-    var geneWidth = d3.scaleLinear().range([4, 12])
-        .domain([d3.min(genes, function(g) { return g.end - g.start; }),
-                d3.max(genes, function(g) { return g.end - g.start; })]);
-
-    chart.selectAll('#chrDisplay')
-        .data(genes).enter().append('rect')
-        .attr('id', 'chrDisplay')
-        .attr('transform', function(g) { return 'translate(' + geneX(g.start) + ',' + (chartRect.bottom - margins.bottom/2) + ')'; })
-            .attr('height', margins.bottom/3)
-            .attr('width', function(g) { return geneWidth(g.end - g.start); })
-            .attr('rx', 3).attr('ry', 3)
-            .style('stroke', 'black').style('stroke-width', 2)
-            .style('fill', function(g) {
-                return (g.name === gene) ? "steelblue" : "indianred";
-            });*/
 
     chart.selectAll('.point').data(data)
         .enter().append('circle')
@@ -101,4 +83,6 @@ var displayChart = function() {
         firstChart = false;
         renderBrain();
     }
+
+    removeLoader();
 }
