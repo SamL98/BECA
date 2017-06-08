@@ -80,14 +80,16 @@ var removeAnnotationForSNP = function(id) {
 }
 
 var addAnnotationForPValue = function(id) {
-    var voxel = d3.select('#' + id);
-    const x = parseInt(voxel.attr('x'));
-    const y = parseInt(voxel.attr('y'));
-    const annoWidth = 100, annoHeight = 75;
+    const voxel = d3.select('#' + id);
+    const rect = rectFor('#' + id);
+    const gridRect= rectFor('.grid');
+    const x = (rect.left + rect.right)/2 - gridRect.left;
+    const y = (rect.top + rect.bottom)/2 - gridRect.top;
+    const annoWidth = 85, annoHeight = 60;
 
     var fontSize = 14, radius = 10,
         triangleWidth = 20, offset = 20,
-        textInset = { x: 15, y: 15 }, interlineSpacing = 5;
+        textInset = { x: 15, y: 7.5 }, interlineSpacing = 5;
 
     const annoX = x - annoWidth/2;
     var annoY = y - annoHeight - offset;
@@ -95,6 +97,7 @@ var addAnnotationForPValue = function(id) {
         offset, radius, annoWidth, annoHeight, triangleWidth);
     annoY = result[1];
     offset = result[2];
+    textInset.y = result[4];
     const path = result[0];
 
     var annotation = annotationFor('p', '.grid', id, annoX, annoY, annoWidth, annoHeight);
@@ -103,7 +106,7 @@ var addAnnotationForPValue = function(id) {
     var rsText = appendLabelTo(annotation, annoWidth/2,
         textInset.y, 2, voxel.attr('snp')).style('font-weight', '600');
     var pText = appendLabelTo(annotation, annoWidth/2,
-        (+rsText.attr('y')) + fontSize + interlineSpacing, 0, 'p: ' + voxel.attr('y'));
+        (+rsText.attr('y')) + fontSize + interlineSpacing, 0, 'p: ' + voxel.attr('p'));
     var roiText = appendLabelTo(annotation, annoWidth/2,
         (+pText.attr('y')) + fontSize + interlineSpacing, 0, 'ROI: ' + voxel.attr('roi'));
 }
@@ -126,7 +129,7 @@ var pathFor = function(x, y, annoX, annoY, textInsetX, textInsetY, offset, radiu
         path = annotationPath1(radius, annoWidth, annoHeight,
             trWidth, offset);
     }
-    return [path, annoY, offset, upPath];
+    return [path, annoY, offset, upPath, textInsetY];
 }
 
 var annotationFor = function(type, node, id, x, y, width, height) {

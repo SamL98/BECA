@@ -37,13 +37,14 @@ var dragEnd = function(d) {
 
         const lastDrag = d3.event.x;
         const fwdDrag = lastDrag >= zoomStart;
-        lowerBound = fwdDrag ? bpScale(zoomStart) : bpScale(lastDrag);
-        upperBound = fwdDrag ? bpScale(lastDrag) : bpScale(zoomStart);
+        lowerBound = fwdDrag ? parseInt(bpScale(zoomStart)) : parseInt(bpScale(lastDrag));
+        upperBound = fwdDrag ? parseInt(bpScale(lastDrag)) : parseInt(bpScale(zoomStart));
         chrRange = upperBound - lowerBound;
 
         d3.select('#zoom-rect').remove();
 
         if (confirm("Would you like to zoom in to " + (lowerBound/1000000) + 'Mb - ' + (upperBound/1000000) + 'Mb')) {
+            addLoader();
             displayChart();
         }
     }

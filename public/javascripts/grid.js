@@ -29,17 +29,17 @@ var displayGrid = function() {
     var x = d3.scaleLinear().range([rect.left, rect.right]).domain([0, boxWidth * snps.length]);
     var y = d3.scaleLinear().range([rect.bottom, rect.top]).domain([0, boxHeight * 116]);
 
-    grid.append('g').attr('transform', 'translate(' + 250.0 + ',' + gridMargins.top + ')')
+    grid.append('g').attr('transform', 'translate(' + 300.0 + ',' + gridMargins.top + ')')
         .append('text')
             .attr('class', 'gridLabel')
-            .style('text-anchor', 'middle')
+            .style('text-anchor', 'middle').style('font-weight', 400)
             .text('SNPs on chr ' + currChr + ' from ' + lowerBound + '-' + upperBound);
 
-    grid.append('g').attr('transform', 'rotate(-90) translate(' + (-250.0) + ',0)') 
+    grid.append('g').attr('transform', 'rotate(-90) translate(' + (-225.0) + ',0)') 
         .append('text')
             .attr('dy', '2em')
             .attr('class', 'gridLabel')
-            .style('text-anchor', 'middle')
+            .style('text-anchor', 'middle').style('font-weight', 400)
             .text('ROIs');
 
     d3.select('.grid').selectAll('g').data(data)
