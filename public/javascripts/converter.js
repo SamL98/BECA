@@ -1,5 +1,5 @@
 var pToRGB = function(p) {
-    hVal = p * 240;
+    hVal = 240.0 - (p * 240);
     return hsvToRGB(hVal, 100, 100);
 };
 

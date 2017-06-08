@@ -41,7 +41,6 @@ html, body, #content {
 }
 
 #grid-container {
-    margin: $grid-margins-ver $grid-margins-hor $grid-margins-ver $grid-margins-hor;
     overflow: scroll !important;
     background: black;
 }
@@ -138,11 +137,22 @@ canvas {
     stroke: black;
 }
 
-.axisLabel {
-    fill: black;
+@mixin labelMixin() {
     font-size: 14px;
     font-family: "arial";
     font-weight: 600;
+}
+
+.axisLabel {
+    fill: black;
+    @include labelMixin();
+}
+
+.gridLabel {
+    fill: white !important;
+    stroke: white !important;
+    color: white !important;
+    @include labelMixin();
 }
 
 .label {

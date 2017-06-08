@@ -10,11 +10,11 @@ var renderBrain = function() {
     r2.container = 'sliced-vcontainer';
     r2.init();
 
-    slices.file = 'http://localhost:8080/file/gray_matter.nii';
-    slices.labelmap.file = 'http://localhost:8080/file/converted.nii';
-    slices.labelmap.colortable.file = 'http://localhost:8080/file/colortable.txt';
+    slices.file = 'http://localhost:8000/file/gray_matter.nii';
+    slices.labelmap.file = 'http://localhost:8000/file/converted.nii';
+    slices.labelmap.colortable.file = 'http://localhost:8000/file/colortable.txt';
 
-    volume.file = 'http://localhost:8080/file/gray_matter.nii';
+    volume.file = 'http://localhost:8000/file/gray_matter.nii';
 
     sliceX = new X.renderer2D();
     sliceX.container = 'xSliceContainer';
