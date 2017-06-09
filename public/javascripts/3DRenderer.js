@@ -3,17 +3,24 @@ var displayingVolume = true, displayingFull = true,
     displayingFullSlices = false;
 var r1, r2, volume, slices, sliceX, sliceY, sliceZ;
 
-var renderBrain = function() {
+var renderBrain = function(colortable) {
+    r1 = new X.renderer3D();
     r1.container = 'full-vcontainer';
     r1.init();
 
+    r2 = new X.renderer3D();
     r2.container = 'sliced-vcontainer';
     r2.init();
 
+    slices = new X.volume();
     slices.file = 'http://localhost:8000/file/gray_matter.nii';
     slices.labelmap.file = 'http://localhost:8000/file/converted.nii';
-    slices.labelmap.colortable.file = 'http://localhost:8000/file/colortable.txt';
 
+    if (colortable) {
+        slices.labelmap.colortable.file = colortable;
+    }
+
+    volume = new X.volume();
     volume.file = 'http://localhost:8000/file/gray_matter.nii';
 
     sliceX = new X.renderer2D();

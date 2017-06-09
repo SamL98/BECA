@@ -81,7 +81,7 @@ var displayChart = function() {
 
     if (firstChart) {
         firstChart = false;
-        renderBrain();
+        renderBrain(null);
     }
 
     removeLoader();

@@ -53,10 +53,7 @@ var displayGrid = function() {
                 }
                 d3.select('#col' + i).selectAll('rect').style('stroke', 'white');
                 prevCol = i;
-
-                colortable = 'http://localhost:8000/colortable?chr=' + currChr + '&snp=' + s.name;
-                slices.labelmap.colortable.file = colortable;
-                r2.render();
+                renderOverlay(s.name);
             })
             .selectAll('rect').data(function(s) { return s.pvalues; }).enter().append('rect')
                 .attr('id', function(p, j) { return 'p-' + (parseInt(Math.random() * 10000)) + '-' + j; })
