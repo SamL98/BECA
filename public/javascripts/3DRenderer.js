@@ -3,7 +3,7 @@ var displayingVolume = true, displayingFull = true,
     displayingFullSlices = false;
 var r1, r2, volume, slices, sliceX, sliceY, sliceZ;
 
-var renderBrain = function(colortable) {
+var renderBrain = function(snp, colortable) {
     r1 = new X.renderer3D();
     r1.container = 'full-vcontainer';
     r1.init();
@@ -16,12 +16,20 @@ var renderBrain = function(colortable) {
     slices.file = 'http://localhost:8000/file/gray_matter.nii';
     slices.labelmap.file = 'http://localhost:8000/file/converted.nii';
 
+    volume = new X.volume();
+
+    // if (snp) {
+    //     volume.file = 'http://localhost:8000/file/volume-' + snp + '.nii.gz';
+    // } else {
+    //     volume.file = 'http://localhost:8000/file/gray_matter.nii';
+    // }
+
+    volume.file = 'http://localhost:8000/file/gray_matter.nii';
+    volume.labelmap.file = 'http://localhost:8000/file/converted.nii';
     if (colortable) {
         slices.labelmap.colortable.file = colortable;
+        volume.labelmap.colortable.file = colortable;
     }
-
-    volume = new X.volume();
-    volume.file = 'http://localhost:8000/file/gray_matter.nii';
 
     sliceX = new X.renderer2D();
     sliceX.container = 'xSliceContainer';
@@ -43,14 +51,17 @@ var renderBrain = function(colortable) {
 
     r1.onShowtime = function() {
         r1.camera.position = [0, 0, 300];
-
+        
         volume.volumeRendering = true;
         volume.opacity = 0.75;
         volume.lowerThreshold = 0.001;
         volume.windowLower = 0.001;
         volume.windowHigh = 1;
-        volume.minColor = [1, 1, 1];
-        volume.maxColor = [0, 0, 0];
+
+        if (colortable == null) {
+            volume.minColor = [1, 0, 0];
+            volume.maxColor = [0, 0, 1];
+        }
 
         r2.add(slices);
         r2.render();

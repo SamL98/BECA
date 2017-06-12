@@ -21,6 +21,11 @@ var ControlPanel = function() {
     this.color2 = [0, 0, 1]; 
     this.opacity = 0.75;
 
+    this.LowerThreshold = 0.001;
+    this.UpperThreshold = 116;
+    this.WindowLower = 0.001;
+    this.WindowHigh = 1;
+
     this.VolumeMode = 'Both';
     this.SliceMode = 'Normal';
 
@@ -57,10 +62,10 @@ var setUpControls = function() {
                 displayGridAndBrain();
                 break;
             case 'Chart':
-                displayChart();
+                displaySNPChart();
                 break;
             case 'Grid':
-                displayGrid();
+                displaySNPGrid();
                 break;
             case 'Brain':
                 displayBrain();

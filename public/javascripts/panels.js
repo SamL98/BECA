@@ -1,45 +1,63 @@
+const topPanel = '.top-panel';
+const bottomPanel = '.bottom-panel';
+const leftPanel = '.left-panel';
+const rightPanel = '.right-panel';
+
 var displayAll = function() {
-    d3.select('.top-panel').transition().duration(250);
-    d3.select('.bottom-panel').transition().duration(250);
-    d3.select('.right-panel').transition().duration(250);
-    d3.select('.left-panel').transition().duration(250);
+    animatePanel(topPanel, null, '38%');
+    animatePanel(bottomPanel, null, '60%');
+    animatePanel(leftPanel, '38%', null)
+    animatePanel(rightPanel, '60%', null);
+    displayChart();
+    displayGrid();
 }
 
 var displayChartAndGrid = function() {
-    d3.select('.top-panel').transition().duration(250);
-    d3.select('.bottom-panel').transition().duration(250);
-    d3.select('.right-panel').transition().duration(250);
-    d3.select('.left-panel').transition().duration(250);
+    animatePanel(topPanel, null, '38%');
+    animatePanel(bottomPanel, null, '60%');
+    animatePanel(leftPanel, '0%', null);
+    animatePanel(rightPanel, '98%', null);
+    displayChart();
+    displayGrid();
 }
 
 var displayGridAndBrain = function() {
-    d3.select('.top-panel').transition().duration(250);
-    d3.select('.bottom-panel').transition().duration(250);
-    d3.select('.right-panel').transition().duration(250);
-    d3.select('.left-panel').transition().duration(250);
+    animatePanel(bottomPanel, null, '98%');
+    animatePanel(topPanel, null, '0%');
+    animatePanel(leftPanel, '38%', null)
+    animatePanel(rightPanel, '62%', null);
+    displayGrid();
 }
 
-var displayChart = function() {
-    d3.select('.top-panel').transition().duration(250);
-    d3.select('.bottom-panel').transition().duration(250);
-    d3.select('.right-panel').transition().duration(250);
-    d3.select('.left-panel').transition().duration(250);
+var displaySNPChart = function() {
+    animatePanel(topPanel, null, '98%');
+    animatePanel(bottomPanel, null, '0%');
+    displayChart();
 }
 
-var displayGrid = function() {
-    d3.select('.top-panel').transition().duration(250);
-    d3.select('.bottom-panel').transition().duration(250);
-    d3.select('.right-panel').transition().duration(250);
-    d3.select('.left-panel').transition().duration(250);
+var displaySNPGrid = function() {
+    animatePanel(topPanel, null, '0%');
+    animatePanel(bottomPanel, '98%', '98%');
+    animatePanel(rightPanel, '98%', null);
+    animatePanel(leftPanel, '0%', null);
+    displayGrid();
 }
 
 var displayBrain = function() {
-    d3.select('.top-panel').transition().duration(250)
-        .style('height', 0);
-    d3.select('.bottom-panel').transition().duration(250)
-        .style('height', '100%');
-    d3.select('.right-panel').transition().duration(250)
-        .style('width', 0);
-    d3.select('.left-panel').transition().duration(250)
-        .style('width', '100%');
+    animatePanel(topPanel, null, '0%');
+    animatePanel(bottomPanel, '98%', '98%');
+    animatePanel(leftPanel, '98%', null);
+    animatePanel(rightPanel, '0%', null);
+}
+
+var animatePanel = function(panel, width, height) {
+    if (width) {
+        d3.select(panel).transition().duration(100)
+            .style('width', width);
+    }
+
+    if (height) {
+        d3.select(panel).transition().duration(100)
+            .style('height', height);
+    }
 }
