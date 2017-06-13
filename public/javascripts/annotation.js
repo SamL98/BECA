@@ -79,17 +79,17 @@ var removeAnnotationForSNP = function(id) {
     d3.select('#annotation' + id).remove();
 }
 
-var addAnnotationForPValue = function(id) {
+var addAnnotationForPValue = function(id, snp) {
     const voxel = d3.select('#' + id);
     const rect = rectFor('#' + id);
     const gridRect= rectFor('.grid');
     const x = (rect.left + rect.right)/2 - gridRect.left;
     const y = (rect.top + rect.bottom)/2 - gridRect.top;
-    const annoWidth = 85, annoHeight = 60;
+    const annoWidth = 110, annoHeight = 65;
 
     var fontSize = 14, radius = 10,
         triangleWidth = 20, offset = 20,
-        textInset = { x: 15, y: 7.5 }, interlineSpacing = 5;
+        textInset = { x: 15, y: 15 }, interlineSpacing = 5;
 
     const annoX = x - annoWidth/2;
     var annoY = y - annoHeight - offset;
@@ -104,7 +104,7 @@ var addAnnotationForPValue = function(id) {
     addPathTo(annotation, path);
 
     var rsText = appendLabelTo(annotation, annoWidth/2,
-        textInset.y, 2, voxel.attr('snp')).style('font-weight', '600');
+        textInset.y, 2, snp).style('font-weight', '600');
     var pText = appendLabelTo(annotation, annoWidth/2,
         (+rsText.attr('y')) + fontSize + interlineSpacing, 0, 'p: ' + voxel.attr('p'));
     var roiText = appendLabelTo(annotation, annoWidth/2,

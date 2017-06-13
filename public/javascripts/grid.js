@@ -70,7 +70,8 @@ var displayGrid = function() {
                     d3.select('#' + id)
                         .style('stroke', 'white');
                     prevCell = id;
-                    addAnnotationForPValue(id);
+                    const snp = this.parentNode.getAttribute('snp');
+                    addAnnotationForPValue(id, snp);
                 })
                 .on('mouseout', function() {
                     const id = d3.event.target.id;

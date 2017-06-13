@@ -17,17 +17,12 @@ var renderBrain = function(snp, colortable) {
     slices.labelmap.file = 'http://localhost:8000/file/converted.nii';
 
     volume = new X.volume();
-
-    // if (snp) {
-    //     volume.file = 'http://localhost:8000/file/volume-' + snp + '.nii.gz';
-    // } else {
-    //     volume.file = 'http://localhost:8000/file/gray_matter.nii';
-    // }
-
     volume.file = 'http://localhost:8000/file/gray_matter.nii';
     volume.labelmap.file = 'http://localhost:8000/file/converted.nii';
+
     if (colortable) {
         slices.labelmap.colortable.file = colortable;
+        volume.colortable.file = colortable;
         volume.labelmap.colortable.file = colortable;
     }
 
@@ -58,10 +53,8 @@ var renderBrain = function(snp, colortable) {
         volume.windowLower = 0.001;
         volume.windowHigh = 1;
 
-        if (colortable == null) {
-            volume.minColor = [1, 0, 0];
-            volume.maxColor = [0, 0, 1];
-        }
+        volume.minColor = (colortable == null) ? [1, 1, 1] : [1, 0, 0];
+        volume.maxColor = (colortable == null) ? [0, 0, 0] : [0, 0, 1];
 
         r2.add(slices);
         r2.render();
