@@ -91,12 +91,65 @@ html, body, #content {
 }
 
 $volume-height: 62%;
+$volume-width: 48%;
 $slice-height: 45%;
 
 @mixin resizerMixin() {
     margin: 0 0 0 0;
     padding: 0 0 0 0;
     background-color: white;
+}
+
+.vpanelhidden {
+    height: 0;
+}
+
+.vpanelsolo {
+    height: $volume-height;
+    margin-top: (100% - $volume-height)/2;
+}
+
+.vpanelboth {
+    height: $volume-height;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.vboth {
+    width: 48%;
+    display: inline-block;
+    margin-left: 0;
+    margin-bottom: 0;
+}
+
+.vhidden {
+    width: 0;
+    margin-left: 0;
+    margin-bottom: 0;
+}
+
+.vsolo {
+    width: $volume-height;
+    margin-left: (100% - $volume-height)/2;
+    margin-right: (100% - $volume-height)/2;
+}
+
+.shidden {
+    height: 0;
+    margin: 0;
+}
+
+.sboth {
+    display: inline-block;
+    width: 31.5%;
+    height: $slice-height;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.ssolo {
+    height: $slice-height;
+    margin-bottom: (100% - $slice-height)/2;
 }
 
 .vcontainer {

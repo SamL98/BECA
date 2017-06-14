@@ -1,34 +1,78 @@
+/**
+ * Creates a new control panel to manipulate the user-controllable features of the chart, grid, and renderer.
+ * 
+ * @constructor
+ * @this {ControlPanel}
+ */
 var ControlPanel = function() {
     //this.DisplayMode = 'All';
 
-    this.ROI = '';
-    this.gene = '';
+    /** SNP Chart controls */
 
-    var adjacent = function(type) {
-        adjacentRange(type, currChr, roi, function() {
+    // Text input for the user-entered ROI and Query.
+    this.ROI = '';
+    this.Query = '';
+
+    // Submits the given query information.
+    this.Submit = function() {
+        if (query && query != "" && roi && roi > 0) {
+            // If the query and roi are present, fetch the SNP data.
+            performQuery()
+        } else if (this.Query != '' && this.ROI != '') {
+            query = this.Query;
+            roi = this.ROI;
+            this.Submit();
+        }
+    }
+
+    // Functions to fetch SNPs determined by the given query information.
+    var performQuery = function() {
+        parseGenomicData(query, roi, function() {
             displayChart();
+            displayGrid();
+            removeLoader();
         });
     }
 
-    this.previous = function() {
+    // Function to fetch either the previous or next range on the current chromosome.
+    var adjacent = function(type) {
+        // Perform the database query.
+        adjacentRange(type, currChr, roi, function() {
+            // Display the chart and grid.
+            displayChart();
+            displayGrid();
+
+            // Let the user know that the query and display are completed.
+            removeLoader();
+        });
+    }
+
+    // Buttons to display the previous or next range.
+    this.Previous = function() {
         adjacent("prev");
     };
-    this.next = function() {
+    this.Next = function() {
         adjacent("next");
     };
 
+    /** Renderer controls */
+
+    // Controls the min and max colors and opacity of the renderer.
     this.color1 = [1, 0, 0];
     this.color2 = [0, 0, 1]; 
     this.opacity = 0.75;
 
+    // Controls the thresholds of the renderer.
     this.LowerThreshold = 0.001;
     this.UpperThreshold = 116;
     this.WindowLower = 0.001;
     this.WindowHigh = 1;
 
-    this.VolumeMode = 'Both';
-    this.SliceMode = 'Normal';
+    // Controls which renderers to display.
+    this.VolumeMode = 'Both'; // Potential values: Both - Display both the 3d and sliced volumes, Full - Display only the 3d volume, Slices - Diplay only the sliced volume.
+    this.SliceMode = 'Normal'; // Potential values: Normal - Display the orthogonal slices at the bottom with ~30% height, Full - Show only the slicing, no volumes, None - Show no slicing, only volumes.
 
+    // Resets the cameras of the volume renderers to default values.
     this.reset = function() {
         r1.resetBoundingBox();
         r1.resetViewAndRender();
@@ -38,15 +82,19 @@ var ControlPanel = function() {
     };
 };
 
+/**
+ * Creates the control panel and listens to changes in its values.
+ */
 var setUpControls = function() {
+    // Initialize the panel. See Dat.Gui documentation for help.
     var panel = new ControlPanel();
     var gui = new dat.GUI({ autoPlace: true });
-    //document.getElementById('datGuiContainer').appendChild(gui.domElement);
 
-    //var displayFolder = gui.addFolder('Display');
+    // Create the folders to separate chart and renderer control.
     var chartFolder = gui.addFolder('Chart');
     var renderFolder = gui.addFolder('Render');
 
+    // Save the current panel settings in local storage (cleared when cache is emptied).
     gui.remember(panel);
 
     /*var displayControl = displayFolder.add(panel, 'DisplayMode', ['All', 'Chart and Grid', 'Grid and Brain', 'Chart', 'Grid', 'Brain']).listen();
@@ -74,46 +122,49 @@ var setUpControls = function() {
         }
     });*/
 
-    var pControl = chartFolder.add(panel, 'ROI');
-    pControl.onFinishChange(function(value) {
+    /** SNP Chart controls */
+
+    // The textfield for the ROI to query.
+    var rControl = chartFolder.add(panel, 'ROI');
+    rControl.onFinishChange(function(value) {
         roi = parseInt(value);
-        if (query != null && query != "") {
-            parseGenomicData(query, roi, function() {
-                displayChart();
-            });
-        }
     });
 
-    var gControl = chartFolder.add(panel, 'gene');
-    gControl.onFinishChange(function(value) {
+    // The textfield for the formatted chromosome and range query.
+    var qControl = chartFolder.add(panel, 'Query');
+    qControl.onFinishChange(function(value) {
         query = value;
-        if (roi != null && roi > 0) {
-            parseGenomicData(query, roi, function() {
-                displayChart();
-            });
-        }
     });
 
-    chartFolder.add(panel, 'previous');
-    chartFolder.add(panel, 'next');
+    // Add the submit and adjacent buttons to the chart folder.
+    chartFolder.add(panel, 'Submit');
+    chartFolder.add(panel, 'Previous');
+    chartFolder.add(panel, 'Next');
+    // Open the chart folder.
     chartFolder.open();
 
+    /** Renderer controls */
+
+    // Minimum color control.
     var minCC = renderFolder.addColor(panel, 'color1');
     minCC.onChange(function(value) {
         volume.minColor = [value[0]/255.0, value[1]/255.0, value[2]/255.0];
     })
 
+    // Maximum color control.
     var maxCC = renderFolder.addColor(panel, 'color2');
     maxCC.onChange(function(value) {
         volume.maxColor = [value[0]/255.0, value[1]/255.0, value[2]/255.0];
     })
 
+    // Opacity control.
     var opacityControl = renderFolder.add(panel, 'opacity', 0.1, 1.0).step(0.05);
     opacityControl.onChange(function(value) {
         volume.opacity = value;
         slices.opacity = value;
     })
 
+    // Volume mode control (See ControlPanel doc) for more information.
     var volumeControl = renderFolder.add(panel, 'VolumeMode', ['Full', 'Slices', 'Both']).listen();
     volumeControl.onChange(function(value) {
         if (panel.SliceMode === 'Full' && value !== "None") {
@@ -133,6 +184,7 @@ var setUpControls = function() {
         }
     })
 
+    // Volume mode control (See ControlPanel doc) for more information.
     var sliceControl = renderFolder.add(panel, 'SliceMode', ['Full', 'Normal', 'None']).listen();
     sliceControl.onChange(function(value) {
         switch (value) {
@@ -149,6 +201,8 @@ var setUpControls = function() {
         }
     })
 
+    // Add the reset button.
     renderFolder.add(panel, 'reset');
+    // Close the render folder.
     renderFolder.close();
 }

@@ -7,5 +7,5 @@ var renderOverlay = function(name) {
     sliceY.destroy();
     sliceZ.destroy();
 
-    renderBrain(name, colortable);
+    renderBrain(colortable);
 }
