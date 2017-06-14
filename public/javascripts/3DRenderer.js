@@ -75,16 +75,17 @@ var renderBrain = function(colortable) {
     r2.render();
     r2.camera.position = [0, 0, 300];
 
-    // Add the slices to their respective renderers and render.
+    // Wait for the sliced brain to load then add the slices to their respective renderers and render.
+    r2.onShowtime = function() {
+        sliceX.add(slices);
+        sliceX.render();
 
-    sliceX.add(slices);
-    sliceX.render();
+        sliceY.add(slices);
+        sliceY.render();
 
-    sliceY.add(slices);
-    sliceY.render();
-
-    sliceZ.add(slices);
-    sliceZ.render();
+        sliceZ.add(slices);
+        sliceZ.render();
+    }
 };
 
 /**

@@ -78,8 +78,12 @@ var displayGrid = function() {
                 d3.select('#col' + i).selectAll('rect').style('stroke', 'white');
                 prevCol = i;
 
+                // Indicate loading
+                addLoader();
                 // Add the overlay (custom colortable) on the renderers.
                 renderOverlay(s.name);
+                // Set to not loading
+                removeLoader();
             })
             .selectAll('rect').data(function(s) { return s.pvalues; }).enter().append('rect')
                 .attr('id', function(p, j) { return 'p-' + (parseInt(Math.random() * 10000)) + '-' + j; })
