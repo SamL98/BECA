@@ -17,8 +17,13 @@ var displayChart = function() {
     // Append both the offset container and svg chart to the top panel.
     var oc = d3.select('.top-panel').append('div')
         .attr('id', 'offset-container');
+    // Append the SVG chart and add drag zoom bindings for zooming.
     var chart = oc.append('svg').attr('class', 'chart')
-        .style('fill', 'white');
+        .style('fill', 'white')
+        .call(d3.drag()
+            .on('start', dragStart)
+            .on('drag', dragChange)
+            .on('end', dragEnd));
 
     // Determine the width and height of the chart to display.
     const chartRect = rectFor('.chart')

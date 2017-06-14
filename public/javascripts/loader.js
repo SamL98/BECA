@@ -1,3 +1,6 @@
+/**
+ * Adds the loading indicator to the window.
+ */
 var addLoader = function() {
     d3.select('#content')
         .append('div')
@@ -12,6 +15,9 @@ var addLoader = function() {
                     .style('width', '10vw').style('height', '10vw');
 }
 
+/**
+ * Removes the loading indicator from the window.
+ */
 var removeLoader = function() {
     d3.select('#content')
         .select('.loading-container').remove();

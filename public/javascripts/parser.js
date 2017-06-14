@@ -1,5 +1,7 @@
 /**
  * Fetches the SNP data for the given query and roi, formatting them into SNP objects.
+ * @see http://api.jquery.com/jquery.ajax/ for more information on AJAX.
+ * 
  * @param {string} query Specifies the range and chromosome of SNPs to fetch. Can be of format /(rs)\d+/ to specify a SNP (which adds 300k bp to each side of SNP location), /\d{1,2}\:\d+\-\d+/ which specifies a chromosome and explicit range on that chromosome, or a string represent a gene which is then given a 200k bp buffer on the start and end. 
  * @param {integer} roi Specifies which pvalue for each SNP to fetch.
  * @param {function() -> Void} callback Called once the api call to the fileserver is completed.
@@ -51,6 +53,8 @@ var parseGenomicData = function(query, roi, callback) {
 
 /**
  * Fetches the SNPs on the specified chromosome either directly before or after the current displayed range.
+ * @see http://api.jquery.com/jquery.ajax/ for more information on AJAX.
+ * 
  * @param {string} type Indicates whether to fetch the range on the given chromosome before or after the current range. Can be either 'prev' or 'next'.
  * @param {integer} chr Indicates which chromosome to use for the data request.
  * @param {integer} roi Indicates the roi to use for the data request.
@@ -87,7 +91,24 @@ var adjacentRange = function(type, chr, roi, callback) {
 
 /**
  * Formats the given JSON data into SNP objects.
- * See the BECAFileServer documentation for specification on data format.
+ * The data is formatted as a JSON object as such:
+ *  
+ *  {
+ *      "results": [
+ *          {
+ *              "chr": <chromosome_number>,
+ *              "start": <basepair_start_of_range>,
+ *              "end": <basepair_end_of_range>
+ *          },
+ *          [
+ *              <snp_name>,
+ *              <basepair_location>,
+ *              <p_value_from_0_to_1> * 116
+ *          ], * number of SNPs in range
+ *      ]
+ *  }
+ * The value of the "results" key is passed to this method.
+ * 
  * @param {JSON} data 
  * @param {function() -> Void} callback 
  */
