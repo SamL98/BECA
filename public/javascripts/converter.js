@@ -1,8 +1,22 @@
+/**
+ * Interpolates the given p value into HSV space then convert and return it converted into RGB space.
+ * @param {double} p The given p value.
+ * @returns The rgb string of the interpolated color.
+ */
 var pToRGB = function(p) {
     hVal = (p * 240);
     return hsvToRGB(hVal, 100, 100);
 };
 
+/**
+ * Converts the given color form HSV to RGB space.
+ * 
+ * @param {double} h 
+ * @param {double} s 
+ * @param {double} v
+ * 
+ * @returns The rgb string of the converted value.
+ */
 var hsvToRGB = function(h, s, v) {
     var r, g, b;
     var i;

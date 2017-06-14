@@ -3,6 +3,7 @@
  * 
  * @constructor
  * @this {ControlPanel}
+ * @see http://workshop.chromeexperiments.com/examples/gui/ for more information on Dat.GUI.
  */
 var ControlPanel = function() {
     //this.DisplayMode = 'All';
@@ -55,6 +56,23 @@ var ControlPanel = function() {
         adjacent("next");
     };
 
+    // Button to reset the chart zoom
+    this.Reset = function() {
+        // Reset the bounds.
+        lowerBound = originalLower;
+        upperBound = originalUpper;
+
+        // Show that the redisplay will take some time.
+        addLoader();
+
+        // Redisplay the chart and grid.
+        displayChart();
+        displayGrid();
+
+        // Let the user know that the display is completed.
+        removeLoader();
+    }
+
     /** Renderer controls */
 
     // Controls the min and max colors and opacity of the renderer.
@@ -73,7 +91,7 @@ var ControlPanel = function() {
     this.SliceMode = 'Normal'; // Potential values: Normal - Display the orthogonal slices at the bottom with ~30% height, Full - Show only the slicing, no volumes, None - Show no slicing, only volumes.
 
     // Resets the cameras of the volume renderers to default values.
-    this.reset = function() {
+    this.Reset = function() {
         r1.resetBoundingBox();
         r1.resetViewAndRender();
 
@@ -84,9 +102,10 @@ var ControlPanel = function() {
 
 /**
  * Creates the control panel and listens to changes in its values.
+ * @see http://workshop.chromeexperiments.com/examples/gui/ for more information on Dat.GUI.
  */
 var setUpControls = function() {
-    // Initialize the panel. See Dat.Gui documentation for help.
+    // Initialize the panel.
     var panel = new ControlPanel();
     var gui = new dat.GUI({ autoPlace: true });
 
@@ -136,10 +155,11 @@ var setUpControls = function() {
         query = value;
     });
 
-    // Add the submit and adjacent buttons to the chart folder.
+    // Add the submit, reset, and adjacent buttons to the chart folder.
     chartFolder.add(panel, 'Submit');
     chartFolder.add(panel, 'Previous');
     chartFolder.add(panel, 'Next');
+    chartFolder.add(panel, 'Reset');
     // Open the chart folder.
     chartFolder.open();
 
@@ -202,7 +222,7 @@ var setUpControls = function() {
     })
 
     // Add the reset button.
-    renderFolder.add(panel, 'reset');
+    renderFolder.add(panel, 'Reset');
     // Close the render folder.
     renderFolder.close();
 }
