@@ -29,13 +29,13 @@ html, body, #content {
 .left-panel {
     width: 50% - $hResizeWidth/2;
     height: 100%;
-    float: left;
+    display: inline-block;
 }
 
 .right-panel {
     width: 50% - $hResizeWidth/2;
     height: 100%;
-    float: right;
+    display: inline-block;
     background: black;
     overflow: scroll;
 }
@@ -67,23 +67,6 @@ html, body, #content {
     background-color: gray;
 }
 
-#chart-resizer {
-    height: 7.5px;
-    width: 100%;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    vertical-align: middle;
-    cursor: row-resize;
-}
-
-#render-resizer {
-    width: 7.5px;
-    height: 100%;
-    margin-left: 5px;
-    cursor: col-resize;
-    display: inline-block;
-}
-
 #datGuiContainer {
     position: fixed;
     right: 10px;
@@ -94,34 +77,49 @@ $volume-height: 62%;
 $volume-width: 48%;
 $slice-height: 35%;
 
+#chart-resizer, #render-resizer {
+    background-color: gray;
+}
+
+canvas {
+    fill: none;
+}
+
 @mixin resizerMixin() {
     margin: 0 0 0 0;
     padding: 0 0 0 0;
-    background-color: black;
+    background-color: white;
+}
+
+@mixin horResizerMixin() {
+    @include resizerMixin();
+    height: 3px;
+    width: 100%;
+    cursor: row-resize;
+}
+
+@mixin verResizerMixin() {
+    @include resizerMixin();
+    height: 100%;
+    width: 3px;
+    display: inline-flex;
+    cursor: col-resize;
 }
 
 .dragbar {
     @include resizerMixin();
 }
 
-#vcontainer-resizer {
-    width: 3px;
-    height: 100%;
-    display: inline-flex;
-    cursor: col-resize;
+.ver-dragbar {
+    @include verResizerMixin();
 }
 
-#volume-container-ghostbar {
-    width: 3px;
-    height: 100%;
+.hor-dragbar {
+    @include horResizerMixin();
 }
 
-.ghostbar {
-    background-color: white;
-    @include resizerMixin();
-    opacity: 0.5;
-    position: absolute;
-    z-index: 999;
+.slice-dragbar {
+    height: $slice-height;
 }
 
 .vcontainer {

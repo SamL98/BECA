@@ -28,14 +28,42 @@
 // }
 
 var addResizeObservers = function() {
-    var containerRight = rectFor('.volume-panel').width;
-    var drag = d3.drag()
+    var containerWidth = rectFor('.volume-panel').width;
+    var containerHeight = rectFor('#render-container').height;
+
+    var vContainerDrag = d3.drag()
         .on('drag', function() {
             d3.select('#full-vcontainer')
                 .style('width', d3.event.x + 'px');
             d3.select('#sliced-vcontainer')
-                .style('width', (containerRight - rectFor('#vcontainer-resizer').right) + 'px');
+                .style('width', (containerWidth - rectFor('#vcontainer-resizer').right) + 'px');
         });
+    d3.select('#vcontainer-resizer').call(vContainerDrag);
 
-    d3.select('#vcontainer-resizer').call(drag);
+    var vPanelDrag = d3.drag()
+        .on('drag', function() {
+            d3.select('.volume-panel')
+                .style('height', d3.event.y + 'px');
+            d3.selectAll('.slice')
+                .style('height', (containerHeight - d3.event.y) + 'px');
+        });
+    d3.select('#vpanel-resizer').call(vPanelDrag);
+
+    var xSliceDrag = d3.drag()
+        .on('drag', function() {
+            d3.select('#xSliceContainer')
+                .style('width', d3.event.x + 'px');
+            d3.select('#ySliceContainer')
+                .style('width', (containerWidth - rectFor('#zSliceContainer').width - d3.event.x) + 'px');
+        });
+    d3.select('#x-slice-resizer').call(xSliceDrag);
+
+    var ySliceDrag = d3.drag()
+        .on('drag', function() {
+            d3.select('#ySliceContainer')
+                .style('width', (d3.event.x - rectFor('#xSliceContainer').width) + 'px');
+            d3.select('#zSliceContainer')
+                .style('width', (containerWidth - rectFor('#y-slice-resizer').right) + 'px');
+        });
+    d3.select('#y-slice-resizer').call(ySliceDrag);
 }

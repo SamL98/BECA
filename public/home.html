@@ -33,26 +33,24 @@
             <svg class="chart"></svg>
         </div>
     </div>
-    <div class="resizer" id="chart-resizer"></div>
+    <div class="dragbar hor-dragbar" id="chart-resizer"></div>
     <div class="panel bottom-panel">
         <div class="panel left-panel">
             <div id="render-container">
                 <div class="volume-panel">
                     <div class="vcontainer" id="full-vcontainer"></div>
-                    <div class="dragbar" id="vcontainer-resizer"></div>
+                    <div class="dragbar ver-dragbar" id="vcontainer-resizer"></div>
                     <div class="vcontainer" id="sliced-vcontainer"></div>
-                    <div class="dragbar" id="vpanel-resizer"></div>
                 </div>
-                <div class="slice" id="xSliceContainer">
-                    <div class="dragbar" id="x-slice-resizer"></div>
-                </div>
-                <div class="slice" id="ySliceContainer">
-                    <div class="dragbar" id="y-slice-container"></div>
-                </div>
+                <div class="dragbar hor-dragbar" id="vpanel-resizer"></div>
+                <div class="slice" id="xSliceContainer"></div>
+                <div class="dragbar ver-dragbar slice-dragbar" id="x-slice-resizer"></div>
+                <div class="slice" id="ySliceContainer"></div>
+                <div class="dragbar ver-dragbar slice-dragbar" id="y-slice-resizer"></div>
                 <div class="slice" id="zSliceContainer"></div>
             </div>
         </div>
-        <div class="resizer" id="render-resizer"></div>
+        <div class="dragbar ver-dragbar" id="render-resizer"></div>
         <div class="panel right-panel">
             <div id="grid-container"></div>
         </div>
