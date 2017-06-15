@@ -4,7 +4,7 @@
  * 
  * @param {string} query Specifies the range and chromosome of SNPs to fetch. Can be of format /(rs)\d+/ to specify a SNP (which adds 300k bp to each side of SNP location), /\d{1,2}\:\d+\-\d+/ which specifies a chromosome and explicit range on that chromosome, or a string represent a gene which is then given a 200k bp buffer on the start and end. 
  * @param {integer} roi Specifies which pvalue for each SNP to fetch.
- * @param {function() -> Void} callback Called once the api call to the fileserver is completed.
+ * @param {requestCallback} callback Called once the api call to the fileserver is completed.
  */
 var parseGenomicData = function(query, roi, callback) {
     // If either query or roi is null, do not perform the fetch request.
@@ -58,7 +58,7 @@ var parseGenomicData = function(query, roi, callback) {
  * @param {string} type Indicates whether to fetch the range on the given chromosome before or after the current range. Can be either 'prev' or 'next'.
  * @param {integer} chr Indicates which chromosome to use for the data request.
  * @param {integer} roi Indicates the roi to use for the data request.
- * @param {function() -> Void} callback Called once the data request is finished and the data has been formatted.
+ * @param {requestCallback} callback Called once the data request is finished and the data has been formatted.
  */
 var adjacentRange = function(type, chr, roi, callback) {
     // Indicate to the user that the database is being queried.
@@ -110,7 +110,7 @@ var adjacentRange = function(type, chr, roi, callback) {
  * The value of the "results" key is passed to this method.
  * 
  * @param {JSON} data 
- * @param {function() -> Void} callback 
+ * @param {requestCallback} callback 
  */
 var formatData = function(data, callback) {
     // Clear the current, global SNP variable.

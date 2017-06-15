@@ -57,7 +57,7 @@ var ControlPanel = function() {
     };
 
     // Button to reset the chart zoom
-    this.Reset = function() {
+    this.ResetZoom = function() {
         // Reset the bounds.
         lowerBound = originalLower;
         upperBound = originalUpper;
@@ -159,7 +159,7 @@ var setUpControls = function() {
     chartFolder.add(panel, 'Submit');
     chartFolder.add(panel, 'Previous');
     chartFolder.add(panel, 'Next');
-    chartFolder.add(panel, 'Reset');
+    chartFolder.add(panel, 'ResetZoom');
     // Open the chart folder.
     chartFolder.open();
 
