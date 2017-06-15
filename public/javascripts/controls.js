@@ -97,6 +97,10 @@ var ControlPanel = function() {
 
         r2.resetBoundingBox();
         r2.resetViewAndRender();
+
+        d3.select('.volume-panel').style('height', '62%');
+        d3.selectAll('.slice').style('height', '35%');
+        d3.selectAll('.vcontainer').style('width', '48%');
     };
 };
 

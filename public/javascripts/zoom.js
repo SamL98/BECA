@@ -1,14 +1,14 @@
 // Tracks where the zoom began.
 var zoomStart = null;
 // Tracks whether or not zoom is occurring.
-var dragging = false;
+var zooming = false;
 
 /**
  * Handles the start of a drag event on the SNP chart.
  */
 var dragStart = function() {
     // Mark that dragging has began and the location of the event.
-    dragging = true;
+    zooming = true;
     zoomStart = d3.event.x;
     // Append the zoom rect to the chart.
     d3.select('.chart').append('rect')
@@ -23,7 +23,7 @@ var dragStart = function() {
  * Handles changes in the drag event.
  */
 var dragChange = function() {
-    if (dragging && zoomStart) {
+    if (zooming && zoomStart) {
         // If the user is currently dragging, mark the current drag position.
         var currDrag = d3.event.x;
         if (currDrag < zoomStart) {
@@ -44,7 +44,7 @@ var dragChange = function() {
 var dragEnd = function() {
     // Make sure that the user is dragging and that a location for the start of a zoom exists.
     // This event is triggered by a click, so make sure that there is some difference in location between the zoom start and current position.
-    if (dragging && zoomStart && (zoomStart != d3.event.x)) {
+    if (zooming && zoomStart && (zoomStart != d3.event.x)) {
         // Obtain the rect for the SNP chart and create a scale to transform the zoom start and current position into accurate basepairs.
         var chartRect = rectFor('.chart');
         var bpScale = d3.scaleLinear()
@@ -62,7 +62,7 @@ var dragEnd = function() {
         var newRange = newUpper - newLower;
 
         // Set the variables to indicate dragging is no longer occurring.
-        dragging = false;
+        zooming = false;
         zoomStart = null;
 
         // Remove the zoom rect from the DOM.
