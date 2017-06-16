@@ -8,20 +8,24 @@
 var ControlPanel = function() {
     //this.DisplayMode = 'All';
 
-    /** SNP Chart controls */
+    /** Query controls */
 
     // Text input for the user-entered ROI and Query.
     this.ROI = '';
     this.Query = '';
 
+    /** SNP Chart controls */
+
     // Submits the given query information.
     this.Submit = function() {
         if (query && query != "" && roi && roi > 0) {
             // If the query and roi are present, fetch the SNP data.
+            d3.select('#intro-header').remove();
             performQuery()
         } else if (this.Query != '' && this.ROI != '') {
             query = this.Query;
             roi = this.ROI;
+            d3.select('#intro-header').remove();
             this.Submit();
         }
     }
@@ -114,6 +118,7 @@ var setUpControls = function() {
     var gui = new dat.GUI({ autoPlace: true });
 
     // Create the folders to separate chart and renderer control.
+    var queryFolder = gui.addFolder('Query');
     var chartFolder = gui.addFolder('Chart');
     var renderFolder = gui.addFolder('Render');
 
@@ -145,27 +150,34 @@ var setUpControls = function() {
         }
     });*/
 
-    /** SNP Chart controls */
+    /** Query controls */
 
     // The textfield for the ROI to query.
-    var rControl = chartFolder.add(panel, 'ROI');
+    var rControl = queryFolder.add(panel, 'ROI');
     rControl.onFinishChange(function(value) {
         roi = parseInt(value);
     });
 
     // The textfield for the formatted chromosome and range query.
-    var qControl = chartFolder.add(panel, 'Query');
+    var qControl = queryFolder.add(panel, 'Query');
     qControl.onFinishChange(function(value) {
         query = value;
     });
 
-    // Add the submit, reset, and adjacent buttons to the chart folder.
-    chartFolder.add(panel, 'Submit');
+    queryFolder.add(panel, 'Submit');
+
+    // Open the query folder.
+    queryFolder.open();
+
+    /** SNP Chart controls */
+
+    // Add the reset and adjacent buttons to the chart folder.
     chartFolder.add(panel, 'Previous');
     chartFolder.add(panel, 'Next');
     chartFolder.add(panel, 'ResetZoom');
-    // Open the chart folder.
-    chartFolder.open();
+
+    // Close the chart folder.
+    chartFolder.close();
 
     /** Renderer controls */
 
@@ -189,41 +201,41 @@ var setUpControls = function() {
     })
 
     // Volume mode control (See ControlPanel doc) for more information.
-    var volumeControl = renderFolder.add(panel, 'VolumeMode', ['Full', 'Slices', 'Both']).listen();
-    volumeControl.onChange(function(value) {
-        if (panel.SliceMode === 'Full' && value !== "None") {
-            panel.SliceMode = 'Normal';
-        }
-        switch (value) {
-            case "Full":
-                setToFullVolume(true);
-                break;
-            case "Slices":
-                setToSlicedVolume(true);
-                break;
-            case "Both":
-                setToBothVolume();
-                break;
-            default: break;
-        }
-    })
+    // var volumeControl = renderFolder.add(panel, 'VolumeMode', ['Full', 'Slices', 'Both']).listen();
+    // volumeControl.onChange(function(value) {
+    //     if (panel.SliceMode === 'Full' && value !== "None") {
+    //         panel.SliceMode = 'Normal';
+    //     }
+    //     switch (value) {
+    //         case "Full":
+    //             setToFullVolume(true);
+    //             break;
+    //         case "Slices":
+    //             setToSlicedVolume(true);
+    //             break;
+    //         case "Both":
+    //             setToBothVolume();
+    //             break;
+    //         default: break;
+    //     }
+    // })
 
     // Volume mode control (See ControlPanel doc) for more information.
-    var sliceControl = renderFolder.add(panel, 'SliceMode', ['Full', 'Normal', 'None']).listen();
-    sliceControl.onChange(function(value) {
-        switch (value) {
-            case 'Full':
-                showFullSlicing();
-                break;
-            case 'Normal':
-                setToShowSlicing();
-                break;
-            case 'None':
-                setToHideSlicing();
-                break;
-            default: break;
-        }
-    })
+    // var sliceControl = renderFolder.add(panel, 'SliceMode', ['Full', 'Normal', 'None']).listen();
+    // sliceControl.onChange(function(value) {
+    //     switch (value) {
+    //         case 'Full':
+    //             showFullSlicing();
+    //             break;
+    //         case 'Normal':
+    //             setToShowSlicing();
+    //             break;
+    //         case 'None':
+    //             setToHideSlicing();
+    //             break;
+    //         default: break;
+    //     }
+    // })
 
     // Add the reset button.
     renderFolder.add(panel, 'Reset');

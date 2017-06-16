@@ -1,5 +1,70 @@
 // Initialize the controls and renderers once the window loads.
 window.onload = function() {
+    let header = d3.select('#intro-header');
+
+    let instructions = ["Enter a number 1-116 representing the region of interest in the brain.", 
+                        "Specify a chromosome and range to search on. This can be formatted one of three ways:",
+                        "Click \"Submit\" to enter your query."];
+    let formattingOptions = ["The name of a gene (e.g. ASPM or APOE)",
+                            "The name of a SNP (e.g. rs10119)",
+                            "The number of a chromosome, followed by a colon and the lower and upper bounds separated by a colon. Remember that queries for larger ranges will take longer to complete. (e.g. 19:4000000-41000000)"];
+
+    header.select('ol').selectAll('li')
+        .data(instructions).enter().append('li')
+            .attr('id', function(d, i) { return 'instr' + i; })
+            .attr('class', 'instruction')
+            .text(function(d) { return d; });
+
+    header.select('#instr1')
+        .append('ul').attr('class', 'formatting-list')
+        .selectAll('li')
+        .data(formattingOptions).enter().append('li')
+            .attr('class', 'formatting-instruction')
+            .text(function(d) { return d; });
+
+    let chartLines = [
+        "The SNP Chart displays all of the SNPs on the given chromosome within the specified range.",
+        "The x-axis represents the basepair location of the SNP on its associated chromosome while the y-axis represent the -log10 of the p-value of the SNP on the specified ROI.",
+        "Hovering the cursor over a data point will display the annotation for that SNP, including its name, location, and p-value.",
+        "The SNP Chart can be controlled using the controls in the Chart folder of the control panel.",
+        "Selecting \"Previous\" will display the SNPs on the current chromosome directly before the currently displayed range.",
+        "Similarly, \"Next\" will display the SNPs directly after the current range.",
+        "Dragging horizontally on the SNP Chart will create a purple rectangle. When you are done dragging, you will be asked whether or not your would like to zoom in to that range.",
+        "If you select \"Yes\", then the bounds on the x-axis will change accordingly.",
+        "If you wish to undo any zooms, you can always select \"ResetZoom\" and the original bounds will be displayed again."
+    ];
+    let gridLines = [
+        "The Voxel Grid displays the p-values of every SNP currently displayed in the SNP Chart on all 116 ROI\'s.",
+        "Each column represents a SNP on all ROI\'s while each row represents each ROI on all SNP\'s.",
+        "Each cell is given a color to represent the SNP\'s p-value on the given ROI with red corresponding to 0 and blue corresponding to 1.",
+        "Hovering over a cell will display an annotation cataloging the cell\'s SNP, ROI, and p-value.",
+        "Selecting a column or cell will redisplay the Brain Renderer to show the association of the SNP on all ROI\'s of the brain."
+    ];
+    let renderLines = [
+        "The Brain Renderer displays the gray matter of the brain, segmented by the 116 ROI\'s.",
+        "The full, 3D volume, as well as xyz slices are displayed.",
+        "When a column in the voxel grid is selected, the Brain Renderer is redisplayed using the p-values of the selected SNP.",
+        "The color in the Voxel Grid of each SNP on one of the ROI\'s is displayed on the actual ROI in the brain.",
+        "The Brain Renderer can be controlled using the \"Render\" folder in the control panel.",
+        "The \"Opacity\" slider controls the opacity of the brain renderers.",
+        "The \"Reset\" button can be used to reset the cameras of the renderers after they have been changed."
+    ];
+
+    header.select('#chart-info')
+        .selectAll('p').data(chartLines).enter().append('p')
+            .attr('class', 'instruction info-instruction')
+            .text(function(d) { return d; });
+
+    header.select('#grid-info')
+        .selectAll('p').data(gridLines).enter().append('p')
+            .attr('class', 'instruction info-instruction')
+            .text(function(d) { return d; });
+
+    header.select('#render-info')
+        .selectAll('p').data(renderLines).enter().append('p')
+            .attr('class', 'instruction info-instruction')
+            .text(function(d) { return d; });
+
     setUpControls();
     addResizeObservers();
     r1 = new X.renderer3D();
