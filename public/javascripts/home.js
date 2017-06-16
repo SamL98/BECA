@@ -123,7 +123,6 @@ var presentInstructions = function() {
             })
             .on('drag', function() {
                 d3.selectAll('.info-block').style('height', (contentHeight - rectFor('#top-section').bottom) + 'px');
-                //d3.selectAll('.info-instruction').style('height', (contentHeight - rectFor('#chart-header').bottom) + 'px');
                 d3.select('#top-section').style('height', (d3.event.y) + 'px');
             })
     )

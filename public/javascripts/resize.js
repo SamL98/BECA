@@ -7,7 +7,13 @@ var addResizeObservers = function() {
             d3.select('.top-panel')
                 .style('height', d3.event.y + 'px');
             d3.select('bottom-panel')
-                .style('height', (contentHeight - rectFor('#chart-resizer')) + 'px');
+                .style('height', (contentHeight - d3.event.y) + 'px');
+        })
+        .on('end', function() {
+            addLoader();
+            displayChart();
+            displayGrid();
+            removeLoader();
         });
     d3.select('#chart-resizer').call(chartDrag);
 
