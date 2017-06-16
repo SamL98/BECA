@@ -61,5 +61,6 @@
 <script>
     $('.left-panel').css({ 'width': $('.left-panel').height() });
     const rect = rectFor('#render-resizer');
-    $('.right-panel').css({'width': (+$('.bottom-panel').width() - rect.right) });
+    $('.right-panel').css({ 'width': (+$('.bottom-panel').width() - rect.right) });
+    $('#render-container').css({ 'height': (+$('.bottom-panel').height()) });
 </script>

@@ -21,6 +21,11 @@ var renderOverlay = function(name) {
 }
 
 var addSNPLabel = function(name) {
+    previousSNPLabel = name;
+    if (!displaySNPLabel) {
+        return;
+    }
+
     d3.select('#render-container').insert('h2', '.volume-panel')
         .attr('class', 'header').attr('id', 'snp-label')
         .style('margin-top', '5px')
@@ -34,7 +39,6 @@ var addSNPLabel = function(name) {
 
 var previousSNPLabel = '';
 var removeSNPLabel = function() {
-    previousSNPLabel = d3.select('#snp-label').html();
     d3.select('#snp-label').remove();
     d3.select('.volume-panel')
         .style('height', '62%');

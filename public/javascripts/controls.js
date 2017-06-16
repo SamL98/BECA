@@ -66,6 +66,8 @@ var ControlPanel = function() {
         lowerBound = originalLower;
         upperBound = originalUpper;
 
+        removeSNPLabel();
+
         // Show that the redisplay will take some time.
         addLoader();
 
@@ -105,7 +107,7 @@ var ControlPanel = function() {
         } else {
             d3.select('.volume-panel').style('height', '62%');
         }
-        d3.selectAll('.slice').style('height', '35%');
+        d3.selectAll('.slice').style('height', '35%').style('width', '33%');
         d3.selectAll('.vcontainer').style('width', '48%');
     };
 };

@@ -13,33 +13,35 @@ window.onload = function() {
     slices = new X.volume();
 };
 
+function resizePanels() {
+    addLoader();
+    displayChart();
+    displayGrid();
+    removeLoader();
+}
+
+var resizeFunction;
+window.onresize = function() {
+    clearTimeout(resizeFunction);
+    resizeFunction = setTimeout(resizePanels, 50);
+}
+
 var presentInstructions = function() {
-    let header = d3.select('body').insert('div', '.dg')
-        .attr('id', 'intro-header');
-
-    header.append('h2').attr('class', 'header').text('Welcome to BECA');
-    header.append('p').attr('class', 'instruction-label').text('To submit a query, follow these steps:');
-    header.append('ol').attr('class', 'instr-list');
-    header.append('hr');
-
-    header.append('div')
-        .attr('class', 'info-block').attr('id', 'chart-info')
-        .append('h2').attr('class', 'header').text('SNP Chart');
-
-    header.append('div')
-        .attr('class', 'info-block').attr('id', 'grid-info')
-        .append('h2').attr('class', 'header').text('Voxel Grid');
-
-    header.append('div')
-        .attr('class', 'info-block').attr('id', 'render-info')
-        .append('h2').attr('class', 'header').text('Brain Renderer');
-
     let instructions = ["Enter a number 1-116 representing the region of interest in the brain.", 
                         "Specify a chromosome and range to search on. This can be formatted one of three ways:",
                         "Click \"Submit\" to enter your query."];
     let formattingOptions = ["The name of a gene (e.g. ASPM or APOE)",
                             "The name of a SNP (e.g. rs10119)",
                             "The number of a chromosome, followed by a colon and the lower and upper bounds separated by a colon. Remember that queries for larger ranges will take longer to complete. (e.g. 19:4000000-41000000)"];
+
+    let header = d3.select('body').insert('div', '.dg')
+        .attr('id', 'intro-header');
+
+    let topHeader = header.append('div')
+        .attr('id', 'top-section').style('overflow', 'hidden');
+    topHeader.append('h2').attr('class', 'header').text('Welcome to IU BECA');
+    topHeader.append('p').attr('class', 'instruction-label').text('To submit a query, follow these steps:');
+    topHeader.append('ol').attr('class', 'instr-list');
 
     header.select('ol').selectAll('li')
         .data(instructions).enter().append('li')
@@ -53,6 +55,21 @@ var presentInstructions = function() {
         .data(formattingOptions).enter().append('li')
             .attr('class', 'formatting-instruction')
             .text(function(d) { return d; });
+
+    header.append('hr').style('cursor', 'row-resize');
+
+    header.append('div')
+        .attr('class', 'info-block').attr('id', 'chart-info')
+        .append('h2').attr('class', 'header').attr('id', 'chart-header')
+            .text('SNP Chart');
+
+    header.append('div')
+        .attr('class', 'info-block').attr('id', 'grid-info')
+        .append('h2').attr('class', 'header').text('Voxel Grid');
+
+    header.append('div')
+        .attr('class', 'info-block').attr('id', 'render-info')
+        .append('h2').attr('class', 'header').text('Brain Renderer');
 
     let chartLines = [
         "The SNP Chart displays all of the SNPs on the given chromosome within the specified range.",
@@ -96,4 +113,18 @@ var presentInstructions = function() {
         .selectAll('p').data(renderLines).enter().append('p')
             .attr('class', 'instruction info-instruction')
             .text(function(d) { return d; });
+
+    var initDrag = null;
+    let contentHeight = rectFor('#intro-header').height;
+    d3.select('hr').call(
+        d3.drag()
+            .on('start', function() {
+                initDrag = d3.event.y;
+            })
+            .on('drag', function() {
+                d3.selectAll('.info-block').style('height', (contentHeight - rectFor('#top-section').bottom) + 'px');
+                //d3.selectAll('.info-instruction').style('height', (contentHeight - rectFor('#chart-header').bottom) + 'px');
+                d3.select('#top-section').style('height', (d3.event.y) + 'px');
+            })
+    )
 }
