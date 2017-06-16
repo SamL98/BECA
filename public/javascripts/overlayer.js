@@ -13,6 +13,29 @@ var renderOverlay = function(name) {
     sliceY.destroy();
     sliceZ.destroy();
 
+    // Add the label indicating which SNP is being presented to the right panel.
+    addSNPLabel(name);
+
     // Rerender the brain passing the constructed colortable url.
     renderBrain(colortable);
+}
+
+var addSNPLabel = function(name) {
+    d3.select('#render-container').insert('h2', '.volume-panel')
+        .attr('class', 'header').attr('id', 'snp-label')
+        .style('margin-top', '5px')
+        .style('display', 'inline-block')
+        .style('color', 'white')
+        .style('background-color', 'black')
+        .text(name);
+    d3.select('.volume-panel')
+        .style('height', (rectFor('.volume-panel').height - rectFor('#snp-label').height) + 'px');
+}
+
+var previousSNPLabel = '';
+var removeSNPLabel = function() {
+    previousSNPLabel = d3.select('#snp-label').html();
+    d3.select('#snp-label').remove();
+    d3.select('.volume-panel')
+        .style('height', '62%');
 }

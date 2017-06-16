@@ -39,6 +39,8 @@ var gridMargins = {
 
 /** Miscellaneous variables */
 
+var displaySNPLabel = true;
+
 // Flag for if the database has been queried yet.
 var firstChart = true;
 

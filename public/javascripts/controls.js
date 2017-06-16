@@ -84,11 +84,8 @@ var ControlPanel = function() {
     this.color2 = [0, 0, 1]; 
     this.opacity = 0.75;
 
-    // Controls the thresholds of the renderer.
-    this.LowerThreshold = 0.001;
-    this.UpperThreshold = 116;
-    this.WindowLower = 0.001;
-    this.WindowHigh = 1;
+    // Toggles whether or not to show the SNP label.
+    this.ShowLabel = displaySNPLabel;
 
     // Controls which renderers to display.
     this.VolumeMode = 'Both'; // Potential values: Both - Display both the 3d and sliced volumes, Full - Display only the 3d volume, Slices - Diplay only the sliced volume.
@@ -102,7 +99,12 @@ var ControlPanel = function() {
         r2.resetBoundingBox();
         r2.resetViewAndRender();
 
-        d3.select('.volume-panel').style('height', '62%');
+        let headerRect = d3.select('#snp-label');
+        if (headerRect) {
+            d3.select('.volume-panel').style('height', (rectFor('#render-container').height * 0.62 - headerRect.height) + 'px');
+        } else {
+            d3.select('.volume-panel').style('height', '62%');
+        }
         d3.selectAll('.slice').style('height', '35%');
         d3.selectAll('.vcontainer').style('width', '48%');
     };
@@ -198,6 +200,17 @@ var setUpControls = function() {
     opacityControl.onChange(function(value) {
         volume.opacity = value;
         slices.opacity = value;
+    })
+
+    // SNP label control.
+    var labelControl = renderFolder.add(panel, 'ShowLabel');
+    labelControl.onChange(function(value) {
+        displaySNPLabel = value;
+        if (displaySNPLabel) {
+            addSNPLabel(previousSNPLabel);
+        } else {
+            removeSNPLabel();
+        }
     })
 
     // Volume mode control (See ControlPanel doc) for more information.

@@ -1,6 +1,38 @@
 // Initialize the controls and renderers once the window loads.
 window.onload = function() {
-    let header = d3.select('#intro-header');
+    $('#back-button').on('click', function() {
+        presentInstructions();
+    })
+
+    presentInstructions();
+    setUpControls();
+    addResizeObservers();
+    r1 = new X.renderer3D();
+    r2 = new X.renderer3D();
+    volume = new X.volume();
+    slices = new X.volume();
+};
+
+var presentInstructions = function() {
+    let header = d3.select('body').insert('div', '.dg')
+        .attr('id', 'intro-header');
+
+    header.append('h2').attr('class', 'header').text('Welcome to BECA');
+    header.append('p').attr('class', 'instruction-label').text('To submit a query, follow these steps:');
+    header.append('ol').attr('class', 'instr-list');
+    header.append('hr');
+
+    header.append('div')
+        .attr('class', 'info-block').attr('id', 'chart-info')
+        .append('h2').attr('class', 'header').text('SNP Chart');
+
+    header.append('div')
+        .attr('class', 'info-block').attr('id', 'grid-info')
+        .append('h2').attr('class', 'header').text('Voxel Grid');
+
+    header.append('div')
+        .attr('class', 'info-block').attr('id', 'render-info')
+        .append('h2').attr('class', 'header').text('Brain Renderer');
 
     let instructions = ["Enter a number 1-116 representing the region of interest in the brain.", 
                         "Specify a chromosome and range to search on. This can be formatted one of three ways:",
@@ -30,7 +62,7 @@ window.onload = function() {
         "Selecting \"Previous\" will display the SNPs on the current chromosome directly before the currently displayed range.",
         "Similarly, \"Next\" will display the SNPs directly after the current range.",
         "Dragging horizontally on the SNP Chart will create a purple rectangle. When you are done dragging, you will be asked whether or not your would like to zoom in to that range.",
-        "If you select \"Yes\", then the bounds on the x-axis will change accordingly.",
+        "If you select \"OK\", then the bounds on the x-axis will change accordingly.",
         "If you wish to undo any zooms, you can always select \"ResetZoom\" and the original bounds will be displayed again."
     ];
     let gridLines = [
@@ -64,11 +96,4 @@ window.onload = function() {
         .selectAll('p').data(renderLines).enter().append('p')
             .attr('class', 'instruction info-instruction')
             .text(function(d) { return d; });
-
-    setUpControls();
-    addResizeObservers();
-    r1 = new X.renderer3D();
-    r2 = new X.renderer3D();
-    volume = new X.volume();
-    slices = new X.volume();
-};
+}
