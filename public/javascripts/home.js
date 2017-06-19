@@ -1,6 +1,10 @@
 // Initialize the controls and renderers once the window loads.
 window.onload = function() {
     $('#back-button').on('click', function() {
+        destroyRenderers();
+        removePreviousGrids();
+        removeExistingCharts();
+        firstChart = true;
         presentInstructions();
     })
 

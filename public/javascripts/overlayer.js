@@ -1,3 +1,11 @@
+var destroyRenderers = function() {
+    r1.destroy();
+    r2.destroy();
+    sliceX.destroy();
+    sliceY.destroy();
+    sliceZ.destroy();
+}
+
 /**
  * Creates the filename for the colortable for the given SNP and rerenders the brain.
  * @param {string} name The name of the snp to create the colortable for and render.
@@ -7,11 +15,7 @@ var renderOverlay = function(name) {
     colortable = 'http://localhost:8000/' + currChr + '/' + name + '/colortable.txt';
     
     // Destroy the current renderers.
-    r1.destroy();
-    r2.destroy();
-    sliceX.destroy();
-    sliceY.destroy();
-    sliceZ.destroy();
+    destroyRenderers();
 
     // Add the label indicating which SNP is being presented to the right panel.
     addSNPLabel(name);

@@ -49,7 +49,7 @@ var addResizeObservers = function() {
             d3.select('#xSliceContainer')
                 .style('width', d3.event.x + 'px');
             d3.select('#ySliceContainer')
-                .style('width', (rectFor('.volume-panel').width - rectFor('#zSliceContainer').width - d3.event.x) + 'px');
+                .style('width', (rectFor('.volume-panel').width - rectFor('#x-slice-resizer').width - rectFor('#zSliceContainer').width - rectFor('#y-slice-resizer').width - d3.event.x) + 'px');
         });
     d3.select('#x-slice-resizer').call(xSliceDrag);
 

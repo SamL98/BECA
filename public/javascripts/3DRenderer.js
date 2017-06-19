@@ -63,9 +63,9 @@ var renderBrain = function(colortable) {
     
     // Edit the 3d volume properties for volume rendering.
     volume.volumeRendering = true;
-    volume.opacity = 0.75;
-    volume.lowerThreshold = 0.001;
-    volume.windowLower = 0.001;
+    volume.opacity = 1.0;
+    volume.lowerThreshold = 0.01;
+    volume.windowLow = 0.01;
     volume.windowHigh = 1;
     volume.minColor = (colortable == null) ? [0, 0, 0] : [1, 0, 0];
     volume.maxColor = (colortable == null) ? [1, 1, 1] : [0, 0, 1];
@@ -78,6 +78,7 @@ var renderBrain = function(colortable) {
     // Wait for the sliced brain to load then add the slices to their respective renderers and render.
     r2.onShowtime = function() {
         sliceX.add(slices);
+        sliceX.add(linexy);
         sliceX.render();
 
         sliceY.add(slices);
@@ -86,6 +87,30 @@ var renderBrain = function(colortable) {
         sliceZ.add(slices);
         sliceZ.render();
     }
+
+    var mouseDown = function(renderer, id, orientation) {
+        return function(left, middle, right) {
+            var pos = renderer.interactor.mousePosition;
+            let rect = rectFor(id);
+            pos = {x: pos[0]/rect.width, y: pos[1]/rect.height};
+            let dims = slices.dimensions;
+            if (orientation == 'x') {
+                slices.indexY = dims[1] * pos.x;
+                slices.indexZ = dims[2] * pos.y;
+            } else if (orientation == 'y') {
+                slices.indexX = dims[0] * pos.x;
+                slices.indexZ = dims[2] * pos.y;
+            } else {
+                slices.indexX = dims[0] * pos.x;
+                slices.indexY = dims[1] * pos.y;
+            }
+            slices.modified();
+        }
+    }
+
+    sliceX.interactor.onMouseDown = mouseDown(sliceX, '#xSliceContainer', 'x');
+    sliceY.interactor.onMouseDown = mouseDown(sliceY, '#ySliceContainer', 'y');
+    sliceZ.interactor.onMouseDown = mouseDown(sliceZ, '#zSliceContainer', 'z');
 };
 
 /**

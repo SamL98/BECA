@@ -84,6 +84,10 @@ var ControlPanel = function() {
     // Controls the min and max colors and opacity of the renderer.
     this.color1 = [1, 0, 0];
     this.color2 = [0, 0, 1]; 
+    this.lowerThresh = 0.001;
+    this.upperThresh = 1;
+    this.windowLow = 0.001;
+    this.windowHigh = 1;
     this.opacity = 0.75;
 
     // Toggles whether or not to show the SNP label.
@@ -213,44 +217,27 @@ var setUpControls = function() {
         } else {
             removeSNPLabel();
         }
-    })
+    });
 
-    // Volume mode control (See ControlPanel doc) for more information.
-    // var volumeControl = renderFolder.add(panel, 'VolumeMode', ['Full', 'Slices', 'Both']).listen();
-    // volumeControl.onChange(function(value) {
-    //     if (panel.SliceMode === 'Full' && value !== "None") {
-    //         panel.SliceMode = 'Normal';
-    //     }
-    //     switch (value) {
-    //         case "Full":
-    //             setToFullVolume(true);
-    //             break;
-    //         case "Slices":
-    //             setToSlicedVolume(true);
-    //             break;
-    //         case "Both":
-    //             setToBothVolume();
-    //             break;
-    //         default: break;
-    //     }
-    // })
+    var ltC = renderFolder.add(panel, 'lowerThresh', 0, 1).step(0.0001).listen();
+    ltC.onChange(function(value) {
+        volume.lowerThreshold = value;
+    });
 
-    // Volume mode control (See ControlPanel doc) for more information.
-    // var sliceControl = renderFolder.add(panel, 'SliceMode', ['Full', 'Normal', 'None']).listen();
-    // sliceControl.onChange(function(value) {
-    //     switch (value) {
-    //         case 'Full':
-    //             showFullSlicing();
-    //             break;
-    //         case 'Normal':
-    //             setToShowSlicing();
-    //             break;
-    //         case 'None':
-    //             setToHideSlicing();
-    //             break;
-    //         default: break;
-    //     }
-    // })
+    var utC = renderFolder.add(panel, 'upperThresh', 0, 1).step(0.0001).listen();
+    utC.onChange(function(value) {
+        volume.upperThreshold = value;
+    });
+
+    var wlC = renderFolder.add(panel, 'windowLow', 0, 1).step(0.0001).listen();
+    wlC.onChange(function(value) {
+        volume.windowLow = value;
+    });
+
+    var whC = renderFolder.add(panel, 'windowHigh', 0, 1).step(0.0001).listen();
+    whC.onChange(function(value) {
+        volume.windowHigh = value;
+    });
 
     // Add the reset button.
     renderFolder.add(panel, 'Reset');
