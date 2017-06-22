@@ -41,7 +41,7 @@ var parseGenomicData = function(query, roi, callback) {
     // If this is the initial load, render the brain now to avoid lag because the SNP data is not needed.
     if (firstChart) {
         firstChart = false;
-        renderBrain(null);
+        renderBrain(colortable, orientation);
     }
 
     // Perform AJAX call to the fileserver.

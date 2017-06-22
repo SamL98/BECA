@@ -1,6 +1,4 @@
 var destroyRenderers = function() {
-    r1.destroy();
-    r2.destroy();
     sliceX.destroy();
     sliceY.destroy();
     sliceZ.destroy();
@@ -21,29 +19,35 @@ var renderOverlay = function(name) {
     addSNPLabel(name);
 
     // Rerender the brain passing the constructed colortable url.
-    renderBrain(colortable);
+    renderBrain(colortable, orientation);
 }
 
 var addSNPLabel = function(name) {
+    removeSNPLabel();
     previousSNPLabel = name;
     if (!displaySNPLabel) {
         return;
     }
 
-    d3.select('#render-container').insert('h2', '.volume-panel')
+    d3.select('#render-container').insert('h2', '.main-slice')
         .attr('class', 'header').attr('id', 'snp-label')
         .style('margin-top', '5px')
         .style('display', 'inline-block')
         .style('color', 'white')
         .style('background-color', 'black')
         .text(name);
-    d3.select('.volume-panel')
-        .style('height', (rectFor('.volume-panel').height - rectFor('#snp-label').height) + 'px');
+    let newHeight = (rectFor('.main-slice').height - rectFor('#snp-label').height) + 'px';
+    d3.select('.main-slice')
+        .style('height', newHeight);
+    d3.select('.slice-container')
+        .style('height', newHeight);
 }
 
 var previousSNPLabel = '';
 var removeSNPLabel = function() {
     d3.select('#snp-label').remove();
-    d3.select('.volume-panel')
-        .style('height', '62%');
+    d3.select('.main-slice')
+        .style('height', '100%');
+    d3.select('.slice-container')
+        .style('height', '100%');
 }

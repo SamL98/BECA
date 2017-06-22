@@ -39,6 +39,9 @@ var gridMargins = {
 
 /** Miscellaneous variables */
 
+var colortable = null;
+var orientation = null;
+
 var displaySNPLabel = true;
 
 // Flag for if the database has been queried yet.

@@ -26,39 +26,29 @@ var addResizeObservers = function() {
         });
     d3.select('#render-resizer').call(gridDrag);
 
-    var vContainerDrag = d3.drag()
+    var mainSliceDrag = d3.drag()
         .on('drag', function() {
-            d3.select('#full-vcontainer')
+            d3.select('.main-slice')
                 .style('width', d3.event.x + 'px');
-            d3.select('#sliced-vcontainer')
-                .style('width', (rectFor('.volume-panel').width - rectFor('#vcontainer-resizer').right) + 'px');
+            d3.select('.slice-container')
+                .style('width', (rectFor('#render-container').width - rectFor('#main-render-resizer').right) + 'px');
         });
-    d3.select('#vcontainer-resizer').call(vContainerDrag);
+    d3.select('#main-render-resizer').call(mainSliceDrag);
 
-    var vPanelDrag = d3.drag()
+    var secondarySliceDrag = d3.drag()
         .on('drag', function() {
-            d3.select('.volume-panel')
+            console.log(d3.event.y);
+            d3.select('.top-slice')
                 .style('height', d3.event.y + 'px');
-            d3.selectAll('.slice')
-                .style('height', (rectFor('#render-container').height - d3.event.y) + 'px');
+            d3.selectAll('.bottom-slice')
+                .style('height', (rectFor('.slice-container').height - rectFor('#secondary-render-resizer').bottom) + 'px');
         });
-    d3.select('#vpanel-resizer').call(vPanelDrag);
+    d3.select('#secondary-render-resizer').call(secondarySliceDrag);
+}
 
-    var xSliceDrag = d3.drag()
-        .on('drag', function() {
-            d3.select('#xSliceContainer')
-                .style('width', d3.event.x + 'px');
-            d3.select('#ySliceContainer')
-                .style('width', (rectFor('.volume-panel').width - rectFor('#x-slice-resizer').width - rectFor('#zSliceContainer').width - rectFor('#y-slice-resizer').width - d3.event.x) + 'px');
-        });
-    d3.select('#x-slice-resizer').call(xSliceDrag);
-
-    var ySliceDrag = d3.drag()
-        .on('drag', function() {
-            d3.select('#ySliceContainer')
-                .style('width', (d3.event.x - rectFor('#xSliceContainer').width) + 'px');
-            d3.select('#zSliceContainer')
-                .style('width', (rectFor('.volume-panel').width - rectFor('#y-slice-resizer').right) + 'px');
-        });
-    d3.select('#y-slice-resizer').call(ySliceDrag);
+var resetPanels = function() {
+    d3.select('.top-panel').style('height', '37.5vh');
+    d3.select('.bottom-panel').style('height', '52.5vh');
+    d3.select('.left-panel').style('width', rectFor('.bottom-panel').height + 'px');
+    d3.select('.right-panel').style('width', (rectFor('.bottom-panel').width - rectFor('#render-resizer').right) + 'px');
 }

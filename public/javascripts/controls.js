@@ -82,20 +82,11 @@ var ControlPanel = function() {
     /** Renderer controls */
 
     // Controls the min and max colors and opacity of the renderer.
-    this.color1 = [1, 0, 0];
-    this.color2 = [0, 0, 1]; 
-    this.lowerThresh = 0.001;
-    this.upperThresh = 1;
-    this.windowLow = 0.001;
-    this.windowHigh = 1;
+    this.orientation = 'Axial';
     this.opacity = 0.75;
 
     // Toggles whether or not to show the SNP label.
     this.ShowLabel = displaySNPLabel;
-
-    // Controls which renderers to display.
-    this.VolumeMode = 'Both'; // Potential values: Both - Display both the 3d and sliced volumes, Full - Display only the 3d volume, Slices - Diplay only the sliced volume.
-    this.SliceMode = 'Normal'; // Potential values: Normal - Display the orthogonal slices at the bottom with ~30% height, Full - Show only the slicing, no volumes, None - Show no slicing, only volumes.
 
     // Resets the cameras of the volume renderers to default values.
     this.Reset = function() {
@@ -190,16 +181,21 @@ var setUpControls = function() {
     /** Renderer controls */
 
     // Minimum color control.
-    var minCC = renderFolder.addColor(panel, 'color1');
-    minCC.onChange(function(value) {
-        volume.minColor = [value[0]/255.0, value[1]/255.0, value[2]/255.0];
-    })
-
-    // Maximum color control.
-    var maxCC = renderFolder.addColor(panel, 'color2');
-    maxCC.onChange(function(value) {
-        volume.maxColor = [value[0]/255.0, value[1]/255.0, value[2]/255.0];
-    })
+    var orientationControl = renderFolder.add(panel, 'orientation', ['Axial', 'Coronal', 'Sagittal']).listen();
+    orientationControl.onChange(function(value) {
+        switch (value) {
+            case 'Axial':
+                switchToOrientation('x');
+                break;
+            case 'Coronal':
+                switchToOrientation('y');
+                break;
+            case 'Sagittal':
+                switchToOrientation('z');
+                break;
+            default: break;
+        }
+    });
 
     // Opacity control.
     var opacityControl = renderFolder.add(panel, 'opacity', 0.1, 1.0).step(0.05);
@@ -217,26 +213,6 @@ var setUpControls = function() {
         } else {
             removeSNPLabel();
         }
-    });
-
-    var ltC = renderFolder.add(panel, 'lowerThresh', 0, 1).step(0.0001).listen();
-    ltC.onChange(function(value) {
-        volume.lowerThreshold = value;
-    });
-
-    var utC = renderFolder.add(panel, 'upperThresh', 0, 1).step(0.0001).listen();
-    utC.onChange(function(value) {
-        volume.upperThreshold = value;
-    });
-
-    var wlC = renderFolder.add(panel, 'windowLow', 0, 1).step(0.0001).listen();
-    wlC.onChange(function(value) {
-        volume.windowLow = value;
-    });
-
-    var whC = renderFolder.add(panel, 'windowHigh', 0, 1).step(0.0001).listen();
-    whC.onChange(function(value) {
-        volume.windowHigh = value;
     });
 
     // Add the reset button.

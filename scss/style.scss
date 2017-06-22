@@ -6,6 +6,12 @@ $chart-margins-ver: 2%;
 $grid-margins-hor: 4%;
 $grid-margins-ver: 5%;
 
+$render-height: 55vh;
+$main-render-height: 100%;
+$main-render-width: 48%;
+$secondary-render-height: 48%;
+$secondary-render-width: 48%;
+
 html, body, #content, #intro-header {
     width: 100%;
     height: 100%;
@@ -91,7 +97,7 @@ html, body, #content, #intro-header {
 }
 
 .bottom-panel {
-    height: 55vh;
+    height: 52.5vh;
     background-color: black;
 }
 
@@ -174,7 +180,7 @@ canvas {
     @include resizerMixin();
     height: 100%;
     width: 3px;
-    display: inline-flex;
+    display: inline-block;
     cursor: col-resize;
 }
 
@@ -190,25 +196,21 @@ canvas {
     @include horResizerMixin();
 }
 
-.slice-dragbar {
-    height: $slice-height;
-}
-
-.vcontainer {
+.main-slice {
+    width: $main-render-width;
+    height: $main-render-height;
     display: inline-block;
-    height: 100%;
-    width: 48%;
 }
 
-.volume-panel {
+.slice-container {
+    width: $secondary-render-width;
+    height: $main-render-height;
+    display: inline-block;
+}
+
+.secondary-slice {
     width: 100%;
-    height: $volume-height;
-}
-
-.slice {
-    display: inline-block;
-    width: 31.5%;
-    height: $slice-height;
+    height: $secondary-render-height;
 }
 
 canvas {

@@ -3,7 +3,7 @@ var displayingVolume = true, displayingFull = true,
     displayingCombined = true, displayingSlices = true,
     displayingFullSlices = false;
 // Respectively, the full volume renderer, the sliced volume renderer, the full volume volume, the sliced volume volume, and the three slice renderers.
-var r1, r2, volume, slices, sliceX, sliceY, sliceZ;
+var slices, sliceX, sliceY, sliceZ;
 
 /**
  * Renders the full, sliced, and orthogonal slices of the brain with or without a colortable overlay.
@@ -11,76 +11,60 @@ var r1, r2, volume, slices, sliceX, sliceY, sliceZ;
  * @see http://api.goxtk.com for more information on the XTK framework.
  * @param {string} colortable The optional colortable filename to overlay on the brain.
  */
-var renderBrain = function(colortable) {
-    // Initialize the full volume renderer.
-    r1 = new X.renderer3D();
-    r1.container = 'full-vcontainer';
-    r1.init();
-
-    // Initialize the sliced volume renderer.
-    r2 = new X.renderer3D();
-    r2.container = 'sliced-vcontainer';
-    r2.init();
-
+var renderBrain = function(colortable, main) {
     // Create the sliced volume.
     slices = new X.volume();
     slices.file = 'http://localhost:8000/file/gray_matter.nii';
     slices.labelmap.file = 'http://localhost:8000/file/converted.nii';
 
-    // Create the 3d volume.
-    volume = new X.volume();
-    volume.file = 'http://localhost:8000/file/gray_matter.nii';
-    volume.labelmap.file = 'http://localhost:8000/file/converted.nii';
-
     // If a colortable is given, specify it as the colortable for both volumes.
     if (colortable) {
         slices.labelmap.colortable.file = colortable;
-        volume.labelmap.colortable.file = colortable;
     }
+
+    orientations = {};
+    containers = {
+        'main': '.main-slice',
+        'sec-top': '.top-slice',
+        'sec-bottom': '.bottom-slice'
+    };
+
+    if (main == null) {
+        main = 'x';
+    }
+
+    if (main === 'x') {
+        orientations = {'X': 'main', 'Y': 'sec-top', 'Z': 'sec-bottom'};
+    } else if (main === 'y') {
+        orientations = {'Y': 'main', 'X': 'sec-top', 'Z': 'sec-bottom'};
+    } else {
+        orientations = {'Z': 'main', 'X': 'sec-top', 'Y': 'sec-bottom'};
+    }
+
+    console.log(orientation, orientations);
 
     // Create the X-oriented slice.
     sliceX = new X.renderer2D();
-    sliceX.container = 'xSliceContainer';
+    sliceX.container = orientations['X'];
     sliceX.orientation = 'X';
     sliceX.init();
 
     // Create the Y-oriented slice.
     sliceY = new X.renderer2D();
-    sliceY.container = 'ySliceContainer';
+    sliceY.container = orientations['Y'];
     sliceY.orientation = 'Y';
     sliceY.init();
 
     // Create the Z-oriented slice.
     sliceZ = new X.renderer2D();
-    sliceZ.container = 'zSliceContainer';
+    sliceZ.container = orientations['Z'];
     sliceZ.orientation = 'Z';
     sliceZ.init();
 
-    // Add the 3d volume to its renderer, render, and set the camera position.
-    r1.add(volume);
-    r1.render();
-    r1.camera.position = [0, 0, 300];
-    
-    // Edit the 3d volume properties for volume rendering.
-    volume.volumeRendering = true;
-    volume.opacity = 1.0;
-    volume.lowerThreshold = 0.01;
-    volume.windowLow = 0.01;
-    volume.windowHigh = 1;
-    volume.minColor = (colortable == null) ? [0, 0, 0] : [1, 0, 0];
-    volume.maxColor = (colortable == null) ? [1, 1, 1] : [0, 0, 1];
+    sliceX.add(slices);
+    sliceX.render();
 
-    // Add the sliced volume to its renderer, render, and set the camera position.
-    r2.add(slices);
-    r2.render();
-    r2.camera.position = [0, 0, 300];
-
-    // Wait for the sliced brain to load then add the slices to their respective renderers and render.
-    r2.onShowtime = function() {
-        sliceX.add(slices);
-        sliceX.add(linexy);
-        sliceX.render();
-
+    sliceX.onShowtime = function() {
         sliceY.add(slices);
         sliceY.render();
 
@@ -108,162 +92,24 @@ var renderBrain = function(colortable) {
         }
     }
 
-    sliceX.interactor.onMouseDown = mouseDown(sliceX, '#xSliceContainer', 'x');
-    sliceY.interactor.onMouseDown = mouseDown(sliceY, '#ySliceContainer', 'y');
-    sliceZ.interactor.onMouseDown = mouseDown(sliceZ, '#zSliceContainer', 'z');
+    sliceX.interactor.onMouseDown = mouseDown(sliceX, containers[orientations['X']], 'x');
+    sliceY.interactor.onMouseDown = mouseDown(sliceY, containers[orientations['Y']], 'y');
+    sliceZ.interactor.onMouseDown = mouseDown(sliceZ, containers[orientations['Z']], 'z');
 };
 
-/**
- * Display both the full and sliced volumes.
- */
-var setToBothVolume = function() {
-    setToFullVolume(false);
-    setToSlicedVolume(false);
-}
-
-/**
- * Depending on given flag, either hides or unhides the volume panel.
- * @param {bool} none Determines whether or not to hide the volume panel.
- */
-var toggleNoneVolume = function(none) {
-    console.log('toggling volume ' + none);
-    const destClass = (!none) ? 'vpanelboth' : 'vpanelhidden';
-    d3.select('.volume-panel').transition().duration(100)
-        .attr('class', destClass);
-    displayingVolume = !none;
-}
-
-/**
- * Displays the full volume renderer and depending on the given flag, hides the sliced volume renderer.
- * @param {bool} only Determines whether or not the full volume renderers should be the only volume renderer displayed.
- */
-var setToFullVolume = function(only) {
-    if (!displayingVolume) {
-        toggleNoneVolume(false);
-        addSlicing();
+var switchToOrientation = function(o) {
+    if (o === orientation) {
+        return;
     }
-    if (!displayingFull) {
-        addFullVolume();
+
+    orientation = o;
+    destroyRenderers();
+
+    if (o === 'x') {
+        renderBrain(colortable, 'x');
+    } else if (o === 'y') {
+        renderBrain(colortable, 'y');
+    } else {
+        renderBrain(colortable, 'z');
     }
-    if (only) {
-        removeSlicedVolume();
-    }
-}
-
-/**
- * Displays the full sliced volume renderer and depending on the given flag, hides the full volume renderer.
- * @param {bool} only Deteremines whether or not the sliced volume renderer should be the only volume renderer displayed.
- */
-var setToSlicedVolume = function(only) {
-    if (!displayingVolume) {
-        toggleNoneVolume(false);
-        addSlicing();
-    }
-    if (!displayingCombined) {
-        addSlicedVolume();
-    }
-    if (only) {
-        removeFullVolume();
-    }
-}
-
-/**
- * Displays the sliced volume renderer.
- */
-var addSlicedVolume = function() {
-    console.log('adding sliced volume');
-    d3.select('#sliced-vcontainer').transition().duration(100)
-        .attr('class', 'vcontainer vboth');
-    d3.select('#full-vcontainer').transition().duration(100)
-        .attr('class', 'vcontainer vboth');
-    displayingCombined = true;
-}
-
-/**
- * Displays the full volume renderer.
- */
-var addFullVolume = function() {
-    console.log('adding full volume');
-    d3.select('#full-vcontainer').transition().duration(100)
-        .attr('class', 'vcontainer vboth');
-    d3.select('#sliced-vcontainer').transition().duration(100)
-        .attr('class', 'vcontainer vboth');
-    displayingFull = true;
-}
-
-/**
- * Hides the sliced volume renderer.
- */
-var removeSlicedVolume = function() {
-    console.log('removing sliced volume');
-    d3.select('#full-vcontainer').transition().duration(100)
-        .attr('class', 'vcontainer vsolo');
-    d3.select('#sliced-vcontainer').transition().duration(100)
-        .attr('class', 'vcontainer vhidden');
-    displayingCombined = false;
-}
-
-/**
- * Hides the full volume renderer.
- */
-var removeFullVolume = function() {
-    console.log('removing full volume');
-    d3.select('#full-vcontainer').transition().duration(100)
-        .attr('class', 'vcontainer vhidden');
-    d3.select('#sliced-vcontainer').transition().duration(100)
-        .attr('class', 'vcontainer vsolo');
-    displayingFull = false;
-}
-
-/**
- * Shows slicing only if it is not currently shown.
- */
-var setToShowSlicing = function() {
-    if (!displayingSlices) {
-        addSlicing();
-    }
-}
-
-/**
- * Hides slicing only if it is currently shown.
- */
-var setToHideSlicing = function() {
-    if (displayingSlices || displayingFullSlices) {
-        removeSlicing();
-    }
-}
-
-/**
- * Displays the slicing at its normal height.
- */
-var addSlicing = function() {
-    console.log('adding slicing');
-    toggleNoneVolume(false);
-    d3.selectAll('.slice').transition().duration(100)
-        .attr('class', 'sboth');
-    displayingSlices = true;
-}
-
-/**
- * Hides the slicing.
- */
-var removeSlicing = function() {
-    console.log('removing slicing');
-    d3.selectAll('.slice').transition().duration(100)
-        .attr('class', 'shidden');
-    toggleNoneVolume(false);
-    d3.select('.volume-panel').transition().duration(100)
-        .attr('class', 'vpanelsolo');
-    displayingSlices = false;
-}
-
-/**
- * Displays the slicing at its full height while hiding the volume panel.
- */
-var showFullSlicing = function() {
-    console.log('showing full slicing');
-    toggleNoneVolume(true);
-    d3.selectAll('.slice').transition().duration(100)
-        .attr('class', 'ssolo');
-    displayingSlices = true;
 }
