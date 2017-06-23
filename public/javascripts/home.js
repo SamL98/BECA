@@ -1,38 +1,28 @@
-// Initialize the controls and renderers once the window loads.
+// Initialize the controls and display the instructions once the window laods.
 window.onload = function() {
+    // Set the target for the back button.
     $('#back-button').on('click', function() {
+        // Reset all resizing and undo any user initiated changes.
+        firstChart = true;
         resetPanels();
         removeSNPLabel();
         destroyRenderers();
         removePreviousGrids();
         removeExistingCharts();
-        firstChart = true;
         presentInstructions();
     })
 
+    // Present the instructions.
     presentInstructions();
+
+    // Finish initialization.
     setUpControls();
     addResizeObservers();
-
-    r1 = new X.renderer3D();
-    r2 = new X.renderer3D();
-    volume = new X.volume();
-    slices = new X.volume();
 };
 
-function resizePanels() {
-    addLoader();
-    displayChart();
-    displayGrid();
-    removeLoader();
-}
-
-var resizeFunction;
-window.onresize = function() {
-    clearTimeout(resizeFunction);
-    resizeFunction = setTimeout(resizePanels, 50);
-}
-
+/**
+ * Presents the initial instructions on how to use IU BECA.
+ */
 var presentInstructions = function() {
     let instructions = ["Enter a number 1-116 representing the region of interest in the brain.", 
                         "Specify a chromosome and range to search on. This can be formatted one of three ways:",

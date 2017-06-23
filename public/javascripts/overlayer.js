@@ -1,9 +1,3 @@
-var destroyRenderers = function() {
-    sliceX.destroy();
-    sliceY.destroy();
-    sliceZ.destroy();
-}
-
 /**
  * Creates the filename for the colortable for the given SNP and rerenders the brain.
  * @param {string} name The name of the snp to create the colortable for and render.
@@ -22,13 +16,23 @@ var renderOverlay = function(name) {
     renderBrain(colortable, orientation);
 }
 
+/**
+ * Displays the name of the SNP selected in the Voxel Grid on the render container.
+ * @param {string} name The name of the selected SNP.
+ */
 var addSNPLabel = function(name) {
+    // Remove the previous label (if exists).
     removeSNPLabel();
+
+    // Set the global variable for selected SNP name.
     previousSNPLabel = name;
+
+    // Assert that the SNP Label should be displayed
     if (!displaySNPLabel) {
         return;
     }
 
+    // Insert the SNP Label at the beginning of the render container hierarchy.
     d3.select('#render-container').insert('h2', '.main-slice')
         .attr('class', 'header').attr('id', 'snp-label')
         .style('margin-top', '5px')
@@ -36,16 +40,23 @@ var addSNPLabel = function(name) {
         .style('color', 'white')
         .style('background-color', 'black')
         .text(name);
-    let newHeight = (rectFor('.main-slice').height - rectFor('#snp-label').height) + 'px';
+
+    // Adjust the heights of the slice containers to fit the render container.
+    let newHeight = (rectFor('#render-container').height - rectFor('#snp-label').bottom) + 'px';
     d3.select('.main-slice')
         .style('height', newHeight);
     d3.select('.slice-container')
         .style('height', newHeight);
 }
 
-var previousSNPLabel = '';
+/**
+ * Removes the SNP Label from the render container.
+ */
 var removeSNPLabel = function() {
+    // Remove the label.
     d3.select('#snp-label').remove();
+
+    // Adjust the heights of the slice containers to fit the render container.
     d3.select('.main-slice')
         .style('height', '100%');
     d3.select('.slice-container')

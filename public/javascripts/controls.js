@@ -23,6 +23,8 @@ var ControlPanel = function() {
             d3.select('#intro-header').remove();
             performQuery()
         } else if (this.Query != '' && this.ROI != '') {
+            // If the control panel has a query and roi, but the global variables are not set,
+            // set the global variables and resubmit.
             query = this.Query;
             roi = this.ROI;
             d3.select('#intro-header').remove();
@@ -81,7 +83,7 @@ var ControlPanel = function() {
 
     /** Renderer controls */
 
-    // Controls the min and max colors and opacity of the renderer.
+    // Controls the orientation and opacity of the renderer.
     this.orientation = 'Axial';
     this.opacity = 0.75;
 
@@ -96,14 +98,23 @@ var ControlPanel = function() {
         r2.resetBoundingBox();
         r2.resetViewAndRender();
 
+        // Reset the slice containers to their inital widths and heights
+
+        // If the SNP label is present, adjust container heights accordingly.
         let headerRect = d3.select('#snp-label');
         if (headerRect) {
-            d3.select('.volume-panel').style('height', (rectFor('#render-container').height * 0.62 - headerRect.height) + 'px');
+            let destHeight = rectFor('#render-container').height - headerRect.bottom;
+            d3.select('.main-slice').style('height', destHeight + 'px');
+            d3.select('.slice-container').style('height', destHeight + 'px');
         } else {
-            d3.select('.volume-panel').style('height', '62%');
+            d3.select('.main-slice').style('height', '100%');
+            d3.select('.slice-container').style('height', '100%');
         }
-        d3.selectAll('.slice').style('height', '35%').style('width', '31.5%');
-        d3.selectAll('.vcontainer').style('width', '48%');
+
+        let ltHalf = '48%';
+        d3.select('.main-slice').style('width', ltHalf);
+        d3.select('.slice-container').style('width', ltHalf);
+        d3.select('.secondary-slice').style('height', ltHalf);
     };
 };
 
@@ -123,31 +134,6 @@ var setUpControls = function() {
 
     // Save the current panel settings in local storage (cleared when cache is emptied).
     gui.remember(panel);
-
-    /*var displayControl = displayFolder.add(panel, 'DisplayMode', ['All', 'Chart and Grid', 'Grid and Brain', 'Chart', 'Grid', 'Brain']).listen();
-    displayControl.onChange(function(value) {
-        switch (value) {
-            case 'All':
-                displayAll();
-                break;
-            case 'Chart and Grid':
-                displayChartAndGrid();
-                break;
-            case 'Grid and Brain':
-                displayGridAndBrain();
-                break;
-            case 'Chart':
-                displaySNPChart();
-                break;
-            case 'Grid':
-                displaySNPGrid();
-                break;
-            case 'Brain':
-                displayBrain();
-                break;
-            default: break;
-        }
-    });*/
 
     /** Query controls */
 
@@ -180,7 +166,7 @@ var setUpControls = function() {
 
     /** Renderer controls */
 
-    // Minimum color control.
+    // Orientation control.
     var orientationControl = renderFolder.add(panel, 'orientation', ['Axial', 'Coronal', 'Sagittal']).listen();
     orientationControl.onChange(function(value) {
         switch (value) {
@@ -200,8 +186,8 @@ var setUpControls = function() {
     // Opacity control.
     var opacityControl = renderFolder.add(panel, 'opacity', 0.1, 1.0).step(0.05);
     opacityControl.onChange(function(value) {
-        volume.opacity = value;
         slices.opacity = value;
+        slices.modified();
     })
 
     // SNP label control.

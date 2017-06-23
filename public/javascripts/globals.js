@@ -37,12 +37,18 @@ var gridMargins = {
     bottom: 25
 };
 
-/** Miscellaneous variables */
+/** Variables for the renderers */
 
+// The filename for the colortable overlay of the renderers.
 var colortable = null;
+// The orientation of the main slice of the renderers.
 var orientation = null;
-
+// Whether or not to display the SNP label on the render container.
 var displaySNPLabel = true;
+// Holds the current SNP selected from the Voxel Grid for the renderer label.
+var previousSNPLabel = '';
+
+/** Miscellaneous variables */
 
 // Flag for if the database has been queried yet.
 var firstChart = true;

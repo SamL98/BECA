@@ -1,63 +1,28 @@
-const topPanel = '.top-panel';
-const bottomPanel = '.bottom-panel';
-const leftPanel = '.left-panel';
-const rightPanel = '.right-panel';
-
-var displayAll = function() {
-    animatePanel(topPanel, null, '38%');
-    animatePanel(bottomPanel, null, '60%');
-    animatePanel(leftPanel, '38%', null)
-    animatePanel(rightPanel, '60%', null);
+/**
+ * Redisplays both the SNP Chart and the Voxel Grid when new window bounds are introduced.
+ */
+function resizePanels() {
+    addLoader();
     displayChart();
     displayGrid();
+    removeLoader();
 }
 
-var displayChartAndGrid = function() {
-    animatePanel(topPanel, null, '38%');
-    animatePanel(bottomPanel, null, '60%');
-    animatePanel(leftPanel, '0%', null);
-    animatePanel(rightPanel, '98%', null);
-    displayChart();
-    displayGrid();
+// The function to handle window resize events.
+var resizeFunction;
+
+// On each resize, wait 50ms to redisplay the panels so that it is not done excessively.
+window.onresize = function() {
+    clearTimeout(resizeFunction);
+    resizeFunction = setTimeout(resizePanels, 50);
 }
 
-var displayGridAndBrain = function() {
-    animatePanel(bottomPanel, null, '98%');
-    animatePanel(topPanel, null, '0%');
-    animatePanel(leftPanel, '38%', null)
-    animatePanel(rightPanel, '62%', null);
-    displayGrid();
-}
-
-var displaySNPChart = function() {
-    animatePanel(topPanel, null, '98%');
-    animatePanel(bottomPanel, null, '0%');
-    displayChart();
-}
-
-var displaySNPGrid = function() {
-    animatePanel(topPanel, null, '0%');
-    animatePanel(bottomPanel, '98%', '98%');
-    animatePanel(rightPanel, '98%', null);
-    animatePanel(leftPanel, '0%', null);
-    displayGrid();
-}
-
-var displayBrain = function() {
-    animatePanel(topPanel, null, '0%');
-    animatePanel(bottomPanel, '98%', '98%');
-    animatePanel(leftPanel, '98%', null);
-    animatePanel(rightPanel, '0%', null);
-}
-
-var animatePanel = function(panel, width, height) {
-    if (width) {
-        d3.select(panel).transition().duration(100)
-            .style('width', width);
-    }
-
-    if (height) {
-        d3.select(panel).transition().duration(100)
-            .style('height', height);
-    }
+/**
+ * Reset all the panels to their default widths and heights.
+ */
+var resetPanels = function() {
+    d3.select('.top-panel').style('height', '37.5vh');
+    d3.select('.bottom-panel').style('height', '52.5vh');
+    d3.select('.left-panel').style('width', rectFor('.bottom-panel').height + 'px');
+    d3.select('.right-panel').style('width', (rectFor('.bottom-panel').width - rectFor('#render-resizer').right) + 'px');
 }
