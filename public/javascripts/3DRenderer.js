@@ -125,6 +125,7 @@ var renderBrain = function(colortable, main) {
             let dims = slices.dimensions;
 
             // Depending on which orientation is displayed in the event container, change the other indices accordingly.
+
             if (orientation === 'x') {
                 slices.indexY = dims[1] * pos.x;
                 slices.indexZ = dims[2] * pos.y;

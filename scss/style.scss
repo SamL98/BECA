@@ -20,6 +20,7 @@ html, body, #content, #intro-header {
 }
 
 #back-button {
+    display: inline-block;
     cursor: pointer;
 }
 
@@ -206,6 +207,10 @@ canvas {
 
 .hor-dragbar {
     @include horResizerMixin();
+}
+
+.slice {
+    cursor: crosshair;
 }
 
 .main-slice {
