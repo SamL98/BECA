@@ -88,7 +88,7 @@ var presentInstructions = function() {
     ];
     let renderLines = [
         "The Brain Renderer displays the gray matter of the brain, segmented by the 116 ROI\'s.",
-        "The full, 3D volume, as well as xyz slices are displayed.",
+        "The axial, coronal, and sagittal slices are displayed.",
         "When a column in the voxel grid is selected, the Brain Renderer is redisplayed using the p-values of the selected SNP.",
         "The color in the Voxel Grid of each SNP on one of the ROI\'s is displayed on the actual ROI in the brain.",
         "The Brain Renderer can be controlled using the \"Render\" folder in the control panel.",

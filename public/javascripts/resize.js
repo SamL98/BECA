@@ -5,14 +5,15 @@ var addResizeObservers = function() {
     // Obtain the initial values for the dimensions of the total content.
     let contentWidth = rectFor('#content').width;
     let contentHeight = rectFor('#content').height;
+    let bottomBottom = rectFor('.bottom-panel').bottom;
 
     // Handles drags on the horizontal, chart resizer to resize the top and bottom panels.
     var chartDrag = d3.drag()
         .on('drag', function() {
             d3.select('.top-panel')
                 .style('height', d3.event.y + 'px');
-            d3.select('bottom-panel')
-                .style('height', (contentHeight - d3.event.y) + 'px');
+            d3.select('.bottom-panel')
+                .style('height', (bottomBottom - rectFor('#chart-resizer').bottom) + 'px');
         })
         .on('end', function() {
             addLoader();

@@ -125,10 +125,10 @@ var renderBrain = function(colortable, main) {
             let dims = slices.dimensions;
 
             // Depending on which orientation is displayed in the event container, change the other indices accordingly.
-            if (orientation == 'x') {
+            if (orientation === 'x') {
                 slices.indexY = dims[1] * pos.x;
                 slices.indexZ = dims[2] * pos.y;
-            } else if (orientation == 'y') {
+            } else if (orientation === 'y') {
                 slices.indexX = dims[0] * pos.x;
                 slices.indexZ = dims[2] * pos.y;
             } else {
@@ -153,11 +153,10 @@ var addCrosshairs = function() {
         let rect = rectFor(id);
         let ctx = d3.select(id).select('canvas')
             .node().getContext('2d');
-        ctx.fillStyle = 'clear';
-        ctx.fillRect(0, 0, rect.width, rect.height);
+        
         ctx.strokeStyle = 'steelblue';
-        ctx.lineWidth = 5.0;
-        ctx.save();
+        ctx.lineWidth = 3.5;
+
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.beginPath();
 
@@ -175,14 +174,14 @@ var addCrosshairs = function() {
         }
         x *= rect.width;
         y *= rect.height;
+        x -= ctx.lineWidth/2;
+        y -= ctx.lineWidth/2;
 
         ctx.moveTo(x, 0);
         ctx.lineTo(x, rect.height);
         ctx.moveTo(0, y);
         ctx.lineTo(rect.width, y);
-
         ctx.stroke();
-        ctx.restore();
     });
 
 }
