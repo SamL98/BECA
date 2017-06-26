@@ -1,6 +1,9 @@
 // The sliced volume volume and the three slice renderers.
 var slices, sliceX, sliceY, sliceZ;
 
+// Initialize an empty dict that will hold the orientations.
+orientations = {};
+
 /**
  * Destroys the renderers in preparation for new rendering.
  */
@@ -41,8 +44,6 @@ var renderBrain = function(colortable, main) {
         main = 'x';
     }
 
-    // Initialize an empty dict that will hold the orientations.
-    orientations = {};
     if (main === 'x') {
         // If x is the main, default to y on top and z on bottom.
         orientations = {'X': 'main', 'Y': 'sec-top', 'Z': 'sec-bottom'};
@@ -83,6 +84,18 @@ var renderBrain = function(colortable, main) {
 
         sliceZ.add(slices);
         sliceZ.render();
+    }
+
+    sliceX.onRender = function() {
+        addCrosshairs();
+    }
+
+    sliceY.onRender = function() {
+        addCrosshairs();
+    }
+
+    sliceZ.onRender = function() {
+        addCrosshairs();
     }
 
     /**
@@ -133,6 +146,46 @@ var renderBrain = function(colortable, main) {
     sliceY.interactor.onMouseDown = mouseDown(sliceY, containers[orientations['Y']], 'y');
     sliceZ.interactor.onMouseDown = mouseDown(sliceZ, containers[orientations['Z']], 'z');
 };
+
+var addCrosshairs = function() {
+    ['X', 'Y', 'Z'].forEach(o => {
+        let id = '#' + orientations[o];
+        let rect = rectFor(id);
+        let ctx = d3.select(id).select('canvas')
+            .node().getContext('2d');
+        ctx.fillStyle = 'clear';
+        ctx.fillRect(0, 0, rect.width, rect.height);
+        ctx.strokeStyle = 'steelblue';
+        ctx.lineWidth = 5.0;
+        ctx.save();
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.beginPath();
+
+        var x, y;
+        let dims = slices.dimensions;
+        if (o === 'X') {
+            x = slices.indexY/dims[1];
+            y = slices.indexZ/dims[2];
+        } else if (o === 'Y') {
+            x = slices.indexX/dims[0];
+            y = slices.indexZ/dims[2];
+        } else {
+            x = slices.indexX/dims[0];
+            y = slices.indexY/dims[1];
+        }
+        x *= rect.width;
+        y *= rect.height;
+
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, rect.height);
+        ctx.moveTo(0, y);
+        ctx.lineTo(rect.width, y);
+
+        ctx.stroke();
+        ctx.restore();
+    });
+
+}
 
 /**
  * Displays the specified orientation in the main slice container.

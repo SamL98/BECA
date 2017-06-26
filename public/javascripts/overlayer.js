@@ -36,13 +36,14 @@ var addSNPLabel = function(name) {
     d3.select('#render-container').insert('h2', '.main-slice')
         .attr('class', 'header').attr('id', 'snp-label')
         .style('margin-top', '5px')
-        .style('display', 'inline-block')
+        .style('position', 'absolute').style('top', '0').style('left', '0').style('right', '0')
         .style('color', 'white')
         .style('background-color', 'black')
         .text(name);
 
     // Adjust the heights of the slice containers to fit the render container.
-    let newHeight = (rectFor('#render-container').height - rectFor('#snp-label').bottom) + 'px';
+    let labelBottom = rectFor('#snp-label').bottom - rectFor('#render-container').top;
+    let newHeight = (rectFor('#render-container').height - labelBottom) + 'px';
     d3.select('.main-slice')
         .style('height', newHeight);
     d3.select('.slice-container')
