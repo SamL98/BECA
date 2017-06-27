@@ -83,20 +83,18 @@ var ControlPanel = function() {
 
     /** Renderer controls */
 
-    // Controls the orientation and opacity of the renderer.
+    // Controls the orientation of the renderer.
     this.orientation = 'Axial';
-    this.opacity = 0.75;
 
     // Toggles whether or not to show the SNP label.
     this.ShowLabel = displaySNPLabel;
 
     // Resets the cameras of the volume renderers to default values.
     this.Reset = function() {
-        r1.resetBoundingBox();
-        r1.resetViewAndRender();
-
-        r2.resetBoundingBox();
-        r2.resetViewAndRender();
+        let dims = slices.dimensions;
+        slices.indexX = dims[0]/2;
+        slices.indexY = dims[1]/2;
+        slices.indexZ = dims[2]/2;
 
         // Reset the slice containers to their inital widths and heights
 
@@ -182,13 +180,6 @@ var setUpControls = function() {
             default: break;
         }
     });
-
-    // Opacity control.
-    var opacityControl = renderFolder.add(panel, 'opacity', 0.1, 1.0).step(0.05);
-    opacityControl.onChange(function(value) {
-        slices.opacity = value;
-        slices.modified();
-    })
 
     // SNP label control.
     var labelControl = renderFolder.add(panel, 'ShowLabel');

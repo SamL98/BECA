@@ -19,6 +19,12 @@ var query;
 // The default range between lower and upper bounds.
 var chrRange = 600000;
 
+/** Variables regarding the min and max panel size */
+let minTop = 0.2, maxTop = 0.55;
+let minLeft = 0.2, maxLeft = 0.65;
+let minMain = 0.2, maxMain = 0.75;
+let minSec = 0.2, maxSec = 0.75;
+
 /** Variables for displaying the chart and grid. */
 
 // Margins for the SNP chart.

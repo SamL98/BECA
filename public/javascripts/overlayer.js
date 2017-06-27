@@ -61,5 +61,5 @@ var removeSNPLabel = function() {
     d3.select('.main-slice')
         .style('height', '100%');
     d3.select('.slice-container')
-        .style('height', '100%');
+        .style('height', '96%');
 }

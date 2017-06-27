@@ -4,6 +4,8 @@ var slices, sliceX, sliceY, sliceZ;
 // Initialize an empty dict that will hold the orientations.
 orientations = {};
 
+var posX, posY;
+
 /**
  * Destroys the renderers in preparation for new rendering.
  */
@@ -87,15 +89,15 @@ var renderBrain = function(colortable, main) {
     }
 
     sliceX.onRender = function() {
-        addCrosshairs();
+        addCrosshairs('Z');
     }
 
     sliceY.onRender = function() {
-        addCrosshairs();
+        addCrosshairs('X');
     }
 
     sliceZ.onRender = function() {
-        addCrosshairs();
+        addCrosshairs('Y');
     }
 
     /**
@@ -119,26 +121,23 @@ var renderBrain = function(colortable, main) {
 
             // Determine the percent across and down the given slice container.
             let rect = rectFor(id);
+            posX = rect.width, posY = rect.height;
             pos = {x: pos[0]/rect.width, y: pos[1]/rect.height};
 
             // Obtain the dimensions of the sliced brain as a length-3 array.
             let dims = slices.dimensions;
 
             // Depending on which orientation is displayed in the event container, change the other indices accordingly.
-
             if (orientation === 'x') {
-                slices.indexY = dims[1] * pos.x;
-                slices.indexZ = dims[2] * pos.y;
+                slices.indexY = dims[1] - dims[1] * pos.x;
+                slices.indexZ = dims[2] - dims[2] * pos.y;
             } else if (orientation === 'y') {
-                slices.indexX = dims[0] * pos.x;
-                slices.indexZ = dims[2] * pos.y;
+                slices.indexX = dims[0] - dims[0] * pos.x;
+                slices.indexZ = dims[2] - dims[2] * pos.y;
             } else {
-                slices.indexX = dims[0] * pos.x;
-                slices.indexY = dims[1] * pos.y;
+                slices.indexX = dims[0] - dims[0] * pos.x;
+                slices.indexY = dims[1] - dims[1] * pos.y;
             }
-
-            // Signify that children (2d slices) of the sliced brain have changed.
-            slices.modified();
         }
     }
 
@@ -148,43 +147,40 @@ var renderBrain = function(colortable, main) {
     sliceZ.interactor.onMouseDown = mouseDown(sliceZ, containers[orientations['Z']], 'z');
 };
 
-var addCrosshairs = function() {
-    ['X', 'Y', 'Z'].forEach(o => {
-        let id = '#' + orientations[o];
-        let rect = rectFor(id);
-        let ctx = d3.select(id).select('canvas')
-            .node().getContext('2d');
-        
-        ctx.strokeStyle = 'steelblue';
-        ctx.lineWidth = 3.5;
+var addCrosshairs = function(o) {
+    let id = '#' + orientations[o];
+    let rect = rectFor(id);
+    let ctx = d3.select(id).select('canvas')
+        .node().getContext('2d');
+    
+    ctx.strokeStyle = 'steelblue';
+    ctx.lineWidth = 3.5;
 
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
-        ctx.beginPath();
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.beginPath();
 
-        var x, y;
-        let dims = slices.dimensions;
-        if (o === 'X') {
-            x = slices.indexY/dims[1];
-            y = slices.indexZ/dims[2];
-        } else if (o === 'Y') {
-            x = slices.indexX/dims[0];
-            y = slices.indexZ/dims[2];
-        } else {
-            x = slices.indexX/dims[0];
-            y = slices.indexY/dims[1];
-        }
-        x *= rect.width;
-        y *= rect.height;
-        x -= ctx.lineWidth/2;
-        y -= ctx.lineWidth/2;
+    var x, y;
+    let dims = slices.dimensions;
+    if (o === 'X') {
+        x = 1.0 - slices.indexY/dims[1];
+        y = 1.0 - slices.indexZ/dims[2];
+    } else if (o === 'Y') {
+        x = 1.0 - slices.indexX/dims[0];
+        y = 1.0 - slices.indexZ/dims[2];
+    } else {
+        x = 1.0 - slices.indexX/dims[0];
+        y = 1.0 - slices.indexY/dims[1];
+    }
+    x *= rect.width;
+    y *= rect.height;
+    x -= ctx.lineWidth/2;
+    y -= ctx.lineWidth/2;
 
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, rect.height);
-        ctx.moveTo(0, y);
-        ctx.lineTo(rect.width, y);
-        ctx.stroke();
-    });
-
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, rect.height);
+    ctx.moveTo(0, y);
+    ctx.lineTo(rect.width, y);
+    ctx.stroke();
 }
 
 /**
