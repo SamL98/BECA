@@ -20,6 +20,10 @@ var ControlPanel = function() {
     this.Submit = function() {
         if (query && query != "" && roi && roi > 0) {
             // If the query and roi are present, fetch the SNP data.
+            if (roi > 116) {
+                alert("The entered ROI must be between 0 and 116");
+                return;
+            }
             d3.select('#intro-header').remove();
             performQuery()
         } else if (this.Query != '' && this.ROI != '') {
@@ -27,7 +31,6 @@ var ControlPanel = function() {
             // set the global variables and resubmit.
             query = this.Query;
             roi = this.ROI;
-            d3.select('#intro-header').remove();
             this.Submit();
         }
     }
@@ -143,7 +146,7 @@ var setUpControls = function() {
 
     // The textfield for the formatted chromosome and range query.
     var qControl = queryFolder.add(panel, 'Query');
-    qControl.onFinishChange(function(value) {
+    qControl.onChange(function(value) {
         query = value;
     });
 

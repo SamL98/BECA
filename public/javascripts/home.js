@@ -92,7 +92,6 @@ var presentInstructions = function() {
         "When a column in the voxel grid is selected, the Brain Renderer is redisplayed using the p-values of the selected SNP.",
         "The color in the Voxel Grid of each SNP on one of the ROI\'s is displayed on the actual ROI in the brain.",
         "The Brain Renderer can be controlled using the \"Render\" folder in the control panel.",
-        "The \"Opacity\" slider controls the opacity of the brain renderers.",
         "The \"Reset\" button can be used to reset the cameras of the renderers after they have been changed."
     ];
 

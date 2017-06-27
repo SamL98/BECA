@@ -4,8 +4,6 @@ var slices, sliceX, sliceY, sliceZ;
 // Initialize an empty dict that will hold the orientations.
 orientations = {};
 
-var posX, posY;
-
 /**
  * Destroys the renderers in preparation for new rendering.
  */
@@ -121,7 +119,6 @@ var renderBrain = function(colortable, main) {
 
             // Determine the percent across and down the given slice container.
             let rect = rectFor(id);
-            posX = rect.width, posY = rect.height;
             pos = {x: pos[0]/rect.width, y: pos[1]/rect.height};
 
             // Obtain the dimensions of the sliced brain as a length-3 array.

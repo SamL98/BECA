@@ -113,6 +113,14 @@ var adjacentRange = function(type, chr, roi, callback) {
  * @param {requestCallback} callback 
  */
 var formatData = function(data, callback) {
+    let error = data[0].error;
+    if (error) {
+        alert(error);
+        removeLoader();
+        $('#back-button').click();
+        return;
+    }
+
     // Clear the current, global SNP variable.
     snps = [];
     for (var i = 1; i < data.length; i++) {
