@@ -34,7 +34,7 @@ var displayChart = function() {
     var data = [];
     for (var i = 0; i < snps.length; i++) {
         var snp = snps[i];
-        if (snp.loc >= lowerBound || snp.loc <= upperBound) {
+        if (snp.loc >= lowerBound && snp.loc <= upperBound) {
             data.push(snp);
         }
     }
