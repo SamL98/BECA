@@ -3,6 +3,8 @@
  * @param {string} name The name of the snp to create the colortable for and render.
  */
 var renderOverlay = function(name) {
+    panel.DisplayOverlay = true;
+
     // Create the URL for the colortable from the fileserver.
     colortable = 'http://localhost:8000/' + currChr + '/' + name + '/colortable.txt';
     

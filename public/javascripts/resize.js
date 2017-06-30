@@ -17,12 +17,16 @@ var addResizeObservers = function() {
                 .style('height', d3.event.y + 'px');
             d3.select('.bottom-panel')
                 .style('height', (bottomBottom - rectFor('#chart-resizer').bottom) + 'px');
+            d3.select('#render-container').style('height', '100%');
+            d3.select('.main-slice').style('height', '100%');
+            d3.select('.slice-container').style('height', '100%');
         })
         .on('end', function() {
             addLoader();
             displayChart();
-            displayGrid();
-            removeLoader();
+            displayGrid(() => {
+                removeLoader();
+            });
         });
     d3.select('#chart-resizer').call(chartDrag);
 

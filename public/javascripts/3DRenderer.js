@@ -86,6 +86,9 @@ var renderBrain = function(colortable, main) {
         sliceZ.render();
     }
 
+    // Add the crosshairs to the canvases of the three renderers. 
+    // They must be added every time on render since every time the slice is rendered, it hides the crosshairs.
+
     sliceX.onRender = function() {
         addCrosshairs('Z');
     }
@@ -144,18 +147,26 @@ var renderBrain = function(colortable, main) {
     sliceZ.interactor.onMouseDown = mouseDown(sliceZ, containers[orientations['Z']], 'z');
 };
 
+/**
+ * Adds the crosshairs to show the slice index of the orientations other than the specified one.
+ * @param {string} o The given orientation (X, Y, or Z) to add the crosshairs to.
+ */
 var addCrosshairs = function(o) {
+    // Obtain the context of the specified orientation container.
     let id = '#' + orientations[o];
     let rect = rectFor(id);
     let ctx = d3.select(id).select('canvas')
         .node().getContext('2d');
     
+    // Set context variables.
     ctx.strokeStyle = 'steelblue';
     ctx.lineWidth = 3.5;
-
     ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+    // Begin crosshair path.
     ctx.beginPath();
 
+    // Calculate the beginning x coordinate for the horizontal crosshair and y coordinate for the vertical crosshair.
     var x, y;
     let dims = slices.dimensions;
     if (o === 'X') {
@@ -168,11 +179,14 @@ var addCrosshairs = function(o) {
         x = 1.0 - slices.indexX/dims[0];
         y = 1.0 - slices.indexY/dims[1];
     }
+
+    // Scale the x and y coordinates by the container dimensions and adjust them to center them by line width.
     x *= rect.width;
     y *= rect.height;
     x -= ctx.lineWidth/2;
     y -= ctx.lineWidth/2;
 
+    // Outline the actual path and stroke it.
     ctx.moveTo(x, 0);
     ctx.lineTo(x, rect.height);
     ctx.moveTo(0, y);

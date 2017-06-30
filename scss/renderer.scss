@@ -1,0 +1,55 @@
+$volume-height: 62%;
+$volume-width: 48%;
+$slice-height: 35%;
+
+$render-height: 55vh;
+$main-render-height: 100%;
+$main-render-width: 48%;
+$secondary-render-height: 48%;
+$secondary-render-width: 48%;
+
+#render-container {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    top: 0;
+    left: 0;
+    background: black;
+}
+
+canvas {
+    fill: none;
+    width: 100%;
+    height: 100%;
+}
+
+.slice {
+    cursor: crosshair;
+}
+
+.main-slice, .slice-container {
+    height: $main-render-height;
+    display: inline-block;
+}
+
+.main-slice {
+    width: $main-render-width; 
+}
+
+.slice-container {
+    width: $secondary-render-width;
+}
+
+.secondary-slice {
+    width: 100%;
+    height: $secondary-render-height;
+}
+
+#sec-top {
+    top: 0;
+}
+
+#sec-bottom {
+    bottom: 0;
+}

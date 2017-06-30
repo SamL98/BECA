@@ -1,0 +1,21 @@
+$grid-margins-hor: 4%;
+$grid-margins-ver: 5%;
+
+@mixin labelMixin() {
+    font-size: 14px;
+    font-family: "arial";
+    font-weight: 600;
+}
+
+#grid-container {
+    display: inline-block;
+    overflow: scroll !important;
+    background: black;
+}
+
+.gridLabel {
+    fill: white !important;
+    stroke: white !important;
+    color: white !important;
+    @include labelMixin();
+}

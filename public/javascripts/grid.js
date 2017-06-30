@@ -14,7 +14,7 @@ var prevCell = null;
  * @see https://github.com/d3/d3/wiki for more information on the D3 framework.
  * @see https://developer.mozilla.org/en-US/docs/Web/SVG for more information on SVG.
  */
-var displayGrid = function() {
+var displayGrid = function(callback = null) {
     // Remove the previous grids.
     removePreviousGrids();
     
@@ -121,4 +121,8 @@ var displayGrid = function() {
                         removeAnnotationForPValue(id);
                     }
                 });
+
+    if (callback) {
+        callback();
+    }
 }

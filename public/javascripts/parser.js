@@ -113,8 +113,10 @@ var adjacentRange = function(type, chr, roi, callback) {
  * @param {requestCallback} callback 
  */
 var formatData = function(data, callback) {
+    // Check to see if the response was passed an error.
     let error = data[0].error;
     if (error) {
+        // If there was an error (such as no SNP or no Gene found) let the user know and go back to the intro screen.
         alert(error);
         removeLoader();
         $('#back-button').click();

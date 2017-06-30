@@ -1,0 +1,47 @@
+$chart-margins-hor: 2%;
+$chart-margins-ver: 2%;
+
+@mixin labelMixin() {
+    font-size: 14px;
+    font-family: "arial";
+    font-weight: 600;
+}
+
+#offset-container {
+    width: 100%;
+    height: 100%;
+}
+
+.chart {
+    margin: 0 $chart-margins-hor $chart-margins-ver $chart-margins-hor;
+    width: 100% - ($chart-margins-hor);
+    height: 100% - (2 * $chart-margins-ver);
+}
+
+.point {
+    fill: steelblue;
+    stroke: black;
+}
+
+.axis text {
+    fill: black;
+    font-size: 12px;
+    font-family: "arial";
+}
+
+.axis path, .axis line {
+    fill: none;
+    stroke: black;
+}
+
+.label {
+    text-anchor: middle;
+    font: 14px sans-serif;
+    color: black;
+    fill: black;
+}
+
+.axisLabel {
+    fill: black;
+    @include labelMixin();
+}

@@ -1,0 +1,37 @@
+#chart-resizer, #render-resizer {
+    background-color: gray;
+}
+
+@mixin resizerMixin() {
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+    background-color: black;
+}
+
+@mixin horResizerMixin() {
+    @include resizerMixin();
+    height: 3px;
+    width: 100%;
+    display: inline-block;
+    cursor: row-resize;
+}
+
+@mixin verResizerMixin() {
+    @include resizerMixin();
+    height: 100%;
+    width: 3px;
+    display: inline-block;
+    cursor: col-resize;
+}
+
+.dragbar {
+    @include resizerMixin();
+}
+
+.ver-dragbar {
+    @include verResizerMixin();
+}
+
+.hor-dragbar {
+    @include horResizerMixin();
+}

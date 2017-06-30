@@ -101,7 +101,7 @@ var addAnnotationForSNP = function(id) {
     // Select the point.
     var point = d3.select('#' + id);
     // Specify the width and height of the annotation.
-    var annotationWidth = 150, annotationHeight = 75;
+    var annotationWidth = 135, annotationHeight = 65;
     // Obtain the center coordinates of the point.
     var pointX = (+point.attr('cx')), pointY = (+point.attr('cy'));
 

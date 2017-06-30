@@ -30,7 +30,7 @@ let minSec = 0.2, maxSec = 0.75;
 // Margins for the SNP chart.
 var chartMargins = {
     top: 25,
-    bottom: 30,
+    bottom: 20,
     left: 50,
     right: 25
 };
@@ -43,10 +43,14 @@ var gridMargins = {
     bottom: 25
 };
 
+var panel;
+
 /** Variables for the renderers */
 
 // The filename for the colortable overlay of the renderers.
 var colortable = null;
+
+var displayingOverlay = false;
 // The orientation of the main slice of the renderers.
 var orientation = null;
 // Whether or not to display the SNP label on the render container.

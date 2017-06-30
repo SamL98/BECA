@@ -21,6 +21,7 @@ var ControlPanel = function() {
         if (query && query != "" && roi && roi > 0) {
             // If the query and roi are present, fetch the SNP data.
             if (roi > 116) {
+                // Assert that the roi is less than the max roi.
                 alert("The entered ROI must be between 0 and 116");
                 return;
             }
@@ -71,6 +72,7 @@ var ControlPanel = function() {
         lowerBound = originalLower;
         upperBound = originalUpper;
 
+        // Remove the SNP label.
         removeSNPLabel();
 
         // Show that the redisplay will take some time.
@@ -78,10 +80,9 @@ var ControlPanel = function() {
 
         // Redisplay the chart and grid.
         displayChart();
-        displayGrid();
-
-        // Let the user know that the display is completed.
-        removeLoader();
+        displayGrid(() => {
+            removeLoader();
+        });
     }
 
     /** Renderer controls */
@@ -91,6 +92,9 @@ var ControlPanel = function() {
 
     // Toggles whether or not to show the SNP label.
     this.ShowLabel = displaySNPLabel;
+
+    // Toggles whether or not to show the colortable.
+    this.DisplayOverlay = displayingOverlay;
 
     // Resets the cameras of the volume renderers to default values.
     this.Reset = function() {
@@ -125,7 +129,7 @@ var ControlPanel = function() {
  */
 var setUpControls = function() {
     // Initialize the panel.
-    var panel = new ControlPanel();
+    panel = new ControlPanel();
     var gui = new dat.GUI({ autoPlace: true });
 
     // Create the folders to separate chart and renderer control.
@@ -193,6 +197,13 @@ var setUpControls = function() {
         } else {
             removeSNPLabel();
         }
+    });
+
+    var overlayControl = renderFolder.add(panel, 'DisplayOverlay').listen();
+    overlayControl.onChange(value => {
+        displayingOverlay = value;
+        destroyRenderers();
+        renderBrain(displayingOverlay ? colortable : null, orientation);
     });
 
     // Add the reset button.

@@ -78,8 +78,9 @@ var dragEnd = function() {
             // Set to loading, display the chart, and set to not loading.
             addLoader();
             displayChart();
-            displayGrid();
-            removeLoader();
+            displayGrid(() => {
+                removeLoader();
+            });
         }
     }
 };
