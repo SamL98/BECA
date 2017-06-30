@@ -177,7 +177,7 @@ var addAnnotationForPValue = function(id, snp) {
     const y = (rect.top + rect.bottom)/2 - gridRect.top;
 
     // Specify the width and height of the annotation.
-    const annoWidth = 110, annoHeight = 65;
+    const annoWidth = 100, annoHeight = 65;
 
     // Specify variables for use in displaying the annotation and text.
     // - fontSize: the point size of the font used in the annotation labels.

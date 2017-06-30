@@ -18,6 +18,18 @@ $secondary-render-width: 48%;
     background: black;
 }
 
+#main-render-resizer {
+    position: absolute;
+    margin-left: 5px;
+    right: 0;
+}
+
+#secondary-render-resizer {
+    position: absolute;
+    margin-top: 5px;
+    bottom: 0;
+}
+
 canvas {
     fill: none;
     width: 100%;
@@ -31,14 +43,18 @@ canvas {
 .main-slice, .slice-container {
     height: $main-render-height;
     display: inline-block;
+    position: absolute;
+    bottom: 0;
 }
 
 .main-slice {
     width: $main-render-width; 
+    left: 0;
 }
 
 .slice-container {
     width: $secondary-render-width;
+    right: 0;
 }
 
 .secondary-slice {
@@ -47,9 +63,11 @@ canvas {
 }
 
 #sec-top {
+    position: absolute;
     top: 0;
 }
 
 #sec-bottom {
+    position: absolute;
     bottom: 0;
 }

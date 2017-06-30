@@ -35,21 +35,17 @@ var addSNPLabel = function(name) {
     }
 
     // Insert the SNP Label at the beginning of the render container hierarchy.
-    d3.select('#render-container').insert('h2', '.main-slice')
+    /*d3.select('.left-panel').insert('h2', '#render-container')
         .attr('class', 'header').attr('id', 'snp-label')
         .style('margin-top', '5px')
-        .style('position', 'absolute').style('top', '0').style('left', '0').style('right', '0')
         .style('color', 'white')
         .style('background-color', 'black')
         .text(name);
 
     // Adjust the heights of the slice containers to fit the render container.
-    let labelBottom = rectFor('#snp-label').bottom - rectFor('#render-container').top;
-    let newHeight = (rectFor('#render-container').height - labelBottom) + 'px';
-    d3.select('.main-slice')
-        .style('height', newHeight);
-    d3.select('.slice-container')
-        .style('height', newHeight);
+    let labelBottom = rectFor('#snp-label').bottom - rectFor('.left-panel').top;
+    let newHeight = (rectFor('.left-panel').height - labelBottom) + 'px';
+    d3.select('#render-container').style('height', newHeight);*/
 }
 
 /**
@@ -60,8 +56,5 @@ var removeSNPLabel = function() {
     d3.select('#snp-label').remove();
 
     // Adjust the heights of the slice containers to fit the render container.
-    d3.select('.main-slice')
-        .style('height', '100%');
-    d3.select('.slice-container')
-        .style('height', '96%');
+    d3.select('#render-container').style('height', '100%');
 }

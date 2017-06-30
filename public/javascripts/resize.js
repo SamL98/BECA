@@ -67,8 +67,11 @@ var addResizeObservers = function() {
             }
             d3.select('.top-slice')
                 .style('height', d3.event.y + 'px');
+            console.log(rectFor('.slice-container'));
+            console.log(rectFor('#sec-top'))
+            console.log(rectFor('#secondary-render-resizer'));
             d3.selectAll('.bottom-slice')
-                .style('height', (rectFor('.slice-container').height - rectFor('#secondary-render-resizer').bottom) + 'px');
+                .style('height', (rectFor('.slice-container').bottom - rectFor('#secondary-render-resizer').bottom) + 'px');
         });
     d3.select('#secondary-render-resizer').call(secondarySliceDrag);
 }

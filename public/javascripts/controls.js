@@ -108,12 +108,10 @@ var ControlPanel = function() {
         // If the SNP label is present, adjust container heights accordingly.
         let headerRect = d3.select('#snp-label');
         if (headerRect) {
-            let destHeight = rectFor('#render-container').height - headerRect.bottom;
-            d3.select('.main-slice').style('height', destHeight + 'px');
-            d3.select('.slice-container').style('height', destHeight + 'px');
+            let destHeight = rectFor('.left-panel').height - headerRect.bottom;
+            d3.select('#render-container').style('height', destHeight + 'px');
         } else {
-            d3.select('.main-slice').style('height', '100%');
-            d3.select('.slice-container').style('height', '100%');
+            d3.select('#render-container').style('height', '100%');
         }
 
         let ltHalf = '48%';
