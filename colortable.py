@@ -9,6 +9,7 @@ def interpolate_color(val):
     return int(r * 255), int(g * 255), int(b * 255)
 
 def create_colortable():
+    print("creating colortable")
     if len(sys.argv) < 2:
         print("there is no snp command line argument")
         return
@@ -32,3 +33,5 @@ def create_colortable():
             p = float(value)
             r, g, b = interpolate_color(p)
             f.write("{0}, {1}, {2}, {3}, {4} 255\n".format(roi_name, r, g, b, i + 1))
+
+create_colortable()
