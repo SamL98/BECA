@@ -16,7 +16,7 @@ var parseGenomicData = function(query, roi, callback) {
     addLoader();
     
     // Base URL for querying the GWAS database.
-    var urlString = 'http://localhost:8000/query-database?roi=' + roi;
+    var urlString = 'http://localhost:3000/query?roi=' + roi;
 
     // Figure out which query format is used.
     if (/(rs)\d+/.test(query)) {
@@ -47,7 +47,7 @@ var parseGenomicData = function(query, roi, callback) {
     // Perform AJAX call to the fileserver.
     $.get(urlString, function(data) {
         // On completion, format the data into SNP objects.
-        formatData(data['results'], callback);
+        formatData(data, callback);
     });
 }
 
@@ -80,12 +80,12 @@ var adjacentRange = function(type, chr, roi, callback) {
     query = "chr" + chr + ":" + start + "-" + end;
 
     // Base URL for database queries.
-    var urlString = 'http://localhost:8000/query-database?roi=' + roi + '&chr=' + currChr + '&min=' + start + '&max=' + end;
+    var urlString = 'http://localhost:3000/query?roi=' + roi + '&chr=' + currChr + '&min=' + start + '&max=' + end;
     
     // Perform AJAX call to fileserver.
     $.get(urlString, function(data) {
         // Format the data into SNP objects.
-        formatData(data['results'], callback);
+        formatData(data, callback);
     });
 }
 
@@ -127,14 +127,20 @@ var formatData = function(data, callback) {
     snps = [];
     for (var i = 1; i < data.length; i++) {
         // For each data point, first obtain the name and location from the first two indices.
-        const name = data[i][0], loc = data[i][1];
+        let name = data[i].name, loc = data[i].loc;
 
         // The rest of the data point is the pvalues, so for convenience, the whole array is simply shifted.
-        data[i].shift(); data[i].shift();
+        var pvalues = [];
+        delete data[i].name;
+        delete data[i].loc;
+
+        Object.keys(data[i]).forEach(key => {
+            pvalues.push(data[i][key]);
+        });
 
         // Create the SNP object, using a random frequency.
         // Note - Frequency should be removed from the model.
-        snps.push(new SNP(name, loc, data[i], Math.random()));
+        snps.push(new SNP(name, loc, pvalues, Math.random()));
     }
 
     // Set the global variables specifying current chromosome and range.

@@ -24,8 +24,8 @@ var destroyRenderers = function() {
 var renderBrain = function(colortable, main) {
     // Create the sliced volume.
     slices = new X.volume();
-    slices.file = 'http://localhost:8000/file/gray_matter.nii';
-    slices.labelmap.file = 'http://localhost:8000/file/converted.nii';
+    slices.file = 'http://localhost:3000/nifti/gray_matter.nii';
+    slices.labelmap.file = 'http://localhost:3000/nifti/converted.nii';
 
     // If a colortable is given, specify it as the colortable for both volumes.
     if (colortable) {

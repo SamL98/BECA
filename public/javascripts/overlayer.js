@@ -4,9 +4,9 @@
  */
 var renderOverlay = function(name) {
     panel.DisplayOverlay = true;
-
+    console.log(currChr, name);
     // Create the URL for the colortable from the fileserver.
-    colortable = 'http://localhost:8000/' + currChr + '/' + name + '/colortable.txt';
+    colortable = 'http://localhost:3000/colortable?chr=' + currChr + '&snp=' + name;
     
     // Destroy the current renderers.
     destroyRenderers();
