@@ -19,10 +19,18 @@ function snpGivenChr(chr, name, callback) {
     connection.query("use " + dbname);
     connection.query("select * from SNPs where name=?", [name], (error, result, fields) => {
         if (error) {
-            console.log("Error queryinf for snp given chromosome: " + error.stack);
+            console.log("Error querying for snp given chromosome: " + error.stack);
             callback(null);
             return;
         }
+
+        if (result.length > 1) {
+            console.log("ERROR: Multiple SNPs found on chr when only one should be.");
+            callback(null);
+            return;
+        }
+
+        result = result[0];
         callback(result);
     });
 }

@@ -85,10 +85,14 @@ app.get('/colortable', (req, res) => {
         }
 
         let snpStr = JSON.stringify(snp);
-        let commandStr = "python colortable.py " + snpStr;
+        let commandStr = "python colortable.py \'" + snpStr + "\'";
         exec(commandStr, (error, stdout, stderr) => {
-            console.log(stdout);
-            console.log(stderr);
+            if (stdout.trim() !== "") {
+                console.log(stdout);
+            }
+            if (stderr.trim() !== "") {
+                console.log(stderr);
+            }
             if (error) {
                 console.log("Error executing colortable subprocess");
                 res.status(500).send("ERROR: Subprocess execution.");
