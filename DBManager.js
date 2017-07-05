@@ -1,5 +1,6 @@
 var mysql = require('mysql');
 var connected = false;
+
 var connection = mysql.createConnection({
     host: process.env.RDS_HOSTNAME,
     user: process.env.RDS_USERNAME,
