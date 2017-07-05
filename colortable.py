@@ -22,7 +22,7 @@ def create_colortable():
         print("snp is not a dict")
         return
 
-    with open("public/snp_colortable.txt", "w+") as f:
+    with open("public/NiftiFiles/snp_colortable.txt", "w+") as f:
         f.write("0 background 0 0 0 0\n")
         snp.pop('name', None)
         snp.pop('loc', None)

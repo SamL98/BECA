@@ -1,9 +1,10 @@
 var mysql = require('mysql');
 var connected = false;
 var connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'admin',
-    password: 'iubeca-admin'
+    host: process.env.RDS_HOSTNAME,
+    user: process.env.RDS_USERNAME,
+    password: process.env.RDS_PASSWORD,
+    port: process.env.RDS_PORT
 });
 connection.connect(err => {
     if (err) {
