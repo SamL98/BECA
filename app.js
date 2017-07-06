@@ -1,5 +1,5 @@
 var express = require('express');
-var sassMiddleware = require('node-sass-middleware');
+//var sassMiddleware = require('node-sass-middleware');
 var path = require('path');
 var dbmanager = require('./DBManager.js');
 var exec = require('child_process').exec;
@@ -13,14 +13,14 @@ var allowCrossDomain = function(req, res, next) {
     next();
 }
 
-var srcPath = __dirname + '/scss', destPath = __dirname + '/public/stylesheets';
+/*var srcPath = __dirname + '/scss', destPath = __dirname + '/public/stylesheets';
 app.use('/stylesheets', sassMiddleware({
         src: srcPath,
         dest: destPath,
         debug: true,
         outputStyle: 'compressed'
     })
-);
+);*/
 app.use(express.static(path.join(__dirname, 'public')));
 app.all('*', allowCrossDomain);
 
