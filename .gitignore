@@ -5,3 +5,4 @@ public/NiftiFiles/*
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
+admin-keypair.pem
