@@ -10,7 +10,7 @@
   "license": "ISC",
   "private": true,
   "dependencies": {
-    "express": "^4.15.2",
-    "mysql": "^2.13.0"
+    "express": "https://registry.npmjs.org/express/-/express-4.15.2.tgz",
+    "mysql": "https://registry.npmjs.org/mysql/-/mysql-2.13.0.tgz"
   }
 }
