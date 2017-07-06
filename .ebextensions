@@ -1,7 +1,0 @@
-"10-install-npm-packages": {
-  "env": {
-    "HOME": "/root"
-    "PATH": "/usr/bin:/usr/lib/node_modules:/sbin:/bin:/usr/sbin:opt/aws/bin"
-  },
-  "command": "npm install"
-}
