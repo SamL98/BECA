@@ -56,6 +56,7 @@ var parseGenomicData = function(query, roi, callback) {
             console.log("Error with AJAX request: " + error);
             alert("Sorry. We couldn't find any SNPs for your query: " + query);
             $('#back-button').click();
+            removeLoader();
         }
     });
 }
@@ -103,6 +104,7 @@ var adjacentRange = function(type, chr, roi, callback) {
             console.log("Error with AJAX request: " + error);
             alert("Sorry. We couldn't find any SNPs for your query: " + query);
             $('#back-button').click();
+            removeLoader();
         }
     });
 }
