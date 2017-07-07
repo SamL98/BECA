@@ -68,4 +68,4 @@ var rectFor = function(selector) {
     return d3.select(selector).node().getBoundingClientRect();
 };
 
-var currentHost = "http://localhost:8081";
+var currentHost = "http://sample-env.jnmcqpjnwd.us-east-2.elasticbeanstalk.com";

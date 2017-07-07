@@ -74,7 +74,7 @@ app.get('/query', (req, res) => {
             }
             res.send(snps);
             return;
-        })
+        });
     }
 });
 

@@ -3,6 +3,8 @@
  * @param {string} name The name of the snp to create the colortable for and render.
  */
 var renderOverlay = function(name) {
+    addLoader();
+
     // Destroy the current renderers.
     destroyRenderers();
 
@@ -22,6 +24,7 @@ var renderOverlay = function(name) {
                 return;
             }
             renderBrain(colortable, orientation);
+            removeLoader();
         }, error: error => {
             console.log("Error while creating colortable: " + error);
         }
