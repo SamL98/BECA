@@ -90,12 +90,6 @@ var ControlPanel = function() {
     // Controls the orientation of the renderer.
     this.orientation = 'Axial';
 
-    // Toggles whether or not to show the SNP label.
-    this.ShowLabel = displaySNPLabel;
-
-    // Toggles whether or not to show the colortable.
-    this.DisplayOverlay = displayingOverlay;
-
     // Resets the cameras of the volume renderers to default values.
     this.Reset = function() {
         let dims = slices.dimensions;
@@ -184,24 +178,6 @@ var setUpControls = function() {
                 break;
             default: break;
         }
-    });
-
-    // SNP label control.
-    var labelControl = renderFolder.add(panel, 'ShowLabel');
-    labelControl.onChange(function(value) {
-        displaySNPLabel = value;
-        if (displaySNPLabel) {
-            addSNPLabel(previousSNPLabel);
-        } else {
-            removeSNPLabel();
-        }
-    });
-
-    var overlayControl = renderFolder.add(panel, 'DisplayOverlay').listen();
-    overlayControl.onChange(value => {
-        displayingOverlay = value;
-        destroyRenderers();
-        renderBrain(displayingOverlay ? colortable : null, orientation);
     });
 
     // Add the reset button.

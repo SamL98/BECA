@@ -67,3 +67,5 @@ var firstChart = true;
 var rectFor = function(selector) {
     return d3.select(selector).node().getBoundingClientRect();
 };
+
+var currentHost = "http://localhost:8081";

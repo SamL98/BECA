@@ -2,10 +2,12 @@
  * Redisplays both the SNP Chart and the Voxel Grid when new window bounds are introduced.
  */
 function resizePanels() {
-    addLoader();
-    displayChart();
-    displayGrid();
-    removeLoader();
+    if (snps && snps.length > 0) {
+        addLoader();
+        displayChart();
+        displayGrid();
+        removeLoader();
+    }
 }
 
 // The function to handle window resize events.

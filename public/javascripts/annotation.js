@@ -114,7 +114,7 @@ var addAnnotationForSNP = function(id) {
     // - interlineSpacing: spacing between annotation labels.
     var fontSize = 14,
         radius = 10, triangleWidth = 20, offset = 20,
-        textInset = { x: 15, y: 10 }, interlineSpacing = 5;
+        textInset = { x: 15, y: 15 }, interlineSpacing = 5;
 
     // Calculate the origin points of the annotation.
     var annotationX = pointX - annotationWidth/2, 

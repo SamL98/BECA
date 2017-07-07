@@ -3,18 +3,29 @@
  * @param {string} name The name of the snp to create the colortable for and render.
  */
 var renderOverlay = function(name) {
-    panel.DisplayOverlay = true;
-    // Create the URL for the colortable from the fileserver.
-    colortable = 'http://localhost:3000/colortable?chr=' + currChr + '&snp=' + name;
-    
     // Destroy the current renderers.
     destroyRenderers();
 
     // Add the label indicating which SNP is being presented to the right panel.
     addSNPLabel(name);
 
-    // Rerender the brain passing the constructed colortable url.
-    renderBrain(colortable, orientation);
+    // Create the URL for the colortable from the fileserver.
+    let colortableURL =  currentHost + '/colortable?chr=' + currChr + '&snp=' + name;
+    colortable = currentHost + '/nifti/snp_colortable.txt';
+    $.ajax({
+        url: colortableURL, 
+        type: 'GET',
+        dataType: 'text',
+        success: data => {
+            if (data !== "Success!") {
+                console.log("Response from colortable creation was not expected: " + data);
+                return;
+            }
+            renderBrain(colortable, orientation);
+        }, error: error => {
+            console.log("Error while creating colortable: " + error);
+        }
+    });
 }
 
 /**

@@ -16,7 +16,7 @@ var parseGenomicData = function(query, roi, callback) {
     addLoader();
     
     // Base URL for querying the GWAS database.
-    var urlString = 'http://localhost:3000/query?roi=' + roi;
+    var urlString = currentHost + '/query?roi=' + roi;
 
     // Figure out which query format is used.
     if (/(rs)\d+/.test(query)) {
@@ -45,9 +45,18 @@ var parseGenomicData = function(query, roi, callback) {
     }
 
     // Perform AJAX call to the fileserver.
-    $.get(urlString, function(data) {
-        // On completion, format the data into SNP objects.
-        formatData(data, callback);
+    $.ajax({
+        url: urlString,
+        type: 'GET',
+        dataType: 'json',
+        success: data => {
+            // On completion, format the data into SNP objects.
+            formatData(data, callback);
+        }, error: error => {
+            console.log("Error with AJAX request: " + error);
+            alert("Sorry. We couldn't find any SNPs for your query: " + query);
+            $('#back-button').click();
+        }
     });
 }
 
@@ -80,12 +89,21 @@ var adjacentRange = function(type, chr, roi, callback) {
     query = "chr" + chr + ":" + start + "-" + end;
 
     // Base URL for database queries.
-    var urlString = 'http://localhost:3000/query?roi=' + roi + '&chr=' + currChr + '&min=' + start + '&max=' + end;
+    var urlString = currentHost + '/query?roi=' + roi + '&chr=' + currChr + '&min=' + start + '&max=' + end;
     
-    // Perform AJAX call to fileserver.
-    $.get(urlString, function(data) {
-        // Format the data into SNP objects.
-        formatData(data, callback);
+    // Perform AJAX call to the fileserver.
+    $.ajax({
+        url: urlString,
+        type: 'GET',
+        dataType: 'json',
+        success: data => {
+            // On completion, format the data into SNP objects.
+            formatData(data, callback);
+        }, error: error => {
+            console.log("Error with AJAX request: " + error);
+            alert("Sorry. We couldn't find any SNPs for your query: " + query);
+            $('#back-button').click();
+        }
     });
 }
 

@@ -39,6 +39,11 @@ app.get('/query', (req, res) => {
     let gene = req.query.gene;
     if (gene) {
         dbmanager.serveSnpsForGene(gene, roi, snps => {
+            if (!snps) {
+                console.log("No SNPS from query");
+                res.status(500).send("null SNPs");
+                return;
+            }
             res.send(snps);
             return;
         });
@@ -47,6 +52,11 @@ app.get('/query', (req, res) => {
     let snp = req.query.snp;
     if (snp) {
         dbmanager.serveSnpsForSnp(snp, roi, snps => {
+            if (!snps) {
+                console.log("No SNPS from query");
+                res.status(500).send("null SNPs");
+                return;
+            }
             res.send(snps);
             return;
         });
@@ -57,6 +67,11 @@ app.get('/query', (req, res) => {
     let max = parseInt(req.query.max);
     if (chr && min && max) {
         dbmanager.serveSnpsForRange(chr, min, max, roi, snps => {
+            if (!snps) {
+                console.log("No SNPS from query");
+                res.status(500).send("null SNPs");
+                return;
+            }
             res.send(snps);
             return;
         })
@@ -98,7 +113,7 @@ app.get('/colortable', (req, res) => {
                 res.status(500).send("ERROR: Subprocess execution.");
                 return;
             }
-            res.sendFile(path.join(__dirname + "/public/NiftiFiles/snp_colortable.txt"));
+            res.send("Success!");
         });
     });
 });

@@ -29,9 +29,10 @@ def create_colortable():
 
         i = 0
         for (key, value) in snp.items():
-            roi_name = (rois[i + 1])[0]
+            roi_name = rois[i][0]
             p = float(value)
             r, g, b = interpolate_color(p)
-            f.write("{0}, {1}, {2}, {3}, {4} 255\n".format(roi_name, r, g, b, i + 1))
+            f.write("{0} {1} {2} {3} {4} 255\n".format(i + 1, roi_name, r, g, b))
+            i += 1
 
 create_colortable()
