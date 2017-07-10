@@ -13,7 +13,10 @@ After the window finishes loading, enter a query and an ROI in the control panel
 * Gene - Input a gene name, and the SNP's within the start and end basepair location of that gene (with a 200k basepair buffer on both sides) will be displayed.
 * SNP - Input a SNP name, and the SNP's within the basepair location, given a 300k basepair buffer on both sides will be displayed.
 * Range - Input a chromosome and start and end basepair locations. This information should be formatted as:
+
     (chromosome_number):(lower_bound)-(upper_bound)
 
     or if you know RegEx, your query should match the expression:
-    "/\d{1,2}\:\d+\-\d+/"
+
+
+    /\d{1,2}\:\d+\-\d+/
