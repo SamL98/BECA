@@ -5,3 +5,4 @@
 .idea/
 *.pem
 public/NiftiFiles/
+node_modules/
