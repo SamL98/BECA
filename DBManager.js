@@ -18,6 +18,9 @@ connection.connect(err => {
 });
 
 function snpGivenChr(chr, name, callback) {
+    if (!connected) {
+        callback(null);
+    }
     let dbname = connection.escapeId("chr" + chr);
     connection.query("use " + dbname);
     connection.query("select * from SNPs where name=?", [name], (error, result, fields) => {
@@ -39,6 +42,9 @@ function snpGivenChr(chr, name, callback) {
 }
 
 function snpFor(name, callback) {
+    if (!connected) {
+        callback(null);
+    }
     connection.query("use snp_map");
     connection.query("select chr, loc from SNPs where name=?", [name], (error, result, fields) => {
         if (error) {
@@ -51,6 +57,9 @@ function snpFor(name, callback) {
 }
 
 function geneFor(name, callback) {
+    if (!connected) {
+        callback(null);
+    }
     connection.query("use gene_map");
     connection.query("select chr, start, end from Genes where name=?", [name], (error, result, fields) => {
         if (error) {
@@ -63,6 +72,9 @@ function geneFor(name, callback) {
 }
 
 function snpsFor(chr, start, end, roi, callback) {
+    if (!connected) {
+        callback(null);
+    }
     let dbname = connection.escapeId("chr" + chr);
     connection.query("use " + dbname, (error, result, fields) => {
         if (error) {
@@ -84,6 +96,9 @@ function snpsFor(chr, start, end, roi, callback) {
 }
 
 function serveSnpsForGene(name, roi, callback) {
+    if (!connected) {
+        callback(null);
+    }
     geneFor(name, (gene) => {
         if (!gene) {
             console.log("Gene " + name + " is nil from query");
@@ -107,6 +122,9 @@ function serveSnpsForGene(name, roi, callback) {
 }
 
 function serveSnpsForSnp(name, roi, callback) {
+    if (!connected) {
+        callback(null);
+    }
     snpFor(name, snp => {
         if (!snp) {
             console.log("SNP " + name + " is nil from query");
@@ -130,6 +148,9 @@ function serveSnpsForSnp(name, roi, callback) {
 }
 
 function serveSnpsForRange(chr, lower, upper, roi, callback) {
+    if (!connected) {
+        callback(null);
+    }
     snpsFor(chr, lower, upper, roi, snps => {
         callback(snps);
     });

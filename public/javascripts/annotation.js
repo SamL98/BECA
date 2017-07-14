@@ -10,20 +10,28 @@ var addAnnotationHover = function() {
             addAnnotationForSNP(e.target.id);
 
             // Modify the point to indicate that its annotation is being displayed.
-            d3.select('#' + e.target.id)
-                .transition().duration(100)
-                .style('fill', 'indianred')
-                .attr('r', 7);
+            indicateSNPInspected(e.target.id);
         }).mouseout(function(e) {
             // On mouseout, remove the annotation.
             removeAnnotationForSNP(e.target.id);
 
             // Modify the point to indicate that it is no longer being inspected.
-            var point = d3.select('#' + e.target.id);
-            point.transition().duration(100)
-                .style('fill', 'steelblue')
-                .attr('r', point.attr('scaledFreq'));
+            indicateSNPUninspected(e.target.id);
         });
+}
+
+var indicateSNPInspected = function(id) {
+    d3.select('#' + id)
+        .transition().duration(100)
+        .style('fill', 'indianred')
+        .attr('r', 7);
+}
+
+var indicateSNPUninspected = function(id) {
+    var point = d3.select('#' + id);
+    point.transition().duration(100)
+        .style('fill', 'steelblue')
+        .attr('r', point.attr('scaledFreq'));
 }
 
 /**

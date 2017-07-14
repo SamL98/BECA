@@ -70,4 +70,4 @@ var rectFor = function(selector) {
 
 var localHost = "http://localhost:8081";
 var awsHost = "http://sample-env.jnmcqpjnwd.us-east-2.elasticbeanstalk.com";
-var currentHost = awsHost;
+var currentHost = localHost;

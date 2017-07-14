@@ -7,7 +7,9 @@ var removePreviousGrids = function() {
 
 // Variables to keep track of the previously selected column and previously hovered cell, respectively.
 var prevCol = null;
+var prevRow = null;
 var prevCell = null;
+var prevSNP = null;
 
 /**
  * Displays a voxel grid where each column represents a SNP and each row represents an ROI. Each cell is colored based off that SNP's p-value on the ROI with red corresponding to 0 and blue corresponding to 1.
@@ -71,12 +73,17 @@ var displayGrid = function(callback = null) {
 
                 // If a column was previously selected, unselected it.
                 if (prevCol) {
+                    removeAnnotationForSNP('snp' + prevCol);
+                    indicateSNPUninspected('snp' + prevCol);
                     d3.select('#col' + prevCol).selectAll('rect').style('stroke', 'black');
                 }
 
                 // Select the new column.
                 d3.select('#col' + i).selectAll('rect').style('stroke', 'white');
                 prevCol = i;
+
+                addAnnotationForSNP('snp' + prevCol);
+                indicateSNPInspected('snp' + prevCol);
 
                 // Indicate loading
                 addLoader();
@@ -86,6 +93,7 @@ var displayGrid = function(callback = null) {
                 removeLoader();
             })
             .selectAll('rect').data(function(s) { return s.pvalues; }).enter().append('rect')
+                .attr('class', 'voxel')
                 .attr('id', function(p, j) { return 'p-' + (parseInt(Math.random() * 10000)) + '-' + j; })
                 .attr('snp', s.name).attr('p', function(p) { return p; })
                 .attr('roi', function(p, j) { return j; })
@@ -95,6 +103,18 @@ var displayGrid = function(callback = null) {
                 .style('fill', function(p) { 
                     // Fill each cell according to its inteprolated p-value.
                     return pToRGB(p); 
+                })
+                .on('click', function(p, j) {
+                    prevRow = j;
+                    var voxels = document.getElementsByClassName('voxel');
+                    for (var i = 0; i < voxels.length; i++) {
+                        var voxel = voxels[i];
+                        if (parseInt(voxel.getAttribute('roi')) == prevRow) {
+                            voxel.style['stroke'] = 'white';
+                        } else {
+                            voxel.style['stroke'] = 'black';
+                        }
+                    }
                 })
                 .on('mouseover', function() {
                     /** Similar to chart points, add voxel annotations on hover. */
