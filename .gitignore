@@ -1,0 +1,7 @@
+*.zip
+.elasticbeanstalk/
+.DS_Store
+.vscode/
+.idea/
+*.pem
+public/NiftiFiles/
