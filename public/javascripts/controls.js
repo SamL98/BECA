@@ -25,6 +25,7 @@ var ControlPanel = function() {
                 alert("The entered ROI must be between 0 and 116");
                 return;
             }
+            selectedROI = roi;
             d3.select('#intro-header').remove();
             performQuery()
         } else if (this.Query != '' && this.ROI != '') {
@@ -89,6 +90,24 @@ var ControlPanel = function() {
 
     // Controls the orientation of the renderer.
     this.orientation = 'Axial';
+
+    this.ShowLocation = function() {
+        if (!selectedROI) {
+            alert("Please enter a query or select an ROI from the Voxel Grid.");
+            return;
+        }
+
+        getCenterOfROI(selectedROI, center => {
+            if (!center) {
+                console.log("No center from AJAX request");
+                return;
+            }
+
+            slices.indexX = center[0];
+            slices.indexY = center[1];
+            slices.indexZ = center[2];
+        });
+    }
 
     // Resets the cameras of the volume renderers to default values.
     this.Reset = function() {
@@ -179,6 +198,8 @@ var setUpControls = function() {
             default: break;
         }
     });
+
+    renderFolder.add(panel, 'ShowLocation');
 
     // Add the reset button.
     renderFolder.add(panel, 'Reset');

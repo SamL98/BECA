@@ -109,7 +109,7 @@ app.get('/colortable', (req, res) => {
                 console.log(stderr);
             }
             if (error) {
-                console.log("Error executing colortable subprocess");
+                console.log("Error executing colortable subprocess.");
                 res.status(500).send("ERROR: Subprocess execution.");
                 return;
             }
@@ -117,6 +117,52 @@ app.get('/colortable', (req, res) => {
         });
     });
 });
+
+app.get('/center', (req, res) => {
+    let roi = req.query.roi;
+    if (!roi) {
+        console.log("ROI missing from center query");
+        res.status(400).send("ERROR: Missing params.");
+        return;
+    }
+
+    let commandStr = "python roi_locator.py " + roi;
+    console.log(process.env.PYTHONPATH);
+    exec(commandStr, (error, stdout, stderr) => {
+        if (error) {
+            console.log("Error executing roi locator subprocess: " + error);
+            res.status(500).send("ERROR: Subprocess execution.");
+            return;
+        }
+
+        if (stderr.trim() !== "") {
+            console.log(stderr);
+        }
+
+        let coords = stdout.trim();
+        if (coords === "") {
+            console.log("No coordinates return by roi locator subprocess.");
+            res.status(500).send("ERROR: Subprocess execution.");
+            return;
+        }
+
+        if (coords.length < 6) {
+            console.log("Coordinate string is too short from roi locator subprocess.");
+            res.status(500).send("ERROR: Subprocess execution.");
+            return;
+        }
+
+        let arrStr = coords.substring(1, coords.length - 1);
+        let center = arrStr.split(',');
+        if (center.length < 3) {
+            console.log("Coordinate array is too short from roi locator subprocess.");
+            res.status(500).send("ERROR: Subprocess execution.");
+            return;
+        }
+
+        res.status(200).send(center.map(parseInt));
+    })
+})
 
 app.listen(8081, function() {
     console.log('listening on 8081');

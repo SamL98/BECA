@@ -63,6 +63,8 @@ var previousSNPLabel = '';
 // Flag for if the database has been queried yet.
 var firstChart = true;
 
+var selectedROI;
+
 // Returns the bounding rect for the given JQuery/D3 selector.
 var rectFor = function(selector) {
     return d3.select(selector).node().getBoundingClientRect();

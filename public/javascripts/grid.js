@@ -106,6 +106,7 @@ var displayGrid = function(callback = null) {
                 })
                 .on('click', function(p, j) {
                     prevRow = j;
+                    selectedROI = j;
                     var voxels = document.getElementsByClassName('voxel');
                     for (var i = 0; i < voxels.length; i++) {
                         var voxel = voxels[i];

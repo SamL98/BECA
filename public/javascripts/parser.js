@@ -109,6 +109,22 @@ var adjacentRange = function(type, chr, roi, callback) {
     });
 }
 
+var getCenterOfROI = function(roi, callback) {
+    var urlString = currentHost + '/center?roi=' + roi;
+    $.ajax({
+        url: urlString,
+        type: 'GET',
+        dataType: 'json',
+        success: data => {
+            callback(data);
+        }, error: error => {
+            console.log("Error with AJAX request: " + error),
+            alert("Sorry. There was an error finding the location of the given ROI. Please try again.");
+            callback(null);
+        }
+    });
+}
+
 /**
  * Formats the given JSON data into SNP objects.
  * The data is formatted as a JSON object as such:
