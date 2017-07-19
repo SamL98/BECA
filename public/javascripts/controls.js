@@ -199,8 +199,6 @@ var setUpControls = function() {
         }
     });
 
-    renderFolder.add(panel, 'ShowLocation');
-
     // Add the reset button.
     renderFolder.add(panel, 'Reset');
     // Close the render folder.
