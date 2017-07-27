@@ -97,15 +97,19 @@ var ControlPanel = function() {
             return;
         }
 
+        addLoader();
         getCenterOfROI(selectedROI, center => {
             if (!center) {
                 console.log("No center from AJAX request");
+                removeLoader();
                 return;
             }
-
+            console.log(center);
             slices.indexX = center[0];
             slices.indexY = center[1];
             slices.indexZ = center[2];
+
+            removeLoader();
         });
     }
 
@@ -198,6 +202,8 @@ var setUpControls = function() {
             default: break;
         }
     });
+
+    renderFolder.add(panel, 'ShowLocation');
 
     // Add the reset button.
     renderFolder.add(panel, 'Reset');

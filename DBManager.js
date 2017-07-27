@@ -2,10 +2,9 @@ var mysql = require('mysql');
 var connected = false;
 
 var connection = mysql.createConnection({
-    host: process.env.RDS_HOSTNAME,
-    user: process.env.RDS_USERNAME,
-    password: process.env.RDS_PASSWORD,
-    port: process.env.RDS_PORT,
+    host: 'localhost',
+    user: process.env.mysql_username,
+    password: process.env.mysql_pass,
     timeout: 60000
 });
 connection.connect(err => {
@@ -113,6 +112,13 @@ function serveSnpsForGene(name, roi, callback) {
         }
 
         gene = gene[0];
+
+        if (gene === undefined) {
+            console.log("Gene " + gene + " is undefined from query");
+            callback(null);
+            return;
+        }
+
         let lowerBound = parseInt(gene.start) - 200000;
         let upperBound = parseInt(gene.end) + 200000;
         snpsFor(gene.chr, lowerBound, upperBound, roi, snps => {
