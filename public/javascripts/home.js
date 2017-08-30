@@ -122,4 +122,18 @@ var presentInstructions = function() {
                 d3.select('#top-section').style('height', (d3.event.y) + 'px');
             })
     )
+
+    header.append('button')
+        .attr('id', 'gwas-button')
+        .style('width', '100px').style('height', '65px')
+        .style('position', 'absolute').style('top', '5px').style('left', '10px')
+        .style('background-color', 'indianred')
+        .style('color', 'white')
+        .style('border', 'none').style('border-radius', '5px')
+        .style('cursor', 'pointer')
+        .text('GWAS');
+
+    $('#gwas-button').on('click', e => {
+        window.location.href = currentHost + '/gwas';
+    });
 }

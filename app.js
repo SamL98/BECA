@@ -171,6 +171,53 @@ app.get('/center', (req, res) => {
     })
 })
 
+app.get('/gwas', (req, res) => {
+    res.sendFile(path.join(__dirname + "/public/gwas.html"));
+})
+
+app.get('/gwas_query', (req, res) => {
+    let gene = req.query.gene;
+    if (gene) {
+        dbmanager.serveAssocationsForGene(gene, result => {
+            if (!result) {
+                console.log("No associations from query");
+                res.status(500).send("null assocs");
+                return;
+            }
+            res.send(result);
+            return;
+        })
+    }
+
+    let snp = req.query.snp;
+    if (snp) {
+        dbmanager.serveAssociationsForSnp(snp, result => {
+            if (!result) {
+                console.log("No associations from query");
+                res.status(500).send("null assocs");
+                return;
+            }
+            res.send(result);
+            return;
+        })
+    }
+
+    let chr = req.query.chr;
+    let low = req.query.min;
+    let high = req.query.max;
+    if (chr && low && high) {
+        dbmanager.serveAssociationsForRange(chr, low, high, result => {
+            if (!result) {
+                console.log("No associations from query");
+                res.status(500).send("null assocs");
+                return;
+            }
+            res.send(result);
+            return;
+        })
+    }
+})
+
 app.listen(8080, function() {
     console.log('listening on 8080');
 });

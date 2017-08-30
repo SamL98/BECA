@@ -7,6 +7,7 @@ var connection = mysql.createConnection({
     password: process.env.mysql_pass,
     timeout: 60000
 });
+
 connection.connect(err => {
     if (err) {
         console.log("Error connecting to MySQL: " + err.stack);
@@ -162,10 +163,90 @@ function serveSnpsForRange(chr, lower, upper, roi, callback) {
     });
 }
 
+function associationsFor(chr, lower, upper, callback) {
+    connection.query("use GWAS");
+    connection.query("select SNPs.name, SNPs.chr, SNPs.pos, Associations.name as trait, Associations.size, Associations.cohort, Associations.pvalue, Papers.pubmed_id as pubmed from \
+        ((SNPs inner join Associations on SNPs.id=Associations.snp) \
+        inner join Papers on Associations.paper=Papers.id) \
+        where SNPs.chr=? and SNPs.pos>=? and SNPs.pos<=?",
+    [chr, lower, upper], (error, result, fields) => {
+        if (error) {
+            console.log("Error querying for assocations: " + error.stack);
+            callback(null);
+            return;
+        }
+        result = {
+            "snps": result,
+            "bounds": {
+                "low": lower,
+                "high": upper
+            }
+        }
+        callback(result);
+    })
+}
+
+function serveAssociationsForSnp(name, callback) {
+    if (!connected) {
+        callback(null);
+    }
+
+    connection.query("use GWAS");
+    connection.query("select chr, pos from SNPs where name=?", [name], (error, result, fields) => {
+        if (error) {
+            console.log("Error getting GWAS data for SNP " + snp + " " + error.stack);
+            callback(null);
+            return;
+        }
+
+        result = result[0];
+        associationsFor(result.chr, result.pos - 300000, result.pos + 300000, assocs => {
+            callback(assocs);
+        })
+    })
+}
+
+function serveAssocationsForGene(name, callback) {
+    if (!connected) {
+        callback(null);
+    }
+
+    geneFor(name, gene => {
+        if (!gene || gene === "") {
+            console.log("Error querying for gene: " + gene);
+            callback(null);
+            return;
+        }
+
+        gene = gene[0];
+        if (gene === undefined) {
+            console.log("Gene " + gene + " is undefined from query");
+            callback(null);
+            return;
+        }
+
+        let lowerBound = parseInt(gene.start) - 200000;
+        let upperBound = parseInt(gene.end) + 200000;
+        let chr = parseInt(gene.chr);
+        associationsFor(chr, lowerBound, upperBound, assocs => {
+            callback(assocs);
+        })
+    })
+}
+
+function serveAssociationsForRange(chr, low, high, callback) {
+    associationsFor(chr, low, high, assocs => {
+        callback(assocs);
+    })
+}
+
 module.exports = {
     serveSnpsForGene,
     serveSnpsForSnp,
     serveSnpsForRange,
-    snpGivenChr
+    snpGivenChr,
+    serveAssocationsForGene,
+    serveAssociationsForSnp,
+    serveAssociationsForRange
 }
 

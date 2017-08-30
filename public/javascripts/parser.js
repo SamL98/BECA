@@ -1,3 +1,29 @@
+var parseQuery = function(baseURL, query) {
+    if (baseURL.charAt(baseURL.length - 1) != '?') {
+        baseURL += "&";
+    }
+    // Figure out which query format is used.
+    if (/(rs)\d+/.test(query)) {
+        // Assume query for SNP
+        baseURL += 'snp=' + query;
+    } else if (/\d{1,2}\:\d+\-\d+/.test(query)) {
+        // Assume query for range
+        colonIndex = query.indexOf(':');
+        dashIndex = query.indexOf('-');
+
+        // Parse query for chromosome, min, and max
+        currChr = parseInt(query.substring(0, colonIndex));
+        lowerBound = parseInt(query.substring(colonIndex + 1, dashIndex));
+        upperBound = parseInt(query.substring(dashIndex + 1, query.length));
+
+        baseURL += 'chr=' + currChr + '&min=' + lowerBound + '&max=' + upperBound;
+    } else {
+        // Assume query for Gene
+        baseURL += 'gene=' + query;
+    }
+    return baseURL;
+}
+
 /**
  * Fetches the SNP data for the given query and roi, formatting them into SNP objects.
  * @see http://api.jquery.com/jquery.ajax/ for more information on AJAX.
@@ -17,26 +43,7 @@ var parseGenomicData = function(query, roi, callback) {
     
     // Base URL for querying the GWAS database.
     var urlString = currentHost + '/query?roi=' + roi;
-
-    // Figure out which query format is used.
-    if (/(rs)\d+/.test(query)) {
-        // Assume query for SNP
-        urlString += '&snp=' + query;
-    } else if (/\d{1,2}\:\d+\-\d+/.test(query)) {
-        // Assume query for range
-        colonIndex = query.indexOf(':');
-        dashIndex = query.indexOf('-');
-
-        // Parse query for chromosome, min, and max
-        currChr = parseInt(query.substring(0, colonIndex));
-        lowerBound = parseInt(query.substring(colonIndex + 1, dashIndex));
-        upperBound = parseInt(query.substring(dashIndex + 1, query.length));
-
-        urlString += '&chr=' + currChr + '&min=' + lowerBound + '&max=' + upperBound;
-    } else {
-        // Assume query for Gene
-        urlString += '&gene=' + query;
-    }
+    urlString = parseQuery(urlString, query);
 
     // If this is the initial load, render the brain now to avoid lag because the SNP data is not needed.
     if (firstChart) {
