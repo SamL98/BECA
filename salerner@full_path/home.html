@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<head>
+    <link rel="stylesheet" type="text/css" href="stylesheets/style.css"></link>
+    <link rel="stylesheet" type="text/css" href="stylesheets/resizer.css"></link>
+    <link rel="stylesheet" type="text/css" href="stylesheets/chart.css"></link>
+    <link rel="stylesheet" type="text/css" href="stylesheets/grid.css"></link>
+    <link rel="stylesheet" type="text/css" href="stylesheets/renderer.css"></link>
+    <link rel="stylesheet" type="text/css" href="stylesheets/instructions.css"></link>
+    <link rel="stylesheet" type="text/css" href="stylesheets/panels.css"></link>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="/javascripts/dat.gui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="stylesheets/dg.css"></link>
+    <script src="//d3js.org/d3.v4.min.js"></script>
+    <script src="//get.goXTK.com/xtk.js"></script>
+    <script src="/javascripts/models.js"></script>
+    <script src="/javascripts/converter.js"></script>
+</head>
+
+<script src="/javascripts/3drenderer.js"></script>
+<script src="/javascripts/globals.js"></script>
+<script src="/javascripts/loader.js"></script>
+<script src="/javascripts/parser.js"></script>
+<script src="/javascripts/annotation.js"></script>
+<script src="/javascripts/zoom.js"></script>
+<script src="/javascripts/chart.js"></script>
+<script src="/javascripts/overlayer.js"></script>
+<script src="/javascripts/grid.js"></script>
+<script src="/javascripts/panels.js"></script>
+<script src="/javascripts/controls.js"></script>
+<script src="/javascripts/resize.js"></script>
+<script src="/javascripts/home.js"></script>
+
+<img id="back-button" src="./left-arrow.svg" width="25" height="25"></img>
+<div id="content">
+    <div class="panel top-panel">
+        <div id="offset-container">
+            <svg class="chart"></svg>
+        </div>
+    </div>
+    <div class="dragbar hor-dragbar" id="chart-resizer"></div>
+    <div class="panel bottom-panel">
+        <div class="panel left-panel">
+            <div id="render-container">
+                <div class="slice main-slice" id="main">
+                    <div class="dragbar ver-dragbar" id="main-render-resizer"></div>
+                </div>
+                <div class="slice-container">
+                    <div class="slice secondary-slice top-slice" id="sec-top">
+                        <div class="dragbar hor-dragbar" id="secondary-render-resizer"></div>
+                    </div>
+                    <div class="slice secondary-slice bottom-slice" id="sec-bottom"></div>
+                </div>
+            </div>>
+        </div>
+        <div class="dragbar ver-dragbar" id="render-resizer"></div>
+        <div class="panel right-panel">
+            <div id="grid-container"></div>
+        </div>
+    </div>
+</div>
+<div id="acknowledgements">
+    <p>© Copyright 2017, ShenLab at Indiana University School of Medicine
+Acknowledgements: NIH R01 EB022574, NIH R01 LM011360
+Question or bug reporting: shenlab@iu.edu</p>
+</div>
+
+<script>
+    $('.left-panel').css({ 'width': $('.left-panel').height() });
+    const rect = rectFor('#render-resizer');
+    $('.right-panel').css({ 'width': (+$('.bottom-panel').width() - rect.right) });
+    $('#render-container').css({ 'height': (+$('.bottom-panel').height()) });
+</script>

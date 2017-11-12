@@ -10,9 +10,17 @@
   "license": "ISC",
   "private": true,
   "dependencies": {
+    "@types/dat-gui": "^0.6.3",
     "express": "https://registry.npmjs.org/express/-/express-4.15.2.tgz",
     "mysql": "https://registry.npmjs.org/mysql/-/mysql-2.13.0.tgz",
     "node-sass-middleware": "^0.11.0",
-    "typescript": "^2.4.2"
+    "ts-loader": "^2.3.4",
+    "tsc": "^1.20150623.0",
+    "typescript": "^2.4.2",
+    "webpack": "^3.5.5"
+  },
+  "devDependencies": {
+    "@types/d3": "^4.10.0",
+    "@types/jquery": "^3.2.12"
   }
 }

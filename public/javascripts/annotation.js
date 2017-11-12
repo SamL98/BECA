@@ -108,6 +108,7 @@ var annotationPath2 = function(radius, width, height, sWidth, offset) {
 var addAnnotationForSNP = function(id) {
     // Select the point.
     var point = d3.select('#' + id);
+
     // Specify the width and height of the annotation.
     var annotationWidth = 135, annotationHeight = 70;
     // Obtain the center coordinates of the point.

@@ -64,7 +64,7 @@ var displayChart = function() {
         .style('font-weight', 'bold').style('font-size', '20px').style('font-family', 'Arial')
         .text(query);
 
-    // Apend the x axis to the chart.
+    // Append the x axis to the chart.
     chart.append('g')
         .attr('class', 'x axis')
         .attr('transform', 'translate(0,' + height + ')')

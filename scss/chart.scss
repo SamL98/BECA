@@ -18,7 +18,7 @@ $chart-margins-ver: 2%;
     height: 100% - (2 * $chart-margins-ver);
 }
 
-.point {
+.point, .snp {
     fill: steelblue;
     stroke: black;
 }

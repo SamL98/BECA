@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="/javascripts/dat.gui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="stylesheets/style.css"></link>
+    <link rel="stylesheet" type="text/css" href="stylesheets/dg.css"></link>
+    <script type="text/javascript" src="/elm/gwas.js"></script>
+    <script type="text/javascript" src="/javascripts/globals.js"></script>
+    <script type="text/javascript" src="/javascripts/parser.js"></script>
+</head>
+
+<div id="container"></div>
+<script>
+    var query = '';
+
+    var Controls = function() {
+        this.Query = '';
+        // Submits the given query information.
+        this.Submit = function() {
+            query = this.Query;
+            if (query && query != "") {
+                // If the query and roi are present, fetch the SNP data.
+                $.ajax({
+                    url: parseQuery(currentHost + '/gwas_query?', query),
+                    type: 'GET',
+                    dataType: 'json',
+                    success: data => {
+                        app.ports.bounds.send(JSON.stringify(data.bounds))
+                        app.ports.query.send(JSON.stringify(data.snps));
+                    },
+                    error: err => {
+                        console.log('Error with AJAX gwas query: ' + JSON.stringify(err));
+                    }
+                });
+            } else if (this.Query != '') {
+                // If the control panel has a query and roi, but the global variables are not set,
+                // set the global variables and resubmit.
+                query = this.Query;
+                this.Submit();
+            }
+        }
+    }
+
+    panel = new Controls();
+    var gui = new dat.GUI({ autoPlace: true });
+    gui.add(panel, 'Query');
+    gui.add(panel, 'Submit');
+
+    var container = document.getElementById('container');
+    var app = Elm.Main.embed(container);
+</script>
+
+<div id="acknowledgements">
+    <p>© Copyright 2017, ShenLab at Indiana University School of Medicine
+Acknowledgements: NIH R01 EB022574, NIH R01 LM011360
+Question or bug reporting: shenlab@iu.edu</p>
+</div>
