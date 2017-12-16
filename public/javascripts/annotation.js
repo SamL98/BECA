@@ -29,9 +29,10 @@ var indicateSNPInspected = function(id) {
 
 var indicateSNPUninspected = function(id) {
     var point = d3.select('#' + id);
+    var r = point.attr('scaledFreq') ? point.attr('scaledFreq') : 5
     point.transition().duration(100)
         .style('fill', 'steelblue')
-        .attr('r', point.attr('scaledFreq'));
+        .attr('r', r);
 }
 
 /**

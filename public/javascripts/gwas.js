@@ -24,6 +24,15 @@ var findMiddleSNP = function(snps, bounds) {
     return minSnp
 }
 
+var generateRandomId = function(length) {
+    var randomStr = ''
+    var chars = 'ABCDEFGHIJKLMNOPQRSTUVQXYZ1234567890'
+    for (var i = 0; i < length; i++) {
+        randomStr += chars[Math.floor(Math.random() * chars.length)]
+    }
+    return randomStr
+}
+
 var displayChart = function(snps, bounds) {
     d3.selectAll('.chart').remove()
 
@@ -86,8 +95,9 @@ var displayChart = function(snps, bounds) {
 
     chart.selectAll('.point').data(snps)
         .enter().append('circle')
+        .style('cursor', 'pointer')
         .attr('class', 'point')
-        .attr('id', s => { return 'snp' + s.name })
+        .attr('id', s => { return generateRandomId(5) })
         .attr('p', s => { return s.pvalue })
         .attr('snp', s => { return s.name })
         .attr('bp', s => { return s.pos })
@@ -100,8 +110,24 @@ var displayChart = function(snps, bounds) {
             }
             return y(logp) 
         })
+        .on('mouseover', () => {
+            addAnnotationForSNP(d3.event.target.id)
+            indicateSNPInspected(d3.event.target.id)
+        })
+        .on('mouseout', () => {
+            removeAnnotationForSNP(d3.event.target.id)
+            indicateSNPUninspected(d3.event.target.id)
+        })
+        .on('click', () => {
+            let snp = d3.select('#' + d3.event.target.id).attr('snp')
+            for (var i = 0; i < snps.length; i++) {
+                if (snps[i].name === snp) {
+                    currSnp = snps[i]
+                }
+            }
+            changeSNPInfo(snps)
+        })
 
-    addAnnotationHover()
     currSnp = findMiddleSNP(snps, bounds)
     addSNPInfo(snps)
 }
@@ -146,6 +172,7 @@ var Controls = function() {
 window.onload = function() {
     let panel = new Controls()
     var gui = new dat.GUI({ autoPlace: true })
+    gui.remember(panel)
     gui.add(panel, 'Query')
     gui.add(panel, 'Submit')
 }

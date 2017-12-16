@@ -1,8 +1,13 @@
 'use strict'
 
-var addSNPInfo = function(snps) {
-    var filtered = snps.filter(s => { return s.name === currSnp.name })
+let headers = ['Pubmed ID', 'Cohort', 'Trait', 'P-Value']
 
+var getCurrSnps = function(snps) {
+    return snps.filter(s => { return s.name === currSnp.name })
+}
+
+var addSNPInfo = function(snps) {
+    var filtered = getCurrSnps(snps)
     let bodyRect = rectFor('body')
     let chartRect = rectFor('#chart-container')
 
@@ -11,6 +16,7 @@ var addSNPInfo = function(snps) {
         .style('margin-top', '20px')
 
     div.append('h3')
+        .attr('id', 'curr-snp-header')
         .style('width', '100%')
         .style('text-align', 'center')
         .style('font-family', 'arial')
@@ -23,7 +29,6 @@ var addSNPInfo = function(snps) {
     let thead = table.append('thead')
     let tbody = table.append('tbody')
 
-    let headers = ['Pubmed ID', 'Cohort', 'Trait', 'P-Value']
     thead.append('tr').selectAll('th')
         .data(headers).enter().append('th')
         .style('font-family', 'arial')
@@ -31,7 +36,22 @@ var addSNPInfo = function(snps) {
 
     let rows = tbody.selectAll('tr')
         .data(filtered).enter().append('tr')
+    displayTraits(rows, headers)
+}
 
+var changeSNPInfo = function(snps) {
+    var filtered = getCurrSnps(snps)
+
+    d3.select('#curr-snp-header').text(currSnp.name)
+    
+    let tbody = d3.select('#traits-table').select('tbody')
+    tbody.selectAll('tr').remove()
+    let rows = tbody.selectAll('tr')
+        .data(filtered).enter().append('tr')
+    displayTraits(rows, headers)
+}
+
+var displayTraits = function(rows, headers) {
     rows.selectAll('td')
         .data(snp => {
             let vals = [snp.pubmed, snp.cohort, snp.trait, snp.pvalue]
