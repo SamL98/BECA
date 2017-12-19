@@ -70,6 +70,8 @@ var rectFor = function(selector) {
     return d3.select(selector).node().getBoundingClientRect();
 };
 
+var gwasMode = false;
+
 var localHost = "http://localhost:8080";
 var iupuiHost = "http://igb.cs.iupui.edu";
 var currentHost = localHost;

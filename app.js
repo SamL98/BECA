@@ -9,6 +9,8 @@ var dbmanager = require('./DBManager.js');
 /// Require the exec method from the child process module in order to run bash commands from the Javascript.
 var exec = require('child_process').exec;
 
+var rootDir = process.env.root_dir;
+
 /// Create the application by calling the express() method.
 var app = express();
 
@@ -108,7 +110,7 @@ app.get('/colortable', (req, res) => {
         }
 
         let snpStr = JSON.stringify(snp);
-        let commandStr = "python colortable.py \'" + snpStr + "\'";
+        let commandStr = "python " + rootDir + "colortable.py \'" + snpStr + "\'";
         exec(commandStr, (error, stdout, stderr) => {
             if (stdout.trim() !== "") {
                 console.log(stdout);
@@ -134,7 +136,7 @@ app.get('/center', (req, res) => {
         return;
     }
 
-    let commandStr = "python roi_locator.py " + roi + " " + __dirname;
+    let commandStr = "python " + rootDir + "roi_locator.py " + roi + " " + __dirname;
     exec(commandStr, (error, stdout, stderr) => {
         if (error) {
             console.log("Error executing roi locator subprocess: " + error);

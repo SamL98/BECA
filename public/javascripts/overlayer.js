@@ -26,7 +26,10 @@ var renderOverlay = function(name) {
             renderBrain(colortable, orientation);
             removeLoader();
         }, error: error => {
-            console.log("Error while creating colortable: " + error);
+            console.log("Error while creating colortable: " + JSON.stringify(error));
+            removeLoader();
+            renderBrain(null, orientation);
+            alert('Sorry. There was an error creating the colortable.')
         }
     });
 }
