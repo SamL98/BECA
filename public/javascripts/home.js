@@ -1,3 +1,5 @@
+gwasMode = false;
+
 // Initialize the controls and display the instructions once the window laods.
 window.onload = function() {
     // Set the target for the back button.
@@ -36,7 +38,7 @@ var presentInstructions = function() {
 
     let topHeader = header.append('div')
         .attr('id', 'top-section').style('overflow', 'hidden');
-    topHeader.append('h2').attr('class', 'header').text('Welcome to IU BECA');
+    topHeader.append('h2').attr('class', 'header').text('Welcome to the Imaging Genomic Browser (IGB)');
     topHeader.append('p').attr('class', 'instruction-label').text('To submit a query, follow these steps:');
     topHeader.append('ol').attr('class', 'instr-list');
 
@@ -125,11 +127,13 @@ var presentInstructions = function() {
 
     header.append('button')
         .attr('id', 'gwas-button')
-        .style('width', '100px').style('height', '65px')
-        .style('position', 'absolute').style('top', '5px').style('left', '10px')
-        .style('background-color', 'indianred')
-        .style('color', 'white')
-        .style('border', 'none').style('border-radius', '5px')
+        .style('width', '65px').style('height', '40px')
+        .style('font-size', '10px').style('font-weight', '600')
+        .style('position', 'absolute').style('top', '7.5px').style('left', '10px')
+        .style('background-color', 'white')
+        .style('color', 'black')
+        .style('border', '2.5px solid black')
+        .style('border-radius', '5px')
         .style('cursor', 'pointer')
         .text('GWAS');
 

@@ -130,6 +130,10 @@ var addAnnotationForSNP = function(id) {
     var annotationX = pointX - annotationWidth/2, 
         annotationY = pointY - annotationHeight - offset;
 
+    if (gwasMode) {
+        annotationX += 30
+    }
+
     // Obtain the annotation path to use given the set parameters
     // Note - Array result is returned because if the annotationY is less than zero, the annotationY, offset, and textInsets must change.
     var result = pathFor(pointX, pointY, annotationX, annotationY, textInset.x, textInset.y,
@@ -201,7 +205,7 @@ var addAnnotationForPValue = function(id, snp) {
         textInset = { x: 15, y: 15 }, interlineSpacing = 5;
 
     // Specify the x and y origins for the annotation.
-    const annoX = x - annoWidth/2;
+    var annoX = x - annoWidth/2;
     var annoY = y - annoHeight - offset;
 
     // Determine the annotation path to use given the parameters.
@@ -263,6 +267,9 @@ var pathFor = function(x, y, annoX, annoY, textInsetX, textInsetY, offset, radiu
 
     // If the annotation's y origin would be offscreen adjust the parameters as follows.
     if (annoY < 0) {
+        if (gwasMode) {
+            y += 10
+        }
         textInsetY += offset;
         annoY = y;
         path = annotationPath2(radius, annoWidth, annoHeight,
@@ -271,6 +278,9 @@ var pathFor = function(x, y, annoX, annoY, textInsetX, textInsetY, offset, radiu
         upPath = true;
     // If the annotation's y origin doesn't overflow, use the preferred annotationPath1.
     } else {
+        if (gwasMode) {
+            annoY += 10
+        }
         path = annotationPath1(radius, annoWidth, annoHeight,
             trWidth, offset);
     }

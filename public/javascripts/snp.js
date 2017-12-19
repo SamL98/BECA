@@ -6,6 +6,11 @@ var getCurrSnps = function(snps) {
     return snps.filter(s => { return s.name === currSnp.name })
 }
 
+d3.select('#assoc-container')
+    .style('width', '80%')
+    .style('margin-left', '10%')
+    .style('margin-right', '10%')
+
 var addSNPInfo = function(snps) {
     var filtered = getCurrSnps(snps)
     let bodyRect = rectFor('body')

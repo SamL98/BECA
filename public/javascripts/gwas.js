@@ -1,6 +1,7 @@
 'use strict'
 
 var currSnp
+gwasMode = true
 
 var findMiddleSNP = function(snps, bounds) {
     if (query.substring(0, 2) === "rs") {
@@ -55,6 +56,7 @@ var displayChart = function(snps, bounds) {
             .attr('width', (width + margins.left + margins.right))
             .attr('height', (height + margins.top + margins.bottom))
         .append('g')
+            .attr('id', 'chart-offset-container')
             .attr('transform', 'translate(' + margins.left + ',' + margins.top + ')')
 
     let rect = rectFor('#chart-container')
@@ -140,7 +142,8 @@ var Controls = function() {
     this.Submit = function() {
         query = this.Query
         if (query && query != "") {
-            // If the query and roi are present, fetch the SNP data.
+            d3.select('#instructions').remove()
+            // If the query is present, fetch the SNP data.
             $.ajax({
                 url: parseQuery(currentHost + '/gwas_query?', query),
                 type: 'GET',
